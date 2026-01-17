@@ -1,0 +1,29 @@
+import { useMemo } from 'react'
+import { NAV, type NavItem } from '@/routes/_authenticated/components/menu.tsx'
+import { type AuthUser, useAuthStore } from '@/stores/auth-store.ts'
+
+const filterNav = (items: NavItem[], user: AuthUser): NavItem[] => {
+  return items
+    .filter(
+      (item) => item.access?.length && item.access.includes(user.role.name)
+    )
+    .map((item) => {
+      const i = { ...item }
+      i.children = filterNav(item.children ?? [], user)
+      return i
+    })
+}
+
+export const useNav = () => {
+  const {
+    auth: { user },
+  } = useAuthStore()
+
+  return useMemo(() => {
+    if (user) {
+      return filterNav(NAV, user)
+    }
+
+    return []
+  }, [user])
+}

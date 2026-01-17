@@ -17,6 +17,7 @@ import { ThemeProvider } from './context/theme-provider'
 import { routeTree } from './routeTree.gen'
 // Styles
 import './styles/index.css'
+import { useAuth } from '@clerk/clerk-react'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -75,9 +76,18 @@ const queryClient = new QueryClient({
 // Create a new router instance
 const router = createRouter({
   routeTree,
-  context: { queryClient },
+  context: { queryClient, auth: useAuthStore.getState() },
   defaultPreload: 'intent',
   defaultPreloadStaleTime: 0,
+})
+
+useAuthStore.subscribe((state) => {
+  router.update({
+    context: {
+      ...router.options.context,
+      auth: state
+    }
+  })
 })
 
 // Register the router instance for type safety

@@ -1,24 +1,38 @@
-import { useState } from 'react'
-import { z } from 'zod'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { Link, useNavigate } from '@tanstack/react-router'
-import { Loader2, LogIn } from 'lucide-react'
-import { toast } from 'sonner'
-import { IconFacebook, IconGithub } from '@/assets/brand-icons'
-import { useAuthStore } from '@/stores/auth-store'
-import { sleep, cn } from '@/lib/utils'
-import { Button } from '@/components/ui/button'
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
+import { useState } from 'react';
+import { z } from 'zod';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Link, useNavigate } from '@tanstack/react-router';
+import { DefaultRoles } from '@/types';
+import { Loader2, LogIn } from 'lucide-react';
+import { toast } from 'sonner';
+import { IconFacebook, IconGithub } from '@/assets/brand-icons';
+import { useAuthStore } from '@/stores/auth-store';
+import { sleep, cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group.tsx'
 import { PasswordInput } from '@/components/password-input'
+import { Label } from '@/components/ui/label.tsx'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 const formSchema = z.object({
   email: z.email({
@@ -42,6 +56,7 @@ export function UserAuthForm({
   const [isLoading, setIsLoading] = useState(false)
   const navigate = useNavigate()
   const { auth } = useAuthStore()
+  const [selectedRole, setSelectedRole] = useState<string>(DefaultRoles.SUPER_ADMIN)
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -63,7 +78,10 @@ export function UserAuthForm({
         const mockUser = {
           accountNo: 'ACC001',
           email: data.email,
-          role: ['user'],
+          role: {
+            id: 'ACC001',
+            name: DefaultRoles[selectedRole]
+          },
           exp: Date.now() + 24 * 60 * 60 * 1000, // 24 hours from now
         }
 
@@ -73,6 +91,7 @@ export function UserAuthForm({
 
         // Redirect to the stored location or default to dashboard
         const targetPath = redirectTo || '/'
+        console.log({targetPath})
         navigate({ to: targetPath, replace: true })
 
         return `Welcome back, ${data.email}!`
@@ -120,6 +139,20 @@ export function UserAuthForm({
             </FormItem>
           )}
         />
+        <RadioGroup
+          defaultValue={selectedRole}
+          onChange={(e) => setSelectedRole(e.target.value)}
+        >
+          {Object.keys(DefaultRoles).map((key) => (
+            <div
+              key={key}
+              className="flex items-center gap-3"
+            >
+              <RadioGroupItem value={key} id={key} />
+              <Label htmlFor={key}>{DefaultRoles[key]}</Label>
+            </div>
+          ))}
+        </RadioGroup>
         <Button className='mt-2' disabled={isLoading}>
           {isLoading ? <Loader2 className='animate-spin' /> : <LogIn />}
           Sign in

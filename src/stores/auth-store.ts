@@ -1,16 +1,17 @@
 import { create } from 'zustand'
 import { getCookie, setCookie, removeCookie } from '@/lib/cookies'
+import { type Role } from '@/types'
 
 const ACCESS_TOKEN = 'thisisjustarandomstring'
 
-interface AuthUser {
+export interface AuthUser {
   accountNo: string
   email: string
-  role: string[]
   exp: number
+  role: Role
 }
 
-interface AuthState {
+export interface AuthState {
   auth: {
     user: AuthUser | null
     setUser: (user: AuthUser | null) => void
