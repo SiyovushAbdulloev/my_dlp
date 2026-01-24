@@ -40,6 +40,9 @@ import { Route as AuthenticatedSettingsDisplayRouteImport } from './routes/_auth
 import { Route as AuthenticatedSettingsAppearanceRouteImport } from './routes/_authenticated/settings/appearance'
 import { Route as AuthenticatedSettingsAccountRouteImport } from './routes/_authenticated/settings/account'
 import { Route as AuthenticatedErrorsErrorRouteImport } from './routes/_authenticated/errors/$error'
+import { Route as AuthenticatedDictionariesRegionsIndexRouteImport } from './routes/_authenticated/dictionaries/regions/index'
+import { Route as AuthenticatedDictionariesRegionsCreateRouteImport } from './routes/_authenticated/dictionaries/regions/create'
+import { Route as AuthenticatedDictionariesRegionsRegionIdEditRouteImport } from './routes/_authenticated/dictionaries/regions/$regionId.edit'
 
 const ClerkRouteRoute = ClerkRouteRouteImport.update({
   id: '/clerk',
@@ -201,6 +204,24 @@ const AuthenticatedErrorsErrorRoute =
     path: '/errors/$error',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedDictionariesRegionsIndexRoute =
+  AuthenticatedDictionariesRegionsIndexRouteImport.update({
+    id: '/dictionaries/regions/',
+    path: '/dictionaries/regions/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDictionariesRegionsCreateRoute =
+  AuthenticatedDictionariesRegionsCreateRouteImport.update({
+    id: '/dictionaries/regions/create',
+    path: '/dictionaries/regions/create',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDictionariesRegionsRegionIdEditRoute =
+  AuthenticatedDictionariesRegionsRegionIdEditRouteImport.update({
+    id: '/dictionaries/regions/$regionId/edit',
+    path: '/dictionaries/regions/$regionId/edit',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/clerk': typeof ClerkAuthenticatedRouteRouteWithChildren
@@ -230,6 +251,9 @@ export interface FileRoutesByFullPath {
   '/settings/': typeof AuthenticatedSettingsIndexRoute
   '/tasks': typeof AuthenticatedTasksIndexRoute
   '/users': typeof AuthenticatedUsersIndexRoute
+  '/dictionaries/regions/create': typeof AuthenticatedDictionariesRegionsCreateRoute
+  '/dictionaries/regions': typeof AuthenticatedDictionariesRegionsIndexRoute
+  '/dictionaries/regions/$regionId/edit': typeof AuthenticatedDictionariesRegionsRegionIdEditRoute
 }
 export interface FileRoutesByTo {
   '/clerk': typeof ClerkAuthenticatedRouteRouteWithChildren
@@ -258,6 +282,9 @@ export interface FileRoutesByTo {
   '/settings': typeof AuthenticatedSettingsIndexRoute
   '/tasks': typeof AuthenticatedTasksIndexRoute
   '/users': typeof AuthenticatedUsersIndexRoute
+  '/dictionaries/regions/create': typeof AuthenticatedDictionariesRegionsCreateRoute
+  '/dictionaries/regions': typeof AuthenticatedDictionariesRegionsIndexRoute
+  '/dictionaries/regions/$regionId/edit': typeof AuthenticatedDictionariesRegionsRegionIdEditRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -292,6 +319,9 @@ export interface FileRoutesById {
   '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute
   '/_authenticated/tasks/': typeof AuthenticatedTasksIndexRoute
   '/_authenticated/users/': typeof AuthenticatedUsersIndexRoute
+  '/_authenticated/dictionaries/regions/create': typeof AuthenticatedDictionariesRegionsCreateRoute
+  '/_authenticated/dictionaries/regions/': typeof AuthenticatedDictionariesRegionsIndexRoute
+  '/_authenticated/dictionaries/regions/$regionId/edit': typeof AuthenticatedDictionariesRegionsRegionIdEditRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -323,6 +353,9 @@ export interface FileRouteTypes {
     | '/settings/'
     | '/tasks'
     | '/users'
+    | '/dictionaries/regions/create'
+    | '/dictionaries/regions'
+    | '/dictionaries/regions/$regionId/edit'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/clerk'
@@ -351,6 +384,9 @@ export interface FileRouteTypes {
     | '/settings'
     | '/tasks'
     | '/users'
+    | '/dictionaries/regions/create'
+    | '/dictionaries/regions'
+    | '/dictionaries/regions/$regionId/edit'
   id:
     | '__root__'
     | '/(auth)'
@@ -384,6 +420,9 @@ export interface FileRouteTypes {
     | '/_authenticated/settings/'
     | '/_authenticated/tasks/'
     | '/_authenticated/users/'
+    | '/_authenticated/dictionaries/regions/create'
+    | '/_authenticated/dictionaries/regions/'
+    | '/_authenticated/dictionaries/regions/$regionId/edit'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -616,6 +655,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedErrorsErrorRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/dictionaries/regions/': {
+      id: '/_authenticated/dictionaries/regions/'
+      path: '/dictionaries/regions'
+      fullPath: '/dictionaries/regions'
+      preLoaderRoute: typeof AuthenticatedDictionariesRegionsIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dictionaries/regions/create': {
+      id: '/_authenticated/dictionaries/regions/create'
+      path: '/dictionaries/regions/create'
+      fullPath: '/dictionaries/regions/create'
+      preLoaderRoute: typeof AuthenticatedDictionariesRegionsCreateRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dictionaries/regions/$regionId/edit': {
+      id: '/_authenticated/dictionaries/regions/$regionId/edit'
+      path: '/dictionaries/regions/$regionId/edit'
+      fullPath: '/dictionaries/regions/$regionId/edit'
+      preLoaderRoute: typeof AuthenticatedDictionariesRegionsRegionIdEditRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
@@ -671,6 +731,9 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedHelpCenterIndexRoute: typeof AuthenticatedHelpCenterIndexRoute
   AuthenticatedTasksIndexRoute: typeof AuthenticatedTasksIndexRoute
   AuthenticatedUsersIndexRoute: typeof AuthenticatedUsersIndexRoute
+  AuthenticatedDictionariesRegionsCreateRoute: typeof AuthenticatedDictionariesRegionsCreateRoute
+  AuthenticatedDictionariesRegionsIndexRoute: typeof AuthenticatedDictionariesRegionsIndexRoute
+  AuthenticatedDictionariesRegionsRegionIdEditRoute: typeof AuthenticatedDictionariesRegionsRegionIdEditRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -682,6 +745,12 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedHelpCenterIndexRoute: AuthenticatedHelpCenterIndexRoute,
   AuthenticatedTasksIndexRoute: AuthenticatedTasksIndexRoute,
   AuthenticatedUsersIndexRoute: AuthenticatedUsersIndexRoute,
+  AuthenticatedDictionariesRegionsCreateRoute:
+    AuthenticatedDictionariesRegionsCreateRoute,
+  AuthenticatedDictionariesRegionsIndexRoute:
+    AuthenticatedDictionariesRegionsIndexRoute,
+  AuthenticatedDictionariesRegionsRegionIdEditRoute:
+    AuthenticatedDictionariesRegionsRegionIdEditRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =

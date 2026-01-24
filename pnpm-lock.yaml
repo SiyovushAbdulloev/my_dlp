@@ -101,6 +101,12 @@ importers:
       input-otp:
         specifier: ^1.4.2
         version: 1.4.2(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      ky:
+        specifier: ^1.14.2
+        version: 1.14.2
+      laravel-resource-pagination-type:
+        specifier: ^1.0.4
+        version: 1.0.4
       lucide-react:
         specifier: ^0.561.0
         version: 0.561.0(react@19.2.3)
@@ -2575,6 +2581,13 @@ packages:
     peerDependencies:
       '@types/node': '>=18'
       typescript: '>=5.0.4 <7'
+
+  ky@1.14.2:
+    resolution: {integrity: sha512-q3RBbsO5A5zrPhB6CaCS8ZUv+NWCXv6JJT4Em0i264G9W0fdPB8YRfnnEi7Dm7X7omAkBIPojzYJ2D1oHTHqug==}
+    engines: {node: '>=18'}
+
+  laravel-resource-pagination-type@1.0.4:
+    resolution: {integrity: sha512-oy20MD0jCj/ZTU5fBWvM0b+bAb26QE44/vs3NFp0Xjj6FiNKlc1YwZsbkQpj8pwgFqMY1wqnDweRRkPzCbM5rw==}
 
   levn@0.4.1:
     resolution: {integrity: sha512-+bT2uH4E5LGE7h/n3evcS/sQlJXCpIp6ym8OWJ5eV6+67Dsql/LaaT7qJBAt2rzfoa/5QBGBhxDix1dMt2kQKQ==}
@@ -5516,6 +5529,10 @@ snapshots:
       strip-json-comments: 5.0.3
       typescript: 5.9.3
       zod: 4.2.0
+
+  ky@1.14.2: {}
+
+  laravel-resource-pagination-type@1.0.4: {}
 
   levn@0.4.1:
     dependencies:
