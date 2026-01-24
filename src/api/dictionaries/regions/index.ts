@@ -3,7 +3,6 @@ import { type LaravelPaginatedResource } from 'laravel-resource-pagination-type'
 import { type Region } from '@/types'
 import { sleep } from '@/lib/utils.ts'
 import { type RegionForm } from '@/features/dictionaries/regions/create.tsx'
-import { client } from '@/api/client.ts'
 
 export const fetchIndex = async (page: number): Promise<LaravelPaginatedResource<Region>> => {
   // const json: LaravelPaginatedResource<Region> = await client.get(import.meta.env.API_URL + '/api/dictionaries/regions').json();
@@ -84,4 +83,18 @@ export const deleteById = async (id: string) => {
 
   await sleep(3000)
   return true
+}
+
+export const fetchAll = async (): Promise<{data: Region[]}> => {
+  // const json: LaravelPaginatedResource<Region> = await client.get(import.meta.env.API_URL + '/api/dictionaries/regions').json();
+  // return json
+  await sleep(3000)
+  return {
+    data: Array.from({length: 10}).map((_, index) => ({
+      id: index + 1 + '',
+      name_tg: `Вилояти №${index + 1}`,
+      name_ru: `Область №${index + 1}`,
+      name_en: `Region №${index + 1}`,
+    })),
+  }
 }

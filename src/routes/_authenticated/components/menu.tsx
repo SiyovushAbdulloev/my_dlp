@@ -18,6 +18,7 @@ export const NAV: NavItem[] = [
     access: [DefaultRoles.SUPER_ADMIN],
     children: [
       { id: 'regions', label: 'Регионы', to: '/dictionaries/regions', access: [DefaultRoles.SUPER_ADMIN] },
+      { id: 'districts', label: 'Районы', to: '/dictionaries/districts', access: [DefaultRoles.SUPER_ADMIN] },
     ]
   },
 ]

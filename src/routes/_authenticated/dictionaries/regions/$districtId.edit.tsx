@@ -3,7 +3,7 @@ import { RegionsEdit } from '@/features/dictionaries/regions/edit.tsx'
 import { getById } from '@/api/dictionaries/regions'
 
 export const Route = createFileRoute(
-  '/_authenticated/dictionaries/regions/$regionId/edit'
+  '/_authenticated/dictionaries/regions/$districtId/edit'
 )({
   beforeLoad: async ({ params }) => {
     const { regionId } = params

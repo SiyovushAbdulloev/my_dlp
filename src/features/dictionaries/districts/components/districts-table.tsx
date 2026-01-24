@@ -1,45 +1,32 @@
-import { type ReactNode, useEffect, useMemo, useState } from 'react';
-import { Link } from '@tanstack/react-router';
-import { type ColumnDef, flexRender, getCoreRowModel, getPaginationRowModel, useReactTable } from '@tanstack/react-table';
-import { type Region } from '@/types';
-import { type LaravelPaginatedResource } from 'laravel-resource-pagination-type';
+import { type ReactNode, useEffect, useMemo, useState } from 'react'
+import { Link } from '@tanstack/react-router'
+import {
+  type ColumnDef,
+  flexRender,
+  getCoreRowModel,
+  getPaginationRowModel,
+  useReactTable,
+} from '@tanstack/react-table'
+import { type District } from '@/types/district.ts'
+import { type LaravelPaginatedResource } from 'laravel-resource-pagination-type'
 import { LoaderCircle, PenLine, Trash } from 'lucide-react'
 import { toast } from 'sonner'
-import { deleteById, fetchIndex } from '@/api/dictionaries/regions';
-import { Button } from '@/components/ui/button.tsx';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table.tsx';
-import { DataTablePagination } from '@/components/data-table';
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+import { deleteById, fetchIndex } from '@/api/dictionaries/districts'
+import { Button } from '@/components/ui/button.tsx'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table.tsx'
+import { DataTablePagination } from '@/components/data-table'
 
 const getColumns = (opts: {
   deleting: string | null
   onDelete: (id: string) => void
-}): ColumnDef<Region>[] => [
+}): ColumnDef<District>[] => [
   {
     accessorKey: 'name_ru',
     header: 'Наименование',
@@ -54,6 +41,10 @@ const getColumns = (opts: {
     header: 'Name',
   },
   {
+    accessorKey: 'region.name_ru',
+    header: 'Регион',
+  },
+  {
     accessorKey: 'id',
     header: 'Действие',
     cell: (props) => {
@@ -61,19 +52,26 @@ const getColumns = (opts: {
       const isDeleting = opts.deleting === id
 
       return (
-        <div className="flex items-center gap-2">
-          <Link params={{ regionId: id }} to="/dictionaries/regions/$regionId/edit">
+        <div className='flex items-center gap-2'>
+          <Link
+            params={{ districtId: id }}
+            to='/dictionaries/districts/$districtId/edit'
+          >
             <PenLine />
           </Link>
 
           <Button
-            type="button"
-            variant="ghost"
+            type='button'
+            variant='ghost'
             disabled={isDeleting}
             onClick={() => opts.onDelete(id)}
-            className="px-2"
+            className='px-2'
           >
-            {isDeleting ? <LoaderCircle className="size-5 animate-spin" /> : <Trash />}
+            {isDeleting ? (
+              <LoaderCircle className='size-5 animate-spin' />
+            ) : (
+              <Trash />
+            )}
           </Button>
         </div>
       )
@@ -81,9 +79,9 @@ const getColumns = (opts: {
   },
 ]
 
-export const RegionsTable = () => {
-  const [regions, setRegions] =
-    useState<LaravelPaginatedResource<Region> | null>(null)
+export const DistrictsTable = () => {
+  const [districts, setDistricts] =
+    useState<LaravelPaginatedResource<District> | null>(null)
   const [pagination, setPagination] = useState({
     pageIndex: 0,
     pageSize: 10,
@@ -95,7 +93,7 @@ export const RegionsTable = () => {
     try {
       setDeleting(id)
       await deleteById(id)
-      toast.success('Регион успешно удален')
+      toast.success('Район успешно удален')
       await fetchData()
     } finally {
       setDeleting('')
@@ -107,10 +105,10 @@ export const RegionsTable = () => {
   }, [deleting])
 
   const table = useReactTable({
-    data: regions?.data ?? [],
+    data: districts?.data ?? [],
     columns: columns,
     getCoreRowModel: getCoreRowModel(),
-    pageCount: regions?.meta?.last_page ?? 1,
+    pageCount: districts?.meta?.last_page ?? 1,
     manualPagination: true,
     getPaginationRowModel: getPaginationRowModel(),
     onPaginationChange: setPagination,
@@ -123,7 +121,7 @@ export const RegionsTable = () => {
     try {
       setFetching(true)
       const response = await fetchIndex(pagination.pageIndex + 1)
-      setRegions(response)
+      setDistricts(response)
     } finally {
       setFetching(false)
     }

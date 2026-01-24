@@ -1,73 +1,75 @@
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useNavigate } from '@tanstack/react-router';
-import { Route } from '@/routes/_authenticated/dictionaries/regions/$districtId.edit.tsx';
-import { ArrowLeft, Loader2, LogIn } from 'lucide-react'
-import { create, edit } from '@/api/dictionaries/regions';
-import { Button } from '@/components/ui/button.tsx';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form.tsx';
-import { Input } from '@/components/ui/input.tsx';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs.tsx';
-import { Main } from '@/components/layout/main';
-import { type RegionForm, regionFormSchema } from '@/features/dictionaries/regions/create.tsx';
+import { useState } from 'react'
+import { z } from 'zod'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useNavigate } from '@tanstack/react-router'
+import { Route } from '@/routes/_authenticated/dictionaries/districts/create.tsx'
+import { ArrowLeft, Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
+import { create } from '@/api/dictionaries/districts'
+import { Button } from '@/components/ui/button.tsx'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form.tsx'
+import { Input } from '@/components/ui/input.tsx'
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from '@/components/ui/tabs.tsx'
+import { Main } from '@/components/layout/main'
+import { SelectDropdown } from '@/components/select-dropdown.tsx'
 
+export const districtFormSchema = z.object({
+  name: z.object({
+    ru: z
+      .string({ message: 'Наименование на русском обязательно' })
+      .min(1, 'Минимум 1 буква'),
+    en: z
+      .string({ message: 'Наименование на русском обязательно' })
+      .min(1, 'Минимум 1 буква'),
+    tg: z
+      .string({ message: 'Наименование на русском обязательно' })
+      .min(1, 'Минимум 1 буква'),
+  }),
+  region_id: z
+    .string({ message: 'Регион обязателен' })
+    .min(1, 'Регион обязателен'),
+})
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+export type DistrictForm = z.infer<typeof districtFormSchema>
 
 const defaultLang = 'en'
 
-export function RegionsEdit() {
+export function DistrictsCreate() {
   const navigate = useNavigate()
-  const { region } = Route.useRouteContext()
   const [loading, setLoading] = useState<boolean>(false)
+  const { regions } = Route.useRouteContext()
 
-  const form = useForm<RegionForm>({
-    resolver: zodResolver(regionFormSchema),
+  const form = useForm<DistrictForm>({
+    resolver: zodResolver(districtFormSchema),
     defaultValues: {
       name: {
-        en: region.name_en,
-        ru: region.name_ru,
-        tg: region.name_tg,
+        en: '',
+        ru: '',
+        tg: '',
       },
     },
   })
 
-  const onSubmit = async (data: RegionForm) => {
+  const onSubmit = async (data: DistrictForm) => {
     setLoading(true)
     try {
-      await edit(region.id, data)
+      await create(data)
       form.reset()
-      toast.success('Регион успешно изменен')
-      navigate({ to: '/dictionaries/regions' })
+      toast.success('Район успешно создан')
+      navigate({ to: '/dictionaries/districts' })
     } catch (err) {
       console.log(err)
     } finally {
@@ -79,8 +81,8 @@ export function RegionsEdit() {
     <>
       <Main className='flex flex-1 flex-col gap-4 sm:gap-6'>
         <header className={'flex items-center justify-between'}>
-          <h1>Редактировать регион</h1>
-          <Button onClick={() => navigate({ to: '/dictionaries/regions' })}>
+          <h1>Создать район</h1>
+          <Button onClick={() => navigate({ to: '/dictionaries/districts' })}>
             <ArrowLeft size={18} />
             Назад
           </Button>
@@ -149,9 +151,29 @@ export function RegionsEdit() {
               </TabsContent>
             </Tabs>
 
+            <FormField
+              control={form.control}
+              name='region_id'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Регион</FormLabel>
+                  <SelectDropdown
+                    defaultValue={field.value}
+                    onValueChange={field.onChange}
+                    placeholder='Выберите регион'
+                    items={regions.data.map((region) => ({
+                      label: region.name_ru,
+                      value: region.id,
+                    }))}
+                  />
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
             <Button disabled={loading} type='submit'>
               {loading ? <Loader2 className='animate-spin' /> : null}
-              Сохранить
+              Создать
             </Button>
           </form>
         </Form>
