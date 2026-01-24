@@ -10,12 +10,12 @@ export const fetchIndex = async (page: number): Promise<LaravelPaginatedResource
   await sleep(3000)
   return {
     data: Array.from({length: 10}).map((_, index) => ({
-      id: index + 1 + '',
+      id: index + 1 + '' + Date.now().toString(),
       name_tg: `Шахр №${index + 1}, page: ${page}`,
       name_ru: `Район №${index + 1}, page: ${page}`,
       name_en: `District №${index + 1}, page: ${page}`,
       region: {
-        id: "region #1",
+        id: `region ${index + 1}`,
         name_tg: `Вилояти №${index + 1}, page: ${page}`,
         name_ru: `Область №${index + 1}, page: ${page}`,
         name_en: `Region №${index + 1}, page: ${page}`,
@@ -28,7 +28,7 @@ export const fetchIndex = async (page: number): Promise<LaravelPaginatedResource
         next: null
     },
     meta: {
-        current_page: 1,
+        current_page: page,
         from: 0,
         last_page: 6,
         path: '',

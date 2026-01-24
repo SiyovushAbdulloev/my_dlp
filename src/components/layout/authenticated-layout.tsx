@@ -68,7 +68,7 @@ export function AuthenticatedLayout({ children }: AuthenticatedLayoutProps) {
                       </NavigationMenuTrigger>
                       {navItem.children?.length ? (
                         <NavigationMenuContent>
-                          <ul className="grid w-[300px] gap-4">
+                          <ul className="grid w-[300px] gap-1">
                             {navItem.children.map((child) => (
                               <li key={child.id}>
                                 <NavigationMenuLink asChild>

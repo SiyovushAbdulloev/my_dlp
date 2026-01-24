@@ -1,0 +1,25 @@
+import { Main } from '@/components/layout/main'
+import { CitiesTable } from './components/cities-table.tsx'
+import { Plus } from 'lucide-react'
+import { Button } from '@/components/ui/button.tsx'
+import { useNavigate } from '@tanstack/react-router'
+
+export function Cities() {
+  const navigate = useNavigate()
+
+  return (
+    <>
+      <Main className='flex flex-1 flex-col gap-4 sm:gap-6'>
+        <div className='flex flex-wrap items-end justify-between gap-2'>
+          <div>
+            <h2 className='text-2xl font-bold tracking-tight'>Города</h2>
+          </div>
+          <Button className='space-x-1' onClick={() => navigate({to: '/dictionaries/cities/create'})}>
+            <span>Создать город</span> <Plus size={18} />
+          </Button>
+        </div>
+        <CitiesTable />
+      </Main>
+    </>
+  )
+}

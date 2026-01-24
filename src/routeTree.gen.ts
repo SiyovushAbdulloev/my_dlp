@@ -42,10 +42,13 @@ import { Route as AuthenticatedSettingsAccountRouteImport } from './routes/_auth
 import { Route as AuthenticatedErrorsErrorRouteImport } from './routes/_authenticated/errors/$error'
 import { Route as AuthenticatedDictionariesRegionsIndexRouteImport } from './routes/_authenticated/dictionaries/regions/index'
 import { Route as AuthenticatedDictionariesDistrictsIndexRouteImport } from './routes/_authenticated/dictionaries/districts/index'
+import { Route as AuthenticatedDictionariesCitiesIndexRouteImport } from './routes/_authenticated/dictionaries/cities/index'
 import { Route as AuthenticatedDictionariesRegionsCreateRouteImport } from './routes/_authenticated/dictionaries/regions/create'
 import { Route as AuthenticatedDictionariesDistrictsCreateRouteImport } from './routes/_authenticated/dictionaries/districts/create'
+import { Route as AuthenticatedDictionariesCitiesCreateRouteImport } from './routes/_authenticated/dictionaries/cities/create'
 import { Route as AuthenticatedDictionariesRegionsDistrictIdEditRouteImport } from './routes/_authenticated/dictionaries/regions/$districtId.edit'
 import { Route as AuthenticatedDictionariesDistrictsDistrictIdEditRouteImport } from './routes/_authenticated/dictionaries/districts/$districtId.edit'
+import { Route as AuthenticatedDictionariesCitiesCityIdEditRouteImport } from './routes/_authenticated/dictionaries/cities/$cityId.edit'
 
 const ClerkRouteRoute = ClerkRouteRouteImport.update({
   id: '/clerk',
@@ -219,6 +222,12 @@ const AuthenticatedDictionariesDistrictsIndexRoute =
     path: '/dictionaries/districts/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedDictionariesCitiesIndexRoute =
+  AuthenticatedDictionariesCitiesIndexRouteImport.update({
+    id: '/dictionaries/cities/',
+    path: '/dictionaries/cities/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedDictionariesRegionsCreateRoute =
   AuthenticatedDictionariesRegionsCreateRouteImport.update({
     id: '/dictionaries/regions/create',
@@ -231,6 +240,12 @@ const AuthenticatedDictionariesDistrictsCreateRoute =
     path: '/dictionaries/districts/create',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedDictionariesCitiesCreateRoute =
+  AuthenticatedDictionariesCitiesCreateRouteImport.update({
+    id: '/dictionaries/cities/create',
+    path: '/dictionaries/cities/create',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedDictionariesRegionsDistrictIdEditRoute =
   AuthenticatedDictionariesRegionsDistrictIdEditRouteImport.update({
     id: '/dictionaries/regions/$districtId/edit',
@@ -241,6 +256,12 @@ const AuthenticatedDictionariesDistrictsDistrictIdEditRoute =
   AuthenticatedDictionariesDistrictsDistrictIdEditRouteImport.update({
     id: '/dictionaries/districts/$districtId/edit',
     path: '/dictionaries/districts/$districtId/edit',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDictionariesCitiesCityIdEditRoute =
+  AuthenticatedDictionariesCitiesCityIdEditRouteImport.update({
+    id: '/dictionaries/cities/$cityId/edit',
+    path: '/dictionaries/cities/$cityId/edit',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 
@@ -272,10 +293,13 @@ export interface FileRoutesByFullPath {
   '/settings/': typeof AuthenticatedSettingsIndexRoute
   '/tasks': typeof AuthenticatedTasksIndexRoute
   '/users': typeof AuthenticatedUsersIndexRoute
+  '/dictionaries/cities/create': typeof AuthenticatedDictionariesCitiesCreateRoute
   '/dictionaries/districts/create': typeof AuthenticatedDictionariesDistrictsCreateRoute
   '/dictionaries/regions/create': typeof AuthenticatedDictionariesRegionsCreateRoute
+  '/dictionaries/cities': typeof AuthenticatedDictionariesCitiesIndexRoute
   '/dictionaries/districts': typeof AuthenticatedDictionariesDistrictsIndexRoute
   '/dictionaries/regions': typeof AuthenticatedDictionariesRegionsIndexRoute
+  '/dictionaries/cities/$cityId/edit': typeof AuthenticatedDictionariesCitiesCityIdEditRoute
   '/dictionaries/districts/$districtId/edit': typeof AuthenticatedDictionariesDistrictsDistrictIdEditRoute
   '/dictionaries/regions/$districtId/edit': typeof AuthenticatedDictionariesRegionsDistrictIdEditRoute
 }
@@ -306,10 +330,13 @@ export interface FileRoutesByTo {
   '/settings': typeof AuthenticatedSettingsIndexRoute
   '/tasks': typeof AuthenticatedTasksIndexRoute
   '/users': typeof AuthenticatedUsersIndexRoute
+  '/dictionaries/cities/create': typeof AuthenticatedDictionariesCitiesCreateRoute
   '/dictionaries/districts/create': typeof AuthenticatedDictionariesDistrictsCreateRoute
   '/dictionaries/regions/create': typeof AuthenticatedDictionariesRegionsCreateRoute
+  '/dictionaries/cities': typeof AuthenticatedDictionariesCitiesIndexRoute
   '/dictionaries/districts': typeof AuthenticatedDictionariesDistrictsIndexRoute
   '/dictionaries/regions': typeof AuthenticatedDictionariesRegionsIndexRoute
+  '/dictionaries/cities/$cityId/edit': typeof AuthenticatedDictionariesCitiesCityIdEditRoute
   '/dictionaries/districts/$districtId/edit': typeof AuthenticatedDictionariesDistrictsDistrictIdEditRoute
   '/dictionaries/regions/$districtId/edit': typeof AuthenticatedDictionariesRegionsDistrictIdEditRoute
 }
@@ -346,10 +373,13 @@ export interface FileRoutesById {
   '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute
   '/_authenticated/tasks/': typeof AuthenticatedTasksIndexRoute
   '/_authenticated/users/': typeof AuthenticatedUsersIndexRoute
+  '/_authenticated/dictionaries/cities/create': typeof AuthenticatedDictionariesCitiesCreateRoute
   '/_authenticated/dictionaries/districts/create': typeof AuthenticatedDictionariesDistrictsCreateRoute
   '/_authenticated/dictionaries/regions/create': typeof AuthenticatedDictionariesRegionsCreateRoute
+  '/_authenticated/dictionaries/cities/': typeof AuthenticatedDictionariesCitiesIndexRoute
   '/_authenticated/dictionaries/districts/': typeof AuthenticatedDictionariesDistrictsIndexRoute
   '/_authenticated/dictionaries/regions/': typeof AuthenticatedDictionariesRegionsIndexRoute
+  '/_authenticated/dictionaries/cities/$cityId/edit': typeof AuthenticatedDictionariesCitiesCityIdEditRoute
   '/_authenticated/dictionaries/districts/$districtId/edit': typeof AuthenticatedDictionariesDistrictsDistrictIdEditRoute
   '/_authenticated/dictionaries/regions/$districtId/edit': typeof AuthenticatedDictionariesRegionsDistrictIdEditRoute
 }
@@ -383,10 +413,13 @@ export interface FileRouteTypes {
     | '/settings/'
     | '/tasks'
     | '/users'
+    | '/dictionaries/cities/create'
     | '/dictionaries/districts/create'
     | '/dictionaries/regions/create'
+    | '/dictionaries/cities'
     | '/dictionaries/districts'
     | '/dictionaries/regions'
+    | '/dictionaries/cities/$cityId/edit'
     | '/dictionaries/districts/$districtId/edit'
     | '/dictionaries/regions/$districtId/edit'
   fileRoutesByTo: FileRoutesByTo
@@ -417,10 +450,13 @@ export interface FileRouteTypes {
     | '/settings'
     | '/tasks'
     | '/users'
+    | '/dictionaries/cities/create'
     | '/dictionaries/districts/create'
     | '/dictionaries/regions/create'
+    | '/dictionaries/cities'
     | '/dictionaries/districts'
     | '/dictionaries/regions'
+    | '/dictionaries/cities/$cityId/edit'
     | '/dictionaries/districts/$districtId/edit'
     | '/dictionaries/regions/$districtId/edit'
   id:
@@ -456,10 +492,13 @@ export interface FileRouteTypes {
     | '/_authenticated/settings/'
     | '/_authenticated/tasks/'
     | '/_authenticated/users/'
+    | '/_authenticated/dictionaries/cities/create'
     | '/_authenticated/dictionaries/districts/create'
     | '/_authenticated/dictionaries/regions/create'
+    | '/_authenticated/dictionaries/cities/'
     | '/_authenticated/dictionaries/districts/'
     | '/_authenticated/dictionaries/regions/'
+    | '/_authenticated/dictionaries/cities/$cityId/edit'
     | '/_authenticated/dictionaries/districts/$districtId/edit'
     | '/_authenticated/dictionaries/regions/$districtId/edit'
   fileRoutesById: FileRoutesById
@@ -708,6 +747,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDictionariesDistrictsIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/dictionaries/cities/': {
+      id: '/_authenticated/dictionaries/cities/'
+      path: '/dictionaries/cities'
+      fullPath: '/dictionaries/cities'
+      preLoaderRoute: typeof AuthenticatedDictionariesCitiesIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/dictionaries/regions/create': {
       id: '/_authenticated/dictionaries/regions/create'
       path: '/dictionaries/regions/create'
@@ -722,6 +768,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDictionariesDistrictsCreateRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/dictionaries/cities/create': {
+      id: '/_authenticated/dictionaries/cities/create'
+      path: '/dictionaries/cities/create'
+      fullPath: '/dictionaries/cities/create'
+      preLoaderRoute: typeof AuthenticatedDictionariesCitiesCreateRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/dictionaries/regions/$districtId/edit': {
       id: '/_authenticated/dictionaries/regions/$districtId/edit'
       path: '/dictionaries/regions/$districtId/edit'
@@ -734,6 +787,13 @@ declare module '@tanstack/react-router' {
       path: '/dictionaries/districts/$districtId/edit'
       fullPath: '/dictionaries/districts/$districtId/edit'
       preLoaderRoute: typeof AuthenticatedDictionariesDistrictsDistrictIdEditRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dictionaries/cities/$cityId/edit': {
+      id: '/_authenticated/dictionaries/cities/$cityId/edit'
+      path: '/dictionaries/cities/$cityId/edit'
+      fullPath: '/dictionaries/cities/$cityId/edit'
+      preLoaderRoute: typeof AuthenticatedDictionariesCitiesCityIdEditRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
   }
@@ -791,10 +851,13 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedHelpCenterIndexRoute: typeof AuthenticatedHelpCenterIndexRoute
   AuthenticatedTasksIndexRoute: typeof AuthenticatedTasksIndexRoute
   AuthenticatedUsersIndexRoute: typeof AuthenticatedUsersIndexRoute
+  AuthenticatedDictionariesCitiesCreateRoute: typeof AuthenticatedDictionariesCitiesCreateRoute
   AuthenticatedDictionariesDistrictsCreateRoute: typeof AuthenticatedDictionariesDistrictsCreateRoute
   AuthenticatedDictionariesRegionsCreateRoute: typeof AuthenticatedDictionariesRegionsCreateRoute
+  AuthenticatedDictionariesCitiesIndexRoute: typeof AuthenticatedDictionariesCitiesIndexRoute
   AuthenticatedDictionariesDistrictsIndexRoute: typeof AuthenticatedDictionariesDistrictsIndexRoute
   AuthenticatedDictionariesRegionsIndexRoute: typeof AuthenticatedDictionariesRegionsIndexRoute
+  AuthenticatedDictionariesCitiesCityIdEditRoute: typeof AuthenticatedDictionariesCitiesCityIdEditRoute
   AuthenticatedDictionariesDistrictsDistrictIdEditRoute: typeof AuthenticatedDictionariesDistrictsDistrictIdEditRoute
   AuthenticatedDictionariesRegionsDistrictIdEditRoute: typeof AuthenticatedDictionariesRegionsDistrictIdEditRoute
 }
@@ -808,14 +871,20 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedHelpCenterIndexRoute: AuthenticatedHelpCenterIndexRoute,
   AuthenticatedTasksIndexRoute: AuthenticatedTasksIndexRoute,
   AuthenticatedUsersIndexRoute: AuthenticatedUsersIndexRoute,
+  AuthenticatedDictionariesCitiesCreateRoute:
+    AuthenticatedDictionariesCitiesCreateRoute,
   AuthenticatedDictionariesDistrictsCreateRoute:
     AuthenticatedDictionariesDistrictsCreateRoute,
   AuthenticatedDictionariesRegionsCreateRoute:
     AuthenticatedDictionariesRegionsCreateRoute,
+  AuthenticatedDictionariesCitiesIndexRoute:
+    AuthenticatedDictionariesCitiesIndexRoute,
   AuthenticatedDictionariesDistrictsIndexRoute:
     AuthenticatedDictionariesDistrictsIndexRoute,
   AuthenticatedDictionariesRegionsIndexRoute:
     AuthenticatedDictionariesRegionsIndexRoute,
+  AuthenticatedDictionariesCitiesCityIdEditRoute:
+    AuthenticatedDictionariesCitiesCityIdEditRoute,
   AuthenticatedDictionariesDistrictsDistrictIdEditRoute:
     AuthenticatedDictionariesDistrictsDistrictIdEditRoute,
   AuthenticatedDictionariesRegionsDistrictIdEditRoute:
