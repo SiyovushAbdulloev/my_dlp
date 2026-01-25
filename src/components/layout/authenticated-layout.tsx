@@ -61,26 +61,34 @@ export function AuthenticatedLayout({ children }: AuthenticatedLayoutProps) {
                       className="hidden md:block"
                       key={navItem.id}
                     >
-                      <NavigationMenuTrigger>
-                        {navItem.children?.length ? (navItem.label) : (
-                          <Link to={navItem.to}>{navItem.label}</Link>
-                        )}
-                      </NavigationMenuTrigger>
                       {navItem.children?.length ? (
-                        <NavigationMenuContent>
-                          <ul className="grid w-[300px] gap-1">
-                            {navItem.children.map((child) => (
-                              <li key={child.id}>
-                                <NavigationMenuLink asChild>
-                                  <Link to={child.to}>
-                                    <div className="font-medium">{child.label}</div>
-                                  </Link>
-                                </NavigationMenuLink>
-                              </li>
-                            ))}
-                          </ul>
-                        </NavigationMenuContent>
-                      ) : null}
+                          <>
+                            <NavigationMenuTrigger>
+                              {navItem.children?.length ? (navItem.label) : (
+                                <Link to={navItem.to}>{navItem.label}</Link>
+                              )}
+                            </NavigationMenuTrigger>
+                            <NavigationMenuContent>
+                              <ul className="grid w-[300px] gap-1">
+                                {navItem.children.map((child) => (
+                                  <li key={child.id}>
+                                    <NavigationMenuLink asChild>
+                                      <Link to={child.to}>
+                                        <div className="font-medium">{child.label}</div>
+                                      </Link>
+                                    </NavigationMenuLink>
+                                  </li>
+                                ))}
+                              </ul>
+                            </NavigationMenuContent>
+                          </>
+                        ) : (
+                        <NavigationMenuLink asChild>
+                          <Link to={navItem.to}>
+                            <div className="font-medium">{navItem.label}</div>
+                          </Link>
+                        </NavigationMenuLink>
+                      )}
                     </NavigationMenuItem>
                   ))}
                 </NavigationMenuList>
