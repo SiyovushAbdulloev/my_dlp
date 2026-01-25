@@ -22,4 +22,6 @@ export const NAV: NavItem[] = [
       { id: 'cities', label: 'Города', to: '/dictionaries/cities', access: [DefaultRoles.SUPER_ADMIN] },
     ]
   },
+
+  { id: 'roles_permissions', label: 'Роли и права', to: '/roles', access: [DefaultRoles.SUPER_ADMIN] },
 ]

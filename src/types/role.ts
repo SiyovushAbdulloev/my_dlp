@@ -1,6 +1,16 @@
 export interface Role {
   id: string
   name: string
+  is_static: boolean
+  permissions?: Permission[]
+}
+
+export interface Permission {
+  id: string
+  name: string
+  description: string
+  parent?: Permission
+  children?: Permission[]
 }
 
 export const DefaultRoles = {
