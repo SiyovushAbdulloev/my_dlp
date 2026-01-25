@@ -15,6 +15,7 @@ import { Input } from '@/components/ui/input';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group.tsx'
 import { PasswordInput } from '@/components/password-input'
 import { Label } from '@/components/ui/label.tsx'
+import { Gender } from '@/types/user.ts'
 
 
 
@@ -76,13 +77,22 @@ export function UserAuthForm({
 
         // Mock successful authentication with expiry computed at success time
         const mockUser = {
-          accountNo: 'ACC001',
-          email: data.email,
+          id: '1',
+          login: 'siyovush',
+          phone: '+992937555103',
+          email: 'abdulloevsiyovush@yandex.com',
+          first_name: 'Siyovush',
+          last_name: 'Abdulloev',
+          middle_name: 'Zafarovich',
+          birthdate: new Date().toDateString(),
+          gender: 'm' as Gender,
+          school_id: '2',
+          avatar: 'https://picsum.dev/800/600',
           role: {
-            id: 'ACC001',
-            name: DefaultRoles[selectedRole]
-          },
-          exp: Date.now() + 24 * 60 * 60 * 1000, // 24 hours from now
+            id: '1',
+            name: DefaultRoles.SUPER_ADMIN,
+            is_static: true,
+          }
         }
 
         // Set user and access token
@@ -91,7 +101,6 @@ export function UserAuthForm({
 
         // Redirect to the stored location or default to dashboard
         const targetPath = redirectTo || '/'
-        console.log({targetPath})
         navigate({ to: targetPath, replace: true })
 
         return `Welcome back, ${data.email}!`

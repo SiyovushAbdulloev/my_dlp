@@ -1,8 +1,9 @@
 import { useMemo } from 'react'
 import { NAV, type NavItem } from '@/routes/_authenticated/components/menu.tsx'
-import { type AuthUser, useAuthStore } from '@/stores/auth-store.ts'
+import { useAuthStore } from '@/stores/auth-store.ts'
+import { type User } from '@/types/user.ts'
 
-const filterNav = (items: NavItem[], user: AuthUser): NavItem[] => {
+const filterNav = (items: NavItem[], user: User): NavItem[] => {
   return items
     .filter(
       (item) => item.access?.length && item.access.includes(user.role.name)
