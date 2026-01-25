@@ -13,6 +13,7 @@ export interface User {
   school_id: string
   avatar: string
   role: Role
+  is_disabled: boolean
 }
 
 export type Gender = 'm' | 'f'

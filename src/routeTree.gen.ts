@@ -36,6 +36,7 @@ import { Route as AuthenticatedAppsIndexRouteImport } from './routes/_authentica
 import { Route as ClerkAuthenticatedUserManagementRouteImport } from './routes/clerk/_authenticated/user-management'
 import { Route as ClerkauthSignUpRouteImport } from './routes/clerk/(auth)/sign-up'
 import { Route as ClerkauthSignInRouteImport } from './routes/clerk/(auth)/sign-in'
+import { Route as AuthenticatedUsersCreateRouteImport } from './routes/_authenticated/users/create'
 import { Route as AuthenticatedSettingsNotificationsRouteImport } from './routes/_authenticated/settings/notifications'
 import { Route as AuthenticatedSettingsDisplayRouteImport } from './routes/_authenticated/settings/display'
 import { Route as AuthenticatedSettingsAppearanceRouteImport } from './routes/_authenticated/settings/appearance'
@@ -45,6 +46,7 @@ import { Route as AuthenticatedErrorsErrorRouteImport } from './routes/_authenti
 import { Route as AuthenticatedDictionariesRegionsIndexRouteImport } from './routes/_authenticated/dictionaries/regions/index'
 import { Route as AuthenticatedDictionariesDistrictsIndexRouteImport } from './routes/_authenticated/dictionaries/districts/index'
 import { Route as AuthenticatedDictionariesCitiesIndexRouteImport } from './routes/_authenticated/dictionaries/cities/index'
+import { Route as AuthenticatedUsersUserIdEditRouteImport } from './routes/_authenticated/users/$userId.edit'
 import { Route as AuthenticatedRolesRoleIdEditRouteImport } from './routes/_authenticated/roles/$roleId.edit'
 import { Route as AuthenticatedDictionariesRegionsCreateRouteImport } from './routes/_authenticated/dictionaries/regions/create'
 import { Route as AuthenticatedDictionariesDistrictsCreateRouteImport } from './routes/_authenticated/dictionaries/districts/create'
@@ -188,6 +190,12 @@ const ClerkauthSignInRoute = ClerkauthSignInRouteImport.update({
   path: '/sign-in',
   getParentRoute: () => ClerkauthRouteRoute,
 } as any)
+const AuthenticatedUsersCreateRoute =
+  AuthenticatedUsersCreateRouteImport.update({
+    id: '/users/create',
+    path: '/users/create',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedSettingsNotificationsRoute =
   AuthenticatedSettingsNotificationsRouteImport.update({
     id: '/notifications',
@@ -240,6 +248,12 @@ const AuthenticatedDictionariesCitiesIndexRoute =
   AuthenticatedDictionariesCitiesIndexRouteImport.update({
     id: '/dictionaries/cities/',
     path: '/dictionaries/cities/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedUsersUserIdEditRoute =
+  AuthenticatedUsersUserIdEditRouteImport.update({
+    id: '/users/$userId/edit',
+    path: '/users/$userId/edit',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedRolesRoleIdEditRoute =
@@ -305,6 +319,7 @@ export interface FileRoutesByFullPath {
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
   '/settings/display': typeof AuthenticatedSettingsDisplayRoute
   '/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
+  '/users/create': typeof AuthenticatedUsersCreateRoute
   '/clerk/sign-in': typeof ClerkauthSignInRoute
   '/clerk/sign-up': typeof ClerkauthSignUpRoute
   '/clerk/user-management': typeof ClerkAuthenticatedUserManagementRoute
@@ -319,6 +334,7 @@ export interface FileRoutesByFullPath {
   '/dictionaries/districts/create': typeof AuthenticatedDictionariesDistrictsCreateRoute
   '/dictionaries/regions/create': typeof AuthenticatedDictionariesRegionsCreateRoute
   '/roles/$roleId/edit': typeof AuthenticatedRolesRoleIdEditRoute
+  '/users/$userId/edit': typeof AuthenticatedUsersUserIdEditRoute
   '/dictionaries/cities': typeof AuthenticatedDictionariesCitiesIndexRoute
   '/dictionaries/districts': typeof AuthenticatedDictionariesDistrictsIndexRoute
   '/dictionaries/regions': typeof AuthenticatedDictionariesRegionsIndexRoute
@@ -345,6 +361,7 @@ export interface FileRoutesByTo {
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
   '/settings/display': typeof AuthenticatedSettingsDisplayRoute
   '/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
+  '/users/create': typeof AuthenticatedUsersCreateRoute
   '/clerk/sign-in': typeof ClerkauthSignInRoute
   '/clerk/sign-up': typeof ClerkauthSignUpRoute
   '/clerk/user-management': typeof ClerkAuthenticatedUserManagementRoute
@@ -359,6 +376,7 @@ export interface FileRoutesByTo {
   '/dictionaries/districts/create': typeof AuthenticatedDictionariesDistrictsCreateRoute
   '/dictionaries/regions/create': typeof AuthenticatedDictionariesRegionsCreateRoute
   '/roles/$roleId/edit': typeof AuthenticatedRolesRoleIdEditRoute
+  '/users/$userId/edit': typeof AuthenticatedUsersUserIdEditRoute
   '/dictionaries/cities': typeof AuthenticatedDictionariesCitiesIndexRoute
   '/dictionaries/districts': typeof AuthenticatedDictionariesDistrictsIndexRoute
   '/dictionaries/regions': typeof AuthenticatedDictionariesRegionsIndexRoute
@@ -391,6 +409,7 @@ export interface FileRoutesById {
   '/_authenticated/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
   '/_authenticated/settings/display': typeof AuthenticatedSettingsDisplayRoute
   '/_authenticated/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
+  '/_authenticated/users/create': typeof AuthenticatedUsersCreateRoute
   '/clerk/(auth)/sign-in': typeof ClerkauthSignInRoute
   '/clerk/(auth)/sign-up': typeof ClerkauthSignUpRoute
   '/clerk/_authenticated/user-management': typeof ClerkAuthenticatedUserManagementRoute
@@ -405,6 +424,7 @@ export interface FileRoutesById {
   '/_authenticated/dictionaries/districts/create': typeof AuthenticatedDictionariesDistrictsCreateRoute
   '/_authenticated/dictionaries/regions/create': typeof AuthenticatedDictionariesRegionsCreateRoute
   '/_authenticated/roles/$roleId/edit': typeof AuthenticatedRolesRoleIdEditRoute
+  '/_authenticated/users/$userId/edit': typeof AuthenticatedUsersUserIdEditRoute
   '/_authenticated/dictionaries/cities/': typeof AuthenticatedDictionariesCitiesIndexRoute
   '/_authenticated/dictionaries/districts/': typeof AuthenticatedDictionariesDistrictsIndexRoute
   '/_authenticated/dictionaries/regions/': typeof AuthenticatedDictionariesRegionsIndexRoute
@@ -434,6 +454,7 @@ export interface FileRouteTypes {
     | '/settings/appearance'
     | '/settings/display'
     | '/settings/notifications'
+    | '/users/create'
     | '/clerk/sign-in'
     | '/clerk/sign-up'
     | '/clerk/user-management'
@@ -448,6 +469,7 @@ export interface FileRouteTypes {
     | '/dictionaries/districts/create'
     | '/dictionaries/regions/create'
     | '/roles/$roleId/edit'
+    | '/users/$userId/edit'
     | '/dictionaries/cities'
     | '/dictionaries/districts'
     | '/dictionaries/regions'
@@ -474,6 +496,7 @@ export interface FileRouteTypes {
     | '/settings/appearance'
     | '/settings/display'
     | '/settings/notifications'
+    | '/users/create'
     | '/clerk/sign-in'
     | '/clerk/sign-up'
     | '/clerk/user-management'
@@ -488,6 +511,7 @@ export interface FileRouteTypes {
     | '/dictionaries/districts/create'
     | '/dictionaries/regions/create'
     | '/roles/$roleId/edit'
+    | '/users/$userId/edit'
     | '/dictionaries/cities'
     | '/dictionaries/districts'
     | '/dictionaries/regions'
@@ -519,6 +543,7 @@ export interface FileRouteTypes {
     | '/_authenticated/settings/appearance'
     | '/_authenticated/settings/display'
     | '/_authenticated/settings/notifications'
+    | '/_authenticated/users/create'
     | '/clerk/(auth)/sign-in'
     | '/clerk/(auth)/sign-up'
     | '/clerk/_authenticated/user-management'
@@ -533,6 +558,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dictionaries/districts/create'
     | '/_authenticated/dictionaries/regions/create'
     | '/_authenticated/roles/$roleId/edit'
+    | '/_authenticated/users/$userId/edit'
     | '/_authenticated/dictionaries/cities/'
     | '/_authenticated/dictionaries/districts/'
     | '/_authenticated/dictionaries/regions/'
@@ -743,6 +769,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ClerkauthSignInRouteImport
       parentRoute: typeof ClerkauthRouteRoute
     }
+    '/_authenticated/users/create': {
+      id: '/_authenticated/users/create'
+      path: '/users/create'
+      fullPath: '/users/create'
+      preLoaderRoute: typeof AuthenticatedUsersCreateRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/settings/notifications': {
       id: '/_authenticated/settings/notifications'
       path: '/notifications'
@@ -804,6 +837,13 @@ declare module '@tanstack/react-router' {
       path: '/dictionaries/cities'
       fullPath: '/dictionaries/cities'
       preLoaderRoute: typeof AuthenticatedDictionariesCitiesIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/users/$userId/edit': {
+      id: '/_authenticated/users/$userId/edit'
+      path: '/users/$userId/edit'
+      fullPath: '/users/$userId/edit'
+      preLoaderRoute: typeof AuthenticatedUsersUserIdEditRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/roles/$roleId/edit': {
@@ -906,6 +946,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
   AuthenticatedErrorsErrorRoute: typeof AuthenticatedErrorsErrorRoute
   AuthenticatedRolesCreateRoute: typeof AuthenticatedRolesCreateRoute
+  AuthenticatedUsersCreateRoute: typeof AuthenticatedUsersCreateRoute
   AuthenticatedAppsIndexRoute: typeof AuthenticatedAppsIndexRoute
   AuthenticatedChatsIndexRoute: typeof AuthenticatedChatsIndexRoute
   AuthenticatedHelpCenterIndexRoute: typeof AuthenticatedHelpCenterIndexRoute
@@ -916,6 +957,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedDictionariesDistrictsCreateRoute: typeof AuthenticatedDictionariesDistrictsCreateRoute
   AuthenticatedDictionariesRegionsCreateRoute: typeof AuthenticatedDictionariesRegionsCreateRoute
   AuthenticatedRolesRoleIdEditRoute: typeof AuthenticatedRolesRoleIdEditRoute
+  AuthenticatedUsersUserIdEditRoute: typeof AuthenticatedUsersUserIdEditRoute
   AuthenticatedDictionariesCitiesIndexRoute: typeof AuthenticatedDictionariesCitiesIndexRoute
   AuthenticatedDictionariesDistrictsIndexRoute: typeof AuthenticatedDictionariesDistrictsIndexRoute
   AuthenticatedDictionariesRegionsIndexRoute: typeof AuthenticatedDictionariesRegionsIndexRoute
@@ -929,6 +971,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
   AuthenticatedErrorsErrorRoute: AuthenticatedErrorsErrorRoute,
   AuthenticatedRolesCreateRoute: AuthenticatedRolesCreateRoute,
+  AuthenticatedUsersCreateRoute: AuthenticatedUsersCreateRoute,
   AuthenticatedAppsIndexRoute: AuthenticatedAppsIndexRoute,
   AuthenticatedChatsIndexRoute: AuthenticatedChatsIndexRoute,
   AuthenticatedHelpCenterIndexRoute: AuthenticatedHelpCenterIndexRoute,
@@ -942,6 +985,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDictionariesRegionsCreateRoute:
     AuthenticatedDictionariesRegionsCreateRoute,
   AuthenticatedRolesRoleIdEditRoute: AuthenticatedRolesRoleIdEditRoute,
+  AuthenticatedUsersUserIdEditRoute: AuthenticatedUsersUserIdEditRoute,
   AuthenticatedDictionariesCitiesIndexRoute:
     AuthenticatedDictionariesCitiesIndexRoute,
   AuthenticatedDictionariesDistrictsIndexRoute:

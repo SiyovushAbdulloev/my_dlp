@@ -88,6 +88,7 @@ export function UserAuthForm({
           gender: 'm' as Gender,
           school_id: '2',
           avatar: 'https://picsum.dev/800/600',
+          is_disabled: false,
           role: {
             id: '1',
             name: DefaultRoles.SUPER_ADMIN,
