@@ -65,7 +65,7 @@ export function SchoolsEdit() {
       <Main className='flex flex-1 flex-col gap-4 sm:gap-6'>
         <header className={'flex items-center justify-between'}>
           <h1>Редактировать школу</h1>
-          <Button onClick={() => navigate({ to: '/dictionaries/regions' })}>
+          <Button onClick={() => navigate({ to: '/schools' })}>
             <ArrowLeft size={18} />
             Назад
           </Button>

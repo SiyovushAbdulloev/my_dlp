@@ -1,9 +1,8 @@
 // import { client } from '@/api/client.ts'
 import { type LaravelPaginatedResource } from 'laravel-resource-pagination-type'
 import { sleep } from '@/lib/utils.ts'
-import { type RegionForm } from '@/features/dictionaries/regions/create.tsx'
 import { type School } from '@/types/school.ts'
-import { SchoolForm } from '@/features/schools/create.tsx'
+import { type SchoolForm } from '@/features/schools/create.tsx'
 
 export const fetchIndex = async (page: number): Promise<LaravelPaginatedResource<School>> => {
   // const json: LaravelPaginatedResource<School> = await client.get(import.meta.env.API_URL + '/api/schools').json();
