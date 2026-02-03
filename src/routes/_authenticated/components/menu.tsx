@@ -25,4 +25,5 @@ export const NAV: NavItem[] = [
 
   { id: 'roles_permissions', label: 'Роли и права', to: '/roles', access: [DefaultRoles.SUPER_ADMIN] },
   { id: 'users', label: 'Пользователи', to: '/users', access: [DefaultRoles.SUPER_ADMIN] },
+  { id: 'schools', label: 'Школы', to: '/schools', access: [DefaultRoles.DISTRICT_ADMIN] },
 ]

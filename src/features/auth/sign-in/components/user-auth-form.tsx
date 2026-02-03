@@ -91,7 +91,7 @@ export function UserAuthForm({
           is_disabled: false,
           role: {
             id: '1',
-            name: DefaultRoles.SUPER_ADMIN,
+            name: selectedRole,
             is_static: true,
           }
         }
@@ -158,7 +158,7 @@ export function UserAuthForm({
               key={key}
               className="flex items-center gap-3"
             >
-              <RadioGroupItem value={key} id={key} />
+              <RadioGroupItem value={DefaultRoles[key]} id={key} />
               <Label htmlFor={key}>{DefaultRoles[key]}</Label>
             </div>
           ))}
