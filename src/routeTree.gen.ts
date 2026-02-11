@@ -28,6 +28,7 @@ import { Route as ClerkauthRouteRouteImport } from './routes/clerk/(auth)/route'
 import { Route as AuthenticatedSettingsRouteRouteImport } from './routes/_authenticated/settings/route'
 import { Route as AuthenticatedUsersIndexRouteImport } from './routes/_authenticated/users/index'
 import { Route as AuthenticatedTasksIndexRouteImport } from './routes/_authenticated/tasks/index'
+import { Route as AuthenticatedSubjectsIndexRouteImport } from './routes/_authenticated/subjects/index'
 import { Route as AuthenticatedSettingsIndexRouteImport } from './routes/_authenticated/settings/index'
 import { Route as AuthenticatedSchoolsIndexRouteImport } from './routes/_authenticated/schools/index'
 import { Route as AuthenticatedRolesIndexRouteImport } from './routes/_authenticated/roles/index'
@@ -39,6 +40,7 @@ import { Route as ClerkAuthenticatedUserManagementRouteImport } from './routes/c
 import { Route as ClerkauthSignUpRouteImport } from './routes/clerk/(auth)/sign-up'
 import { Route as ClerkauthSignInRouteImport } from './routes/clerk/(auth)/sign-in'
 import { Route as AuthenticatedUsersCreateRouteImport } from './routes/_authenticated/users/create'
+import { Route as AuthenticatedSubjectsCreateRouteImport } from './routes/_authenticated/subjects/create'
 import { Route as AuthenticatedSettingsNotificationsRouteImport } from './routes/_authenticated/settings/notifications'
 import { Route as AuthenticatedSettingsDisplayRouteImport } from './routes/_authenticated/settings/display'
 import { Route as AuthenticatedSettingsAppearanceRouteImport } from './routes/_authenticated/settings/appearance'
@@ -51,6 +53,7 @@ import { Route as AuthenticatedDictionariesRegionsIndexRouteImport } from './rou
 import { Route as AuthenticatedDictionariesDistrictsIndexRouteImport } from './routes/_authenticated/dictionaries/districts/index'
 import { Route as AuthenticatedDictionariesCitiesIndexRouteImport } from './routes/_authenticated/dictionaries/cities/index'
 import { Route as AuthenticatedUsersUserIdEditRouteImport } from './routes/_authenticated/users/$userId.edit'
+import { Route as AuthenticatedSubjectsSubjectIdEditRouteImport } from './routes/_authenticated/subjects/$subjectId.edit'
 import { Route as AuthenticatedSchoolsSchoolIdEditRouteImport } from './routes/_authenticated/schools/$schoolId.edit'
 import { Route as AuthenticatedRolesRoleIdEditRouteImport } from './routes/_authenticated/roles/$roleId.edit'
 import { Route as AuthenticatedDictionariesRegionsCreateRouteImport } from './routes/_authenticated/dictionaries/regions/create'
@@ -153,6 +156,12 @@ const AuthenticatedTasksIndexRoute = AuthenticatedTasksIndexRouteImport.update({
   path: '/tasks/',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedSubjectsIndexRoute =
+  AuthenticatedSubjectsIndexRouteImport.update({
+    id: '/subjects/',
+    path: '/subjects/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedSettingsIndexRoute =
   AuthenticatedSettingsIndexRouteImport.update({
     id: '/',
@@ -212,6 +221,12 @@ const AuthenticatedUsersCreateRoute =
   AuthenticatedUsersCreateRouteImport.update({
     id: '/users/create',
     path: '/users/create',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedSubjectsCreateRoute =
+  AuthenticatedSubjectsCreateRouteImport.update({
+    id: '/subjects/create',
+    path: '/subjects/create',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedSettingsNotificationsRoute =
@@ -284,6 +299,12 @@ const AuthenticatedUsersUserIdEditRoute =
   AuthenticatedUsersUserIdEditRouteImport.update({
     id: '/users/$userId/edit',
     path: '/users/$userId/edit',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedSubjectsSubjectIdEditRoute =
+  AuthenticatedSubjectsSubjectIdEditRouteImport.update({
+    id: '/subjects/$subjectId/edit',
+    path: '/subjects/$subjectId/edit',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedSchoolsSchoolIdEditRoute =
@@ -363,6 +384,7 @@ export interface FileRoutesByFullPath {
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
   '/settings/display': typeof AuthenticatedSettingsDisplayRoute
   '/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
+  '/subjects/create': typeof AuthenticatedSubjectsCreateRoute
   '/users/create': typeof AuthenticatedUsersCreateRoute
   '/clerk/sign-in': typeof ClerkauthSignInRoute
   '/clerk/sign-up': typeof ClerkauthSignUpRoute
@@ -374,6 +396,7 @@ export interface FileRoutesByFullPath {
   '/roles': typeof AuthenticatedRolesIndexRoute
   '/schools': typeof AuthenticatedSchoolsIndexRoute
   '/settings/': typeof AuthenticatedSettingsIndexRoute
+  '/subjects': typeof AuthenticatedSubjectsIndexRoute
   '/tasks': typeof AuthenticatedTasksIndexRoute
   '/users': typeof AuthenticatedUsersIndexRoute
   '/classes/$classId/edit': typeof AuthenticatedClassesClassIdEditRoute
@@ -382,6 +405,7 @@ export interface FileRoutesByFullPath {
   '/dictionaries/regions/create': typeof AuthenticatedDictionariesRegionsCreateRoute
   '/roles/$roleId/edit': typeof AuthenticatedRolesRoleIdEditRoute
   '/schools/$schoolId/edit': typeof AuthenticatedSchoolsSchoolIdEditRoute
+  '/subjects/$subjectId/edit': typeof AuthenticatedSubjectsSubjectIdEditRoute
   '/users/$userId/edit': typeof AuthenticatedUsersUserIdEditRoute
   '/dictionaries/cities': typeof AuthenticatedDictionariesCitiesIndexRoute
   '/dictionaries/districts': typeof AuthenticatedDictionariesDistrictsIndexRoute
@@ -411,6 +435,7 @@ export interface FileRoutesByTo {
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
   '/settings/display': typeof AuthenticatedSettingsDisplayRoute
   '/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
+  '/subjects/create': typeof AuthenticatedSubjectsCreateRoute
   '/users/create': typeof AuthenticatedUsersCreateRoute
   '/clerk/sign-in': typeof ClerkauthSignInRoute
   '/clerk/sign-up': typeof ClerkauthSignUpRoute
@@ -422,6 +447,7 @@ export interface FileRoutesByTo {
   '/roles': typeof AuthenticatedRolesIndexRoute
   '/schools': typeof AuthenticatedSchoolsIndexRoute
   '/settings': typeof AuthenticatedSettingsIndexRoute
+  '/subjects': typeof AuthenticatedSubjectsIndexRoute
   '/tasks': typeof AuthenticatedTasksIndexRoute
   '/users': typeof AuthenticatedUsersIndexRoute
   '/classes/$classId/edit': typeof AuthenticatedClassesClassIdEditRoute
@@ -430,6 +456,7 @@ export interface FileRoutesByTo {
   '/dictionaries/regions/create': typeof AuthenticatedDictionariesRegionsCreateRoute
   '/roles/$roleId/edit': typeof AuthenticatedRolesRoleIdEditRoute
   '/schools/$schoolId/edit': typeof AuthenticatedSchoolsSchoolIdEditRoute
+  '/subjects/$subjectId/edit': typeof AuthenticatedSubjectsSubjectIdEditRoute
   '/users/$userId/edit': typeof AuthenticatedUsersUserIdEditRoute
   '/dictionaries/cities': typeof AuthenticatedDictionariesCitiesIndexRoute
   '/dictionaries/districts': typeof AuthenticatedDictionariesDistrictsIndexRoute
@@ -465,6 +492,7 @@ export interface FileRoutesById {
   '/_authenticated/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
   '/_authenticated/settings/display': typeof AuthenticatedSettingsDisplayRoute
   '/_authenticated/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
+  '/_authenticated/subjects/create': typeof AuthenticatedSubjectsCreateRoute
   '/_authenticated/users/create': typeof AuthenticatedUsersCreateRoute
   '/clerk/(auth)/sign-in': typeof ClerkauthSignInRoute
   '/clerk/(auth)/sign-up': typeof ClerkauthSignUpRoute
@@ -476,6 +504,7 @@ export interface FileRoutesById {
   '/_authenticated/roles/': typeof AuthenticatedRolesIndexRoute
   '/_authenticated/schools/': typeof AuthenticatedSchoolsIndexRoute
   '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute
+  '/_authenticated/subjects/': typeof AuthenticatedSubjectsIndexRoute
   '/_authenticated/tasks/': typeof AuthenticatedTasksIndexRoute
   '/_authenticated/users/': typeof AuthenticatedUsersIndexRoute
   '/_authenticated/classes/$classId/edit': typeof AuthenticatedClassesClassIdEditRoute
@@ -484,6 +513,7 @@ export interface FileRoutesById {
   '/_authenticated/dictionaries/regions/create': typeof AuthenticatedDictionariesRegionsCreateRoute
   '/_authenticated/roles/$roleId/edit': typeof AuthenticatedRolesRoleIdEditRoute
   '/_authenticated/schools/$schoolId/edit': typeof AuthenticatedSchoolsSchoolIdEditRoute
+  '/_authenticated/subjects/$subjectId/edit': typeof AuthenticatedSubjectsSubjectIdEditRoute
   '/_authenticated/users/$userId/edit': typeof AuthenticatedUsersUserIdEditRoute
   '/_authenticated/dictionaries/cities/': typeof AuthenticatedDictionariesCitiesIndexRoute
   '/_authenticated/dictionaries/districts/': typeof AuthenticatedDictionariesDistrictsIndexRoute
@@ -516,6 +546,7 @@ export interface FileRouteTypes {
     | '/settings/appearance'
     | '/settings/display'
     | '/settings/notifications'
+    | '/subjects/create'
     | '/users/create'
     | '/clerk/sign-in'
     | '/clerk/sign-up'
@@ -527,6 +558,7 @@ export interface FileRouteTypes {
     | '/roles'
     | '/schools'
     | '/settings/'
+    | '/subjects'
     | '/tasks'
     | '/users'
     | '/classes/$classId/edit'
@@ -535,6 +567,7 @@ export interface FileRouteTypes {
     | '/dictionaries/regions/create'
     | '/roles/$roleId/edit'
     | '/schools/$schoolId/edit'
+    | '/subjects/$subjectId/edit'
     | '/users/$userId/edit'
     | '/dictionaries/cities'
     | '/dictionaries/districts'
@@ -564,6 +597,7 @@ export interface FileRouteTypes {
     | '/settings/appearance'
     | '/settings/display'
     | '/settings/notifications'
+    | '/subjects/create'
     | '/users/create'
     | '/clerk/sign-in'
     | '/clerk/sign-up'
@@ -575,6 +609,7 @@ export interface FileRouteTypes {
     | '/roles'
     | '/schools'
     | '/settings'
+    | '/subjects'
     | '/tasks'
     | '/users'
     | '/classes/$classId/edit'
@@ -583,6 +618,7 @@ export interface FileRouteTypes {
     | '/dictionaries/regions/create'
     | '/roles/$roleId/edit'
     | '/schools/$schoolId/edit'
+    | '/subjects/$subjectId/edit'
     | '/users/$userId/edit'
     | '/dictionaries/cities'
     | '/dictionaries/districts'
@@ -617,6 +653,7 @@ export interface FileRouteTypes {
     | '/_authenticated/settings/appearance'
     | '/_authenticated/settings/display'
     | '/_authenticated/settings/notifications'
+    | '/_authenticated/subjects/create'
     | '/_authenticated/users/create'
     | '/clerk/(auth)/sign-in'
     | '/clerk/(auth)/sign-up'
@@ -628,6 +665,7 @@ export interface FileRouteTypes {
     | '/_authenticated/roles/'
     | '/_authenticated/schools/'
     | '/_authenticated/settings/'
+    | '/_authenticated/subjects/'
     | '/_authenticated/tasks/'
     | '/_authenticated/users/'
     | '/_authenticated/classes/$classId/edit'
@@ -636,6 +674,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dictionaries/regions/create'
     | '/_authenticated/roles/$roleId/edit'
     | '/_authenticated/schools/$schoolId/edit'
+    | '/_authenticated/subjects/$subjectId/edit'
     | '/_authenticated/users/$userId/edit'
     | '/_authenticated/dictionaries/cities/'
     | '/_authenticated/dictionaries/districts/'
@@ -791,6 +830,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedTasksIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/subjects/': {
+      id: '/_authenticated/subjects/'
+      path: '/subjects'
+      fullPath: '/subjects'
+      preLoaderRoute: typeof AuthenticatedSubjectsIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/settings/': {
       id: '/_authenticated/settings/'
       path: '/'
@@ -866,6 +912,13 @@ declare module '@tanstack/react-router' {
       path: '/users/create'
       fullPath: '/users/create'
       preLoaderRoute: typeof AuthenticatedUsersCreateRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/subjects/create': {
+      id: '/_authenticated/subjects/create'
+      path: '/subjects/create'
+      fullPath: '/subjects/create'
+      preLoaderRoute: typeof AuthenticatedSubjectsCreateRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/settings/notifications': {
@@ -950,6 +1003,13 @@ declare module '@tanstack/react-router' {
       path: '/users/$userId/edit'
       fullPath: '/users/$userId/edit'
       preLoaderRoute: typeof AuthenticatedUsersUserIdEditRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/subjects/$subjectId/edit': {
+      id: '/_authenticated/subjects/$subjectId/edit'
+      path: '/subjects/$subjectId/edit'
+      fullPath: '/subjects/$subjectId/edit'
+      preLoaderRoute: typeof AuthenticatedSubjectsSubjectIdEditRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/schools/$schoolId/edit': {
@@ -1068,6 +1128,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedErrorsErrorRoute: typeof AuthenticatedErrorsErrorRoute
   AuthenticatedRolesCreateRoute: typeof AuthenticatedRolesCreateRoute
   AuthenticatedSchoolsCreateRoute: typeof AuthenticatedSchoolsCreateRoute
+  AuthenticatedSubjectsCreateRoute: typeof AuthenticatedSubjectsCreateRoute
   AuthenticatedUsersCreateRoute: typeof AuthenticatedUsersCreateRoute
   AuthenticatedAppsIndexRoute: typeof AuthenticatedAppsIndexRoute
   AuthenticatedChatsIndexRoute: typeof AuthenticatedChatsIndexRoute
@@ -1075,6 +1136,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedHelpCenterIndexRoute: typeof AuthenticatedHelpCenterIndexRoute
   AuthenticatedRolesIndexRoute: typeof AuthenticatedRolesIndexRoute
   AuthenticatedSchoolsIndexRoute: typeof AuthenticatedSchoolsIndexRoute
+  AuthenticatedSubjectsIndexRoute: typeof AuthenticatedSubjectsIndexRoute
   AuthenticatedTasksIndexRoute: typeof AuthenticatedTasksIndexRoute
   AuthenticatedUsersIndexRoute: typeof AuthenticatedUsersIndexRoute
   AuthenticatedClassesClassIdEditRoute: typeof AuthenticatedClassesClassIdEditRoute
@@ -1083,6 +1145,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedDictionariesRegionsCreateRoute: typeof AuthenticatedDictionariesRegionsCreateRoute
   AuthenticatedRolesRoleIdEditRoute: typeof AuthenticatedRolesRoleIdEditRoute
   AuthenticatedSchoolsSchoolIdEditRoute: typeof AuthenticatedSchoolsSchoolIdEditRoute
+  AuthenticatedSubjectsSubjectIdEditRoute: typeof AuthenticatedSubjectsSubjectIdEditRoute
   AuthenticatedUsersUserIdEditRoute: typeof AuthenticatedUsersUserIdEditRoute
   AuthenticatedDictionariesCitiesIndexRoute: typeof AuthenticatedDictionariesCitiesIndexRoute
   AuthenticatedDictionariesDistrictsIndexRoute: typeof AuthenticatedDictionariesDistrictsIndexRoute
@@ -1099,6 +1162,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedErrorsErrorRoute: AuthenticatedErrorsErrorRoute,
   AuthenticatedRolesCreateRoute: AuthenticatedRolesCreateRoute,
   AuthenticatedSchoolsCreateRoute: AuthenticatedSchoolsCreateRoute,
+  AuthenticatedSubjectsCreateRoute: AuthenticatedSubjectsCreateRoute,
   AuthenticatedUsersCreateRoute: AuthenticatedUsersCreateRoute,
   AuthenticatedAppsIndexRoute: AuthenticatedAppsIndexRoute,
   AuthenticatedChatsIndexRoute: AuthenticatedChatsIndexRoute,
@@ -1106,6 +1170,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedHelpCenterIndexRoute: AuthenticatedHelpCenterIndexRoute,
   AuthenticatedRolesIndexRoute: AuthenticatedRolesIndexRoute,
   AuthenticatedSchoolsIndexRoute: AuthenticatedSchoolsIndexRoute,
+  AuthenticatedSubjectsIndexRoute: AuthenticatedSubjectsIndexRoute,
   AuthenticatedTasksIndexRoute: AuthenticatedTasksIndexRoute,
   AuthenticatedUsersIndexRoute: AuthenticatedUsersIndexRoute,
   AuthenticatedClassesClassIdEditRoute: AuthenticatedClassesClassIdEditRoute,
@@ -1117,6 +1182,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
     AuthenticatedDictionariesRegionsCreateRoute,
   AuthenticatedRolesRoleIdEditRoute: AuthenticatedRolesRoleIdEditRoute,
   AuthenticatedSchoolsSchoolIdEditRoute: AuthenticatedSchoolsSchoolIdEditRoute,
+  AuthenticatedSubjectsSubjectIdEditRoute:
+    AuthenticatedSubjectsSubjectIdEditRoute,
   AuthenticatedUsersUserIdEditRoute: AuthenticatedUsersUserIdEditRoute,
   AuthenticatedDictionariesCitiesIndexRoute:
     AuthenticatedDictionariesCitiesIndexRoute,

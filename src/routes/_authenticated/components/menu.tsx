@@ -27,4 +27,5 @@ export const NAV: NavItem[] = [
   { id: 'users', label: 'Пользователи', to: '/users', access: [DefaultRoles.SUPER_ADMIN] },
   { id: 'schools', label: 'Школы', to: '/schools', access: [DefaultRoles.DISTRICT_ADMIN] },
   { id: 'classes', label: 'Классы', to: '/classes', access: [DefaultRoles.DISTRICT_ADMIN] },
+  { id: 'subjects', label: 'Предметы', to: '/subjects', access: [DefaultRoles.DISTRICT_ADMIN] },
 ]

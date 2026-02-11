@@ -4,7 +4,6 @@ import { useAuthStore } from '@/stores/auth-store.ts'
 import { type User } from '@/types/user.ts'
 
 const filterNav = (items: NavItem[], user: User): NavItem[] => {
-  console.log({user, items})
   return items
     .filter(
       (item) => item.access?.length && item.access.includes(user.role.name)
