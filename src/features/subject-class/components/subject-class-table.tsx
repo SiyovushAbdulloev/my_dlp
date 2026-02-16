@@ -1,57 +1,45 @@
-import { type ReactNode, useEffect, useMemo, useState } from 'react';
-import { Link } from '@tanstack/react-router';
-import { type ColumnDef, flexRender, getCoreRowModel, getPaginationRowModel, useReactTable } from '@tanstack/react-table';
-import { type LaravelPaginatedResource } from 'laravel-resource-pagination-type';
+import { type ReactNode, useEffect, useMemo, useState } from 'react'
+import { Link } from '@tanstack/react-router'
+import {
+  type ColumnDef,
+  flexRender,
+  getCoreRowModel,
+  getPaginationRowModel,
+  useReactTable,
+} from '@tanstack/react-table'
+import { type SubjectClass } from '@/types/subject_class.ts'
+import { type LaravelPaginatedResource } from 'laravel-resource-pagination-type'
 import { LoaderCircle, PenLine, Trash } from 'lucide-react'
 import { toast } from 'sonner'
-import { deleteById, fetchIndex } from '@/api/subjects';
-import { Button } from '@/components/ui/button.tsx';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table.tsx';
-import { DataTablePagination } from '@/components/data-table';
-import { type Subject } from '@/types/subject.ts'
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+import { deleteById, fetchIndex } from '@/api/subject-class'
+import { Button } from '@/components/ui/button.tsx'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table.tsx'
+import { DataTablePagination } from '@/components/data-table'
 
 const getColumns = (opts: {
   deleting: string | null
   onDelete: (id: string) => void
-}): ColumnDef<Subject>[] => [
+}): ColumnDef<SubjectClass>[] => [
   {
-    accessorKey: 'name_ru',
-    header: 'Наименование',
-    cell: (props) => <p>{String(props.getValue() ?? '')}</p>,
+    accessorKey: 'subject',
+    header: 'Предмет',
+    cell: (props) => <p>{String(props.getValue()?.name_ru ?? '')}</p>,
   },
   {
-    accessorKey: 'name_tg',
-    header: 'Ном',
-  },
-  {
-    accessorKey: 'name_en',
-    header: 'Name',
+    accessorKey: 'class',
+    header: 'Класс',
+    cell: (props) => (
+      <p>
+        {String(props.getValue()?.number + ' ' + props.getValue()?.letter) ?? ''}
+      </p>
+    ),
   },
   {
     accessorKey: 'id',
@@ -61,19 +49,26 @@ const getColumns = (opts: {
       const isDeleting = opts.deleting === id
 
       return (
-        <div className="flex items-center gap-2">
-          <Link params={{ subjectId: id }} to="/subjects/$subjectId/edit">
+        <div className='flex items-center gap-2'>
+          <Link
+            params={{ subjectClassId: id }}
+            to='/subject-class/$subjectClassId/edit'
+          >
             <PenLine />
           </Link>
 
           <Button
-            type="button"
-            variant="ghost"
+            type='button'
+            variant='ghost'
             disabled={isDeleting}
             onClick={() => opts.onDelete(id)}
-            className="px-2"
+            className='px-2'
           >
-            {isDeleting ? <LoaderCircle className="size-5 animate-spin" /> : <Trash />}
+            {isDeleting ? (
+              <LoaderCircle className='size-5 animate-spin' />
+            ) : (
+              <Trash />
+            )}
           </Button>
         </div>
       )
@@ -81,9 +76,9 @@ const getColumns = (opts: {
   },
 ]
 
-export const SubjectsTable = () => {
-  const [subjects, setSubjects] =
-    useState<LaravelPaginatedResource<Subject> | null>(null)
+export const SubjectClassTable = () => {
+  const [subjectClasses, setSubjectClasses] =
+    useState<LaravelPaginatedResource<SubjectClass> | null>(null)
   const [pagination, setPagination] = useState({
     pageIndex: 0,
     pageSize: 10,
@@ -95,7 +90,7 @@ export const SubjectsTable = () => {
     try {
       setDeleting(id)
       await deleteById(id)
-      toast.success('Предмет успешно удален')
+      toast.success('Предмет-класс успешно удален')
       await fetchData()
     } finally {
       setDeleting('')
@@ -107,10 +102,10 @@ export const SubjectsTable = () => {
   }, [deleting])
 
   const table = useReactTable({
-    data: subjects?.data ?? [],
+    data: subjectClasses?.data ?? [],
     columns: columns,
     getCoreRowModel: getCoreRowModel(),
-    pageCount: subjects?.meta?.last_page ?? 1,
+    pageCount: subjectClasses?.meta?.last_page ?? 1,
     manualPagination: true,
     getPaginationRowModel: getPaginationRowModel(),
     onPaginationChange: setPagination,
@@ -123,7 +118,7 @@ export const SubjectsTable = () => {
     try {
       setFetching(true)
       const response = await fetchIndex(pagination.pageIndex + 1)
-      setSubjects(response)
+      setSubjectClasses(response)
     } finally {
       setFetching(false)
     }

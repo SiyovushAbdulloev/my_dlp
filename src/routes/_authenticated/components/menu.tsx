@@ -28,4 +28,5 @@ export const NAV: NavItem[] = [
   { id: 'schools', label: 'Школы', to: '/schools', access: [DefaultRoles.DISTRICT_ADMIN] },
   { id: 'classes', label: 'Классы', to: '/classes', access: [DefaultRoles.DISTRICT_ADMIN] },
   { id: 'subjects', label: 'Предметы', to: '/subjects', access: [DefaultRoles.DISTRICT_ADMIN] },
+  { id: 'subject-class', label: 'Предметы-Классы', to: '/subject-class', access: [DefaultRoles.DISTRICT_ADMIN] },
 ]

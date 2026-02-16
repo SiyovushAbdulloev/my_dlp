@@ -3,6 +3,7 @@ import { type LaravelPaginatedResource } from 'laravel-resource-pagination-type'
 import { sleep } from '@/lib/utils.ts'
 import { type SchoolClass } from '@/types/school_class.ts'
 import { ClassForm } from '@/features/classes/create.tsx'
+import type { Region } from '@/types'
 
 export const fetchIndex = async (page: number): Promise<LaravelPaginatedResource<SchoolClass>> => {
   // const json: LaravelPaginatedResource<School> = await client.get(import.meta.env.API_URL + '/api/classes').json();
@@ -79,4 +80,17 @@ export const deleteById = async (id: string) => {
 
   await sleep(3000)
   return true
+}
+
+export const fetchAll = async (): Promise<{data: SchoolClass[]}> => {
+  // const json: LaravelPaginatedResource<Subject> = await client.get(import.meta.env.API_URL + '/api/classes/all').json();
+  // return json
+  await sleep(3000)
+  return {
+    data: Array.from({length: 10}).map((_, index) => ({
+      id: index + 1 + '',
+      number: index + 1,
+      letter: `a №${index + 1}, page: ${index + 1}`,
+    })),
+  }
 }
