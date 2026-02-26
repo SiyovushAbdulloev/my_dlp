@@ -43,6 +43,7 @@ import { Route as ClerkAuthenticatedUserManagementRouteImport } from './routes/c
 import { Route as ClerkauthSignUpRouteImport } from './routes/clerk/(auth)/sign-up'
 import { Route as ClerkauthSignInRouteImport } from './routes/clerk/(auth)/sign-in'
 import { Route as AuthenticatedWebinarsCreateRouteImport } from './routes/_authenticated/webinars/create'
+import { Route as AuthenticatedWebinarsWebinarIdRouteImport } from './routes/_authenticated/webinars/$webinarId'
 import { Route as AuthenticatedVideoLessonsCreateRouteImport } from './routes/_authenticated/video-lessons/create'
 import { Route as AuthenticatedUsersCreateRouteImport } from './routes/_authenticated/users/create'
 import { Route as AuthenticatedSubjectsCreateRouteImport } from './routes/_authenticated/subjects/create'
@@ -250,6 +251,12 @@ const AuthenticatedWebinarsCreateRoute =
     path: '/webinars/create',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedWebinarsWebinarIdRoute =
+  AuthenticatedWebinarsWebinarIdRouteImport.update({
+    id: '/webinars/$webinarId',
+    path: '/webinars/$webinarId',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedVideoLessonsCreateRoute =
   AuthenticatedVideoLessonsCreateRouteImport.update({
     id: '/video-lessons/create',
@@ -342,9 +349,9 @@ const AuthenticatedDictionariesCitiesIndexRoute =
   } as any)
 const AuthenticatedWebinarsWebinarIdEditRoute =
   AuthenticatedWebinarsWebinarIdEditRouteImport.update({
-    id: '/webinars/$webinarId/edit',
-    path: '/webinars/$webinarId/edit',
-    getParentRoute: () => AuthenticatedRouteRoute,
+    id: '/edit',
+    path: '/edit',
+    getParentRoute: () => AuthenticatedWebinarsWebinarIdRoute,
   } as any)
 const AuthenticatedVideoLessonsVideoLessonIdEditRoute =
   AuthenticatedVideoLessonsVideoLessonIdEditRouteImport.update({
@@ -451,6 +458,7 @@ export interface FileRoutesByFullPath {
   '/subjects/create': typeof AuthenticatedSubjectsCreateRoute
   '/users/create': typeof AuthenticatedUsersCreateRoute
   '/video-lessons/create': typeof AuthenticatedVideoLessonsCreateRoute
+  '/webinars/$webinarId': typeof AuthenticatedWebinarsWebinarIdRouteWithChildren
   '/webinars/create': typeof AuthenticatedWebinarsCreateRoute
   '/clerk/sign-in': typeof ClerkauthSignInRoute
   '/clerk/sign-up': typeof ClerkauthSignUpRoute
@@ -511,6 +519,7 @@ export interface FileRoutesByTo {
   '/subjects/create': typeof AuthenticatedSubjectsCreateRoute
   '/users/create': typeof AuthenticatedUsersCreateRoute
   '/video-lessons/create': typeof AuthenticatedVideoLessonsCreateRoute
+  '/webinars/$webinarId': typeof AuthenticatedWebinarsWebinarIdRouteWithChildren
   '/webinars/create': typeof AuthenticatedWebinarsCreateRoute
   '/clerk/sign-in': typeof ClerkauthSignInRoute
   '/clerk/sign-up': typeof ClerkauthSignUpRoute
@@ -577,6 +586,7 @@ export interface FileRoutesById {
   '/_authenticated/subjects/create': typeof AuthenticatedSubjectsCreateRoute
   '/_authenticated/users/create': typeof AuthenticatedUsersCreateRoute
   '/_authenticated/video-lessons/create': typeof AuthenticatedVideoLessonsCreateRoute
+  '/_authenticated/webinars/$webinarId': typeof AuthenticatedWebinarsWebinarIdRouteWithChildren
   '/_authenticated/webinars/create': typeof AuthenticatedWebinarsCreateRoute
   '/clerk/(auth)/sign-in': typeof ClerkauthSignInRoute
   '/clerk/(auth)/sign-up': typeof ClerkauthSignUpRoute
@@ -640,6 +650,7 @@ export interface FileRouteTypes {
     | '/subjects/create'
     | '/users/create'
     | '/video-lessons/create'
+    | '/webinars/$webinarId'
     | '/webinars/create'
     | '/clerk/sign-in'
     | '/clerk/sign-up'
@@ -700,6 +711,7 @@ export interface FileRouteTypes {
     | '/subjects/create'
     | '/users/create'
     | '/video-lessons/create'
+    | '/webinars/$webinarId'
     | '/webinars/create'
     | '/clerk/sign-in'
     | '/clerk/sign-up'
@@ -765,6 +777,7 @@ export interface FileRouteTypes {
     | '/_authenticated/subjects/create'
     | '/_authenticated/users/create'
     | '/_authenticated/video-lessons/create'
+    | '/_authenticated/webinars/$webinarId'
     | '/_authenticated/webinars/create'
     | '/clerk/(auth)/sign-in'
     | '/clerk/(auth)/sign-up'
@@ -1052,6 +1065,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedWebinarsCreateRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/webinars/$webinarId': {
+      id: '/_authenticated/webinars/$webinarId'
+      path: '/webinars/$webinarId'
+      fullPath: '/webinars/$webinarId'
+      preLoaderRoute: typeof AuthenticatedWebinarsWebinarIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/video-lessons/create': {
       id: '/_authenticated/video-lessons/create'
       path: '/video-lessons/create'
@@ -1159,10 +1179,10 @@ declare module '@tanstack/react-router' {
     }
     '/_authenticated/webinars/$webinarId/edit': {
       id: '/_authenticated/webinars/$webinarId/edit'
-      path: '/webinars/$webinarId/edit'
+      path: '/edit'
       fullPath: '/webinars/$webinarId/edit'
       preLoaderRoute: typeof AuthenticatedWebinarsWebinarIdEditRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+      parentRoute: typeof AuthenticatedWebinarsWebinarIdRoute
     }
     '/_authenticated/video-lessons/$videoLessonId/edit': {
       id: '/_authenticated/video-lessons/$videoLessonId/edit'
@@ -1301,6 +1321,21 @@ const AuthenticatedSettingsRouteRouteWithChildren =
     AuthenticatedSettingsRouteRouteChildren,
   )
 
+interface AuthenticatedWebinarsWebinarIdRouteChildren {
+  AuthenticatedWebinarsWebinarIdEditRoute: typeof AuthenticatedWebinarsWebinarIdEditRoute
+}
+
+const AuthenticatedWebinarsWebinarIdRouteChildren: AuthenticatedWebinarsWebinarIdRouteChildren =
+  {
+    AuthenticatedWebinarsWebinarIdEditRoute:
+      AuthenticatedWebinarsWebinarIdEditRoute,
+  }
+
+const AuthenticatedWebinarsWebinarIdRouteWithChildren =
+  AuthenticatedWebinarsWebinarIdRoute._addFileChildren(
+    AuthenticatedWebinarsWebinarIdRouteChildren,
+  )
+
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedSettingsRouteRoute: typeof AuthenticatedSettingsRouteRouteWithChildren
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
@@ -1312,6 +1347,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedSubjectsCreateRoute: typeof AuthenticatedSubjectsCreateRoute
   AuthenticatedUsersCreateRoute: typeof AuthenticatedUsersCreateRoute
   AuthenticatedVideoLessonsCreateRoute: typeof AuthenticatedVideoLessonsCreateRoute
+  AuthenticatedWebinarsWebinarIdRoute: typeof AuthenticatedWebinarsWebinarIdRouteWithChildren
   AuthenticatedWebinarsCreateRoute: typeof AuthenticatedWebinarsCreateRoute
   AuthenticatedAppsIndexRoute: typeof AuthenticatedAppsIndexRoute
   AuthenticatedChatsIndexRoute: typeof AuthenticatedChatsIndexRoute
@@ -1335,7 +1371,6 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedSubjectsSubjectIdEditRoute: typeof AuthenticatedSubjectsSubjectIdEditRoute
   AuthenticatedUsersUserIdEditRoute: typeof AuthenticatedUsersUserIdEditRoute
   AuthenticatedVideoLessonsVideoLessonIdEditRoute: typeof AuthenticatedVideoLessonsVideoLessonIdEditRoute
-  AuthenticatedWebinarsWebinarIdEditRoute: typeof AuthenticatedWebinarsWebinarIdEditRoute
   AuthenticatedDictionariesCitiesIndexRoute: typeof AuthenticatedDictionariesCitiesIndexRoute
   AuthenticatedDictionariesDistrictsIndexRoute: typeof AuthenticatedDictionariesDistrictsIndexRoute
   AuthenticatedDictionariesRegionsIndexRoute: typeof AuthenticatedDictionariesRegionsIndexRoute
@@ -1355,6 +1390,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedSubjectsCreateRoute: AuthenticatedSubjectsCreateRoute,
   AuthenticatedUsersCreateRoute: AuthenticatedUsersCreateRoute,
   AuthenticatedVideoLessonsCreateRoute: AuthenticatedVideoLessonsCreateRoute,
+  AuthenticatedWebinarsWebinarIdRoute:
+    AuthenticatedWebinarsWebinarIdRouteWithChildren,
   AuthenticatedWebinarsCreateRoute: AuthenticatedWebinarsCreateRoute,
   AuthenticatedAppsIndexRoute: AuthenticatedAppsIndexRoute,
   AuthenticatedChatsIndexRoute: AuthenticatedChatsIndexRoute,
@@ -1384,8 +1421,6 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedUsersUserIdEditRoute: AuthenticatedUsersUserIdEditRoute,
   AuthenticatedVideoLessonsVideoLessonIdEditRoute:
     AuthenticatedVideoLessonsVideoLessonIdEditRoute,
-  AuthenticatedWebinarsWebinarIdEditRoute:
-    AuthenticatedWebinarsWebinarIdEditRoute,
   AuthenticatedDictionariesCitiesIndexRoute:
     AuthenticatedDictionariesCitiesIndexRoute,
   AuthenticatedDictionariesDistrictsIndexRoute:

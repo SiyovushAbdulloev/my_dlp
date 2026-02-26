@@ -1,124 +1,31 @@
-import { type ReactNode, useEffect, useMemo, useState } from 'react'
-import { Link } from '@tanstack/react-router'
+import { useEffect, useState } from 'react'
+import { Link, useNavigate } from '@tanstack/react-router'
 import {
-  type ColumnDef,
-  flexRender,
   getCoreRowModel,
   getPaginationRowModel,
   useReactTable,
 } from '@tanstack/react-table'
-import { type Webinar } from '@/types/webinar.ts'
+import { type Webinar } from '@/types/webinar'
 import { type LaravelPaginatedResource } from 'laravel-resource-pagination-type'
-import { LoaderCircle, PenLine, Trash } from 'lucide-react'
+import { LoaderCircle, PenLine, Trash, Calendar, Clock } from 'lucide-react'
 import { toast } from 'sonner'
 import { deleteById, fetchIndex } from '@/api/webinars'
-import { Button } from '@/components/ui/button.tsx'
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table.tsx'
+import { Button } from '@/components/ui/button'
 import { DataTablePagination } from '@/components/data-table'
 
-const getColumns = (opts: {
-  deleting: string | null
-  onDelete: (id: string) => void
-}): ColumnDef<Webinar>[] => [
-  {
-    accessorKey: 'topic_ru',
-    header: 'Тема',
-    cell: (props) => <p>{String(props.getValue() ?? '')}</p>,
-  },
-  {
-    accessorKey: 'topic_tg',
-    header: 'Топик',
-    cell: (props) => <p>{String(props.getValue() ?? '')}</p>,
-  },
-  {
-    accessorKey: 'topic_en',
-    header: 'Topic',
-    cell: (props) => <p>{String(props.getValue() ?? '')}</p>,
-  },
-  {
-    accessorKey: 'start_date',
-    header: 'Дата начало',
-  },
-  {
-    accessorKey: 'start_time',
-    header: 'Время начало',
-  },
-  {
-    accessorKey: 'id',
-    header: 'Действие',
-    cell: (props) => {
-      const id: string = props.getValue()
-      const isDeleting = opts.deleting === id
-
-      return (
-        <div className='flex items-center gap-2'>
-          <Link params={{ webinarId: id }} to='/webinars/$webinarId/edit'>
-            <PenLine />
-          </Link>
-
-          <Button
-            type='button'
-            variant='ghost'
-            disabled={isDeleting}
-            onClick={() => opts.onDelete(id)}
-            className='px-2'
-          >
-            {isDeleting ? (
-              <LoaderCircle className='size-5 animate-spin' />
-            ) : (
-              <Trash />
-            )}
-          </Button>
-        </div>
-      )
-    },
-  },
-]
-
 export const WebinarsTable = () => {
+  const navigate = useNavigate()
+
   const [webinars, setWebinars] =
     useState<LaravelPaginatedResource<Webinar> | null>(null)
+
   const [pagination, setPagination] = useState({
     pageIndex: 0,
     pageSize: 10,
   })
-  const [fetching, setFetching] = useState<boolean>(false)
+
+  const [fetching, setFetching] = useState(false)
   const [deleting, setDeleting] = useState<string>('')
-
-  const onDelete = async (id: string) => {
-    try {
-      setDeleting(id)
-      await deleteById(id)
-      toast.success('Вебинар успешно удален')
-      await fetchData()
-    } finally {
-      setDeleting('')
-    }
-  }
-
-  const columns = useMemo(() => {
-    return getColumns({ deleting, onDelete })
-  }, [deleting])
-
-  const table = useReactTable({
-    data: webinars?.data ?? [],
-    columns: columns,
-    getCoreRowModel: getCoreRowModel(),
-    pageCount: webinars?.meta?.last_page ?? 1,
-    manualPagination: true,
-    getPaginationRowModel: getPaginationRowModel(),
-    onPaginationChange: setPagination,
-    state: {
-      pagination,
-    },
-  })
 
   const fetchData = async () => {
     try {
@@ -134,53 +41,135 @@ export const WebinarsTable = () => {
     fetchData()
   }, [pagination.pageIndex])
 
+  const onDelete = async (id: string) => {
+    try {
+      setDeleting(id)
+      await deleteById(id)
+      toast.success('Вебинар успешно удален')
+      await fetchData()
+    } finally {
+      setDeleting('')
+    }
+  }
+
+  // table нужен только для pagination
+  const table = useReactTable({
+    data: webinars?.data ?? [],
+    columns: [],
+    getCoreRowModel: getCoreRowModel(),
+    pageCount: webinars?.meta?.last_page ?? 1,
+    manualPagination: true,
+    getPaginationRowModel: getPaginationRowModel(),
+    onPaginationChange: setPagination,
+    state: {
+      pagination,
+    },
+  })
+
   return (
-    <div>
-      <div className='relative mb-4 overflow-hidden rounded-md border'>
-        {fetching ? (
-          <span className='absolute top-0 right-0 bottom-0 left-0 z-10 flex items-center justify-center bg-white/70'>
-            <LoaderCircle className={'size-10 animate-spin'} />
-          </span>
-        ) : null}
-        <Table>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id} colSpan={header.colSpan}>
-                    {header.column.columnDef.header as ReactNode}
-                  </TableHead>
-                ))}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((rowModel) => (
-                <TableRow key={rowModel.id}>
-                  {rowModel.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className='h-24 text-center'
+    <div className='flex flex-col gap-6'>
+      {/* Cards wrapper */}
+      <div className='relative'>
+        {/* Loader */}
+        {fetching && (
+          <div className='absolute inset-0 z-10 flex items-center justify-center rounded-2xl bg-white/70'>
+            <LoaderCircle className='size-10 animate-spin' />
+          </div>
+        )}
+
+        {/* Grid */}
+        {webinars?.data?.length ? (
+          <div className='grid gap-6 sm:grid-cols-2 xl:grid-cols-3'>
+            {webinars.data.map((webinar) => {
+              const isDeleting = deleting === webinar.id
+
+              return (
+                <div
+                  key={webinar.id}
+                  onClick={() =>
+                    navigate({
+                      to: '/webinars/$webinarId',
+                      params: { webinarId: webinar.id },
+                    })
+                  }
+                  className='group relative cursor-pointer rounded-2xl border border-slate-200 bg-gradient-to-br from-white to-slate-50 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl'
                 >
-                  Пусто.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
+                  <div className='flex flex-col gap-4 p-6'>
+                    {/* Topic */}
+                    <div>
+                      <h3 className='text-lg font-semibold text-slate-800'>
+                        {webinar.topic_ru}
+                      </h3>
+
+                      <div className='mt-2 flex flex-col gap-1 text-sm text-slate-500'>
+                        <span>🇹🇯 {webinar.topic_tg}</span>
+                        <span>🇬🇧 {webinar.topic_en}</span>
+                      </div>
+                    </div>
+
+                    {/* Teacher */}
+                    <div className='text-sm text-slate-600'>
+                      <span className='font-medium'>Учитель:</span>{' '}
+                      {webinar.teacher_id}
+                    </div>
+
+                    {/* Date & Time */}
+                    <div className='flex items-center gap-4 text-sm text-slate-600'>
+                      <div className='flex items-center gap-1'>
+                        <Calendar size={16} />
+                        {webinar.start_date}
+                      </div>
+
+                      <div className='flex items-center gap-1'>
+                        <Clock size={16} />
+                        {webinar.start_time}
+                      </div>
+                    </div>
+
+                    {/* Actions */}
+                    <div className='mt-4 flex items-center justify-end gap-2'>
+                      <Link
+                        to='/webinars/$webinarId/edit'
+                        params={{ webinarId: webinar.id }}
+                        onClick={(e) => e.stopPropagation()}
+                        className='text-slate-500 transition hover:text-primary'
+                      >
+                        <PenLine size={18} />
+                      </Link>
+
+                      <Button
+                        type='button'
+                        variant='ghost'
+                        disabled={isDeleting}
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          onDelete(webinar.id)
+                        }}
+                        className='px-2'
+                      >
+                        {isDeleting ? (
+                          <LoaderCircle className='size-5 animate-spin' />
+                        ) : (
+                          <Trash size={18} />
+                        )}
+                      </Button>
+                    </div>
+                  </div>
+
+                  {/* Hover glow */}
+                  <div className='pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-transparent transition group-hover:ring-primary/30' />
+                </div>
+              )
+            })}
+          </div>
+        ) : (
+          <div className='flex h-32 items-center justify-center text-slate-500'>
+            Пусто.
+          </div>
+        )}
       </div>
+
+      {/* Pagination (НЕ ТРОГАЕМ) */}
       <DataTablePagination table={table} className='mt-auto' />
     </div>
   )
