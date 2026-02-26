@@ -1,6 +1,5 @@
 // import { client } from '@/api/client.ts'
 import { type LaravelPaginatedResource } from 'laravel-resource-pagination-type'
-import { type Region } from '@/types'
 import { sleep } from '@/lib/utils.ts'
 import { type Subject } from '@/types/subject.ts'
 import { type SubjectForm } from '@/features/subjects/create.tsx'
@@ -86,7 +85,7 @@ export const deleteById = async (id: string) => {
   return true
 }
 
-export const fetchAll = async (): Promise<{data: Region[]}> => {
+export const fetchAll = async (): Promise<{data: Subject[]}> => {
   // const json: LaravelPaginatedResource<Subject> = await client.get(import.meta.env.API_URL + '/api/subjects/all').json();
   // return json
   await sleep(3000)

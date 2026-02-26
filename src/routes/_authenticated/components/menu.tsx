@@ -86,4 +86,16 @@ export const NAV: NavItem[] = [
       DefaultRoles.REGION_ADMIN,
     ],
   },
+  {
+    id: 'video-lessons',
+    label: 'Видео-уроки',
+    to: '/video-lessons',
+    access: [
+      DefaultRoles.STUDENT,
+      DefaultRoles.TEACHER,
+      DefaultRoles.SCHOOL_ADMIN,
+      DefaultRoles.DISTRICT_ADMIN,
+      DefaultRoles.REGION_ADMIN,
+    ],
+  },
 ]
