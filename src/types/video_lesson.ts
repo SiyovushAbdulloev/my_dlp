@@ -10,6 +10,6 @@ export interface VideoLesson {
   class?: SchoolClass
   subject_id: string
   subject?: Subject
-  video_url: string
-  external_url: string
+  video_url?: string
+  external_url?: string
 }

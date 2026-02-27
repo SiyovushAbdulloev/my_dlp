@@ -36,7 +36,8 @@ export const fetchIndex = async (
         name_ru: `Предмет №${index + 1}, page: ${page}`,
         name_en: `Subject №${index + 1}, page: ${page}`,
         name_tg: `Фан №${index + 1}, page: ${page}`,
-      }
+      },
+      video_url: 'https://www.youtube.com/watch?v=yxfuE6h1pi4'
     })),
     links: {
       first: '',
@@ -70,6 +71,7 @@ export const create = async (data: VideoLessonForm) => {
     title_en: `Title`,
     class_id: '1',
     subject_id: '1',
+    video_url: 'https://www.youtube.com/watch?v=yxfuE6h1pi4'
   }
 }
 
@@ -85,6 +87,8 @@ export const getById = async (id: string) => {
     title_en: `Title`,
     class_id: '1',
     subject_id: '1',
+    video_url: 'https://www.youtube.com/watch?v=yxfuE6h1pi4',
+    external_url: undefined
   }
 }
 
@@ -103,6 +107,7 @@ export const edit = async (id: string, data: VideoLessonForm) => {
     title_en: `Title`,
     class_id: '1',
     subject_id: '1',
+    video_url: 'https://www.youtube.com/watch?v=yxfuE6h1pi4'
   }
 }
 
