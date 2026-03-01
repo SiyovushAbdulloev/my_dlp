@@ -17,7 +17,7 @@ import { ThemeProvider } from './context/theme-provider'
 import { routeTree } from './routeTree.gen'
 // Styles
 import './styles/index.css'
-import { useAuth } from '@clerk/clerk-react'
+import { TooltipProvider } from '@/components/ui/tooltip.tsx'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -107,7 +107,9 @@ if (!rootElement.innerHTML) {
         <ThemeProvider>
           <FontProvider>
             <DirectionProvider>
-              <RouterProvider router={router} />
+              <TooltipProvider>
+                <RouterProvider router={router} />
+              </TooltipProvider>
             </DirectionProvider>
           </FontProvider>
         </ThemeProvider>
