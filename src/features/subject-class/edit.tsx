@@ -1,51 +1,26 @@
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useNavigate } from '@tanstack/react-router';
-import { Route } from '@/routes/_authenticated/subject-class/$subjectClassId.edit';
-import { ArrowLeft, Loader2 } from 'lucide-react';
-import { toast } from 'sonner';
-import { create } from '@/api/subject-class';
-import { Button } from '@/components/ui/button.tsx';
-import { Form, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form.tsx';
-import { MultiSelect } from '@/components/ui/multi-select.tsx';
-import { Main } from '@/components/layout/main';
-import { SelectDropdown } from '@/components/select-dropdown.tsx';
-import { type SubjectClassForm, subjectClassFormSchema } from '@/features/subject-class/create.tsx';
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+import { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useNavigate } from '@tanstack/react-router'
+import { Route } from '@/routes/_authenticated/subject-class/$subjectClassId.edit'
+import { ArrowLeft, Loader2 } from 'lucide-react'
+import { toast } from 'sonner'
+import { edit } from '@/api/subject-class'
+import { Button } from '@/components/ui/button.tsx'
+import {
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form.tsx'
+import { MultiSelect } from '@/components/ui/multi-select.tsx'
+import { Main } from '@/components/layout/main'
+import { SelectDropdown } from '@/components/select-dropdown.tsx'
+import {
+  type SubjectClassForm,
+  subjectClassFormSchema,
+} from '@/features/subject-class/create.tsx'
 
 export function SubjectClassEdit() {
   const navigate = useNavigate()
@@ -56,14 +31,14 @@ export function SubjectClassEdit() {
     resolver: zodResolver(subjectClassFormSchema),
     defaultValues: {
       class_id: subject.class_id,
-      subject_ids: []
-    }
+      subject_ids: [],
+    },
   })
 
   const onSubmit = async (data: SubjectClassForm) => {
     setLoading(true)
     try {
-      await create(data)
+      await edit(subject.id, data)
       form.reset()
       toast.success('Предмет-класс успешно редактирован')
       navigate({ to: '/subject-class' })
@@ -119,7 +94,7 @@ export function SubjectClassEdit() {
                   <FormItem className={'w-full'}>
                     <FormLabel className={'!w-full'}>Предметы</FormLabel>
                     <MultiSelect
-                      placeholder={"Выберите предметы"}
+                      placeholder={'Выберите предметы'}
                       options={subjects.data.map((s) => ({
                         value: s.id,
                         label: s.name_ru,

@@ -98,4 +98,10 @@ export const NAV: NavItem[] = [
       DefaultRoles.REGION_ADMIN,
     ],
   },
+  {
+    id: 'teachers',
+    label: 'Учителя',
+    to: '/teachers',
+    access: [DefaultRoles.SCHOOL_ADMIN],
+  },
 ]
