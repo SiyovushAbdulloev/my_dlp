@@ -4,7 +4,7 @@ import { sleep } from '@/lib/utils.ts'
 import { type Teacher } from '@/types/teacher.ts'
 
 export const fetchIndex = async (page: number): Promise<LaravelPaginatedResource<Teacher>> => {
-  // const json: LaravelPaginatedResource<Teacher> = await client.get(import.meta.env.API_URL + '/api/teachers/regions').json();
+  // const json: LaravelPaginatedResource<Teacher> = await client.get(import.meta.env.API_URL + '/api/teachers').json();
   // return json
   await sleep(3000)
   return {

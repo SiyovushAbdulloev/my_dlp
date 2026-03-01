@@ -33,6 +33,7 @@ import { Route as AuthenticatedTeachersIndexRouteImport } from './routes/_authen
 import { Route as AuthenticatedTasksIndexRouteImport } from './routes/_authenticated/tasks/index'
 import { Route as AuthenticatedSubjectsIndexRouteImport } from './routes/_authenticated/subjects/index'
 import { Route as AuthenticatedSubjectClassIndexRouteImport } from './routes/_authenticated/subject-class/index'
+import { Route as AuthenticatedStudentsIndexRouteImport } from './routes/_authenticated/students/index'
 import { Route as AuthenticatedSettingsIndexRouteImport } from './routes/_authenticated/settings/index'
 import { Route as AuthenticatedSchoolsIndexRouteImport } from './routes/_authenticated/schools/index'
 import { Route as AuthenticatedRolesIndexRouteImport } from './routes/_authenticated/roles/index'
@@ -196,6 +197,12 @@ const AuthenticatedSubjectClassIndexRoute =
   AuthenticatedSubjectClassIndexRouteImport.update({
     id: '/subject-class/',
     path: '/subject-class/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedStudentsIndexRoute =
+  AuthenticatedStudentsIndexRouteImport.update({
+    id: '/students/',
+    path: '/students/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedSettingsIndexRoute =
@@ -485,6 +492,7 @@ export interface FileRoutesByFullPath {
   '/roles': typeof AuthenticatedRolesIndexRoute
   '/schools': typeof AuthenticatedSchoolsIndexRoute
   '/settings/': typeof AuthenticatedSettingsIndexRoute
+  '/students': typeof AuthenticatedStudentsIndexRoute
   '/subject-class': typeof AuthenticatedSubjectClassIndexRoute
   '/subjects': typeof AuthenticatedSubjectsIndexRoute
   '/tasks': typeof AuthenticatedTasksIndexRoute
@@ -548,6 +556,7 @@ export interface FileRoutesByTo {
   '/roles': typeof AuthenticatedRolesIndexRoute
   '/schools': typeof AuthenticatedSchoolsIndexRoute
   '/settings': typeof AuthenticatedSettingsIndexRoute
+  '/students': typeof AuthenticatedStudentsIndexRoute
   '/subject-class': typeof AuthenticatedSubjectClassIndexRoute
   '/subjects': typeof AuthenticatedSubjectsIndexRoute
   '/tasks': typeof AuthenticatedTasksIndexRoute
@@ -617,6 +626,7 @@ export interface FileRoutesById {
   '/_authenticated/roles/': typeof AuthenticatedRolesIndexRoute
   '/_authenticated/schools/': typeof AuthenticatedSchoolsIndexRoute
   '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute
+  '/_authenticated/students/': typeof AuthenticatedStudentsIndexRoute
   '/_authenticated/subject-class/': typeof AuthenticatedSubjectClassIndexRoute
   '/_authenticated/subjects/': typeof AuthenticatedSubjectsIndexRoute
   '/_authenticated/tasks/': typeof AuthenticatedTasksIndexRoute
@@ -683,6 +693,7 @@ export interface FileRouteTypes {
     | '/roles'
     | '/schools'
     | '/settings/'
+    | '/students'
     | '/subject-class'
     | '/subjects'
     | '/tasks'
@@ -746,6 +757,7 @@ export interface FileRouteTypes {
     | '/roles'
     | '/schools'
     | '/settings'
+    | '/students'
     | '/subject-class'
     | '/subjects'
     | '/tasks'
@@ -814,6 +826,7 @@ export interface FileRouteTypes {
     | '/_authenticated/roles/'
     | '/_authenticated/schools/'
     | '/_authenticated/settings/'
+    | '/_authenticated/students/'
     | '/_authenticated/subject-class/'
     | '/_authenticated/subjects/'
     | '/_authenticated/tasks/'
@@ -1019,6 +1032,13 @@ declare module '@tanstack/react-router' {
       path: '/subject-class'
       fullPath: '/subject-class'
       preLoaderRoute: typeof AuthenticatedSubjectClassIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/students/': {
+      id: '/_authenticated/students/'
+      path: '/students'
+      fullPath: '/students'
+      preLoaderRoute: typeof AuthenticatedStudentsIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/settings/': {
@@ -1411,6 +1431,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedHelpCenterIndexRoute: typeof AuthenticatedHelpCenterIndexRoute
   AuthenticatedRolesIndexRoute: typeof AuthenticatedRolesIndexRoute
   AuthenticatedSchoolsIndexRoute: typeof AuthenticatedSchoolsIndexRoute
+  AuthenticatedStudentsIndexRoute: typeof AuthenticatedStudentsIndexRoute
   AuthenticatedSubjectClassIndexRoute: typeof AuthenticatedSubjectClassIndexRoute
   AuthenticatedSubjectsIndexRoute: typeof AuthenticatedSubjectsIndexRoute
   AuthenticatedTasksIndexRoute: typeof AuthenticatedTasksIndexRoute
@@ -1457,6 +1478,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedHelpCenterIndexRoute: AuthenticatedHelpCenterIndexRoute,
   AuthenticatedRolesIndexRoute: AuthenticatedRolesIndexRoute,
   AuthenticatedSchoolsIndexRoute: AuthenticatedSchoolsIndexRoute,
+  AuthenticatedStudentsIndexRoute: AuthenticatedStudentsIndexRoute,
   AuthenticatedSubjectClassIndexRoute: AuthenticatedSubjectClassIndexRoute,
   AuthenticatedSubjectsIndexRoute: AuthenticatedSubjectsIndexRoute,
   AuthenticatedTasksIndexRoute: AuthenticatedTasksIndexRoute,

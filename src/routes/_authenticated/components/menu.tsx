@@ -104,4 +104,10 @@ export const NAV: NavItem[] = [
     to: '/teachers',
     access: [DefaultRoles.SCHOOL_ADMIN],
   },
+  {
+    id: 'students',
+    label: 'Ученики',
+    to: '/students',
+    access: [DefaultRoles.SCHOOL_ADMIN],
+  },
 ]
