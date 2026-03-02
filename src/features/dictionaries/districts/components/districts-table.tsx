@@ -57,7 +57,7 @@ const getColumns = (opts: {
             params={{ districtId: id }}
             to='/dictionaries/districts/$districtId/edit'
           >
-            <PenLine />
+            <PenLine className={'size-5'} />
           </Link>
 
           <Button

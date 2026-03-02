@@ -193,7 +193,7 @@ export function Combobox<T>({
             {loading ? (
               <div className='flex h-14 items-center justify-center gap-2 text-sm'>
                 <Loader className='size-4 animate-spin' />
-                Loading...
+                Загружается...
               </div>
             ) : null}
 
@@ -232,13 +232,13 @@ export function Combobox<T>({
               {loadingMore ? (
                 <div className='flex h-12 items-center justify-center gap-2 text-sm'>
                   <Loader className='size-4 animate-spin' />
-                  Loading more...
+                  Загружается...
                 </div>
               ) : null}
 
               {!loading && !loadingMore && items.length > 0 && !hasMore ? (
                 <div className='px-3 py-2 text-xs text-muted-foreground'>
-                  End of list
+                  Конец списка
                 </div>
               ) : null}
             </CommandGroup>

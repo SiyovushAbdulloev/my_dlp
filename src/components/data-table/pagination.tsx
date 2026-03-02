@@ -59,13 +59,15 @@ export function DataTablePagination<TData>({
               ))}
             </SelectContent>
           </Select>
-          <p className='hidden text-sm font-medium sm:block'>Rows per page</p>
+          <p className='hidden text-sm font-medium sm:block'>
+            Кол-во каждую страницу
+          </p>
         </div>
       </div>
 
       <div className='flex items-center sm:space-x-6 lg:space-x-8'>
-        <div className='flex w-[100px] items-center justify-center text-sm font-medium @max-3xl/content:hidden'>
-          Page {currentPage} of {totalPages}
+        <div className='flex min-w-[100px] items-center justify-center text-sm font-medium @max-3xl/content:hidden'>
+          Стр. {currentPage} из {totalPages}
         </div>
         <div className='flex items-center space-x-2'>
           <Button

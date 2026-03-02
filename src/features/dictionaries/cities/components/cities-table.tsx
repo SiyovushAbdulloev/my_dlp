@@ -67,7 +67,7 @@ const getColumns = (opts: {
       return (
         <div className='flex items-center gap-2'>
           <Link params={{ cityId: id }} to='/dictionaries/cities/$cityId/edit'>
-            <PenLine />
+            <PenLine className={'size-5'} />
           </Link>
 
           <Button

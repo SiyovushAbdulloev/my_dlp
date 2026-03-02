@@ -39,7 +39,7 @@ const getColumns = (opts: {
       return (
         <div className='flex items-center gap-2'>
           <Link params={{ roleId: id }} to='/roles/$roleId/edit'>
-            <PenLine />
+            <PenLine className={'size-5'} />
           </Link>
 
           {!props.row.original.is_static ? (

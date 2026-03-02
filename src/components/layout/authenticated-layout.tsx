@@ -15,13 +15,14 @@ import {
   NavigationMenuTrigger,
 } from '@/components/ui/navigation-menu.tsx'
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
-import { ConfigDrawer } from '@/components/config-drawer.tsx'
+// import { ConfigDrawer } from '@/components/config-drawer.tsx'
 // import { AppSidebar } from '@/components/layout/app-sidebar';
 import { Header } from '@/components/layout/header.tsx'
 import { ProfileDropdown } from '@/components/profile-dropdown.tsx'
-import { Search } from '@/components/search.tsx'
+// import { Search } from '@/components/search.tsx'
 import { SkipToMain } from '@/components/skip-to-main'
-import { ThemeSwitch } from '@/components/theme-switch.tsx'
+
+// import { ThemeSwitch } from '@/components/theme-switch.tsx'
 
 type AuthenticatedLayoutProps = {
   children?: React.ReactNode
@@ -98,9 +99,9 @@ export function AuthenticatedLayout({ children }: AuthenticatedLayoutProps) {
                 </NavigationMenuList>
               </NavigationMenu>
               <div className='ms-auto flex items-center space-x-4'>
-                <Search />
-                <ThemeSwitch />
-                <ConfigDrawer />
+                {/*<Search />*/}
+                {/*<ThemeSwitch />*/}
+                {/*<ConfigDrawer />*/}
                 <ProfileDropdown />
               </div>
             </Header>

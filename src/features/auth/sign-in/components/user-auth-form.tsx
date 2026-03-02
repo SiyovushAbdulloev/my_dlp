@@ -61,7 +61,7 @@ export function UserAuthForm({
     setIsLoading(true)
 
     toast.promise(sleep(2000), {
-      loading: 'Signing in...',
+      loading: 'Логинимся...',
       success: () => {
         setIsLoading(false)
 
@@ -94,7 +94,7 @@ export function UserAuthForm({
         const targetPath = redirectTo || '/'
         navigate({ to: targetPath, replace: true })
 
-        return `Welcome back, ${data.email}!`
+        return `Добро пожаловать, ${data.email}!`
       },
       error: 'Error',
     })
