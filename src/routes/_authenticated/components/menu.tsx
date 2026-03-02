@@ -123,4 +123,14 @@ export const NAV: NavItem[] = [
       DefaultRoles.SUPER_ADMIN,
     ],
   },
+  {
+    id: 'teacher-courses',
+    label: 'Курсы повышения кваоификации',
+    to: '/teacher-courses',
+    access: [
+      DefaultRoles.TEACHER,
+      DefaultRoles.SCHOOL_ADMIN,
+      DefaultRoles.DISTRICT_ADMIN,
+    ],
+  },
 ]
