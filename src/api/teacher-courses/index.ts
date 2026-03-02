@@ -82,6 +82,7 @@ export const edit = async (id: string, data: RegionForm) => {
   return {
     id: id,
     name_tg: `Курси`,
+    data,
     name_ru: `Курс`,
     name_en: `Course`,
     content: 'Lorem ipsum dolor sit amet',

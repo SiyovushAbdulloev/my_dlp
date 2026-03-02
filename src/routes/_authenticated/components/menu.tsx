@@ -133,4 +133,12 @@ export const NAV: NavItem[] = [
       DefaultRoles.DISTRICT_ADMIN,
     ],
   },
+  {
+    id: 'education-departments',
+    label: 'Шуъбахои маориф',
+    to: '/education-departments',
+    access: [
+      DefaultRoles.REGION_ADMIN,
+    ],
+  },
 ]
