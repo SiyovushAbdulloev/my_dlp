@@ -110,4 +110,17 @@ export const NAV: NavItem[] = [
     to: '/lesson-topics',
     access: [DefaultRoles.TEACHER, DefaultRoles.SCHOOL_ADMIN],
   },
+  {
+    id: 'books',
+    label: 'Электронные и аудио книги',
+    to: '/books',
+    access: [
+      DefaultRoles.STUDENT,
+      DefaultRoles.TEACHER,
+      DefaultRoles.SCHOOL_ADMIN,
+      DefaultRoles.DISTRICT_ADMIN,
+      DefaultRoles.REGION_ADMIN,
+      DefaultRoles.SUPER_ADMIN,
+    ],
+  },
 ]
