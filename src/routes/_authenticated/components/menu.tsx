@@ -54,13 +54,13 @@ export const NAV: NavItem[] = [
     id: 'classes',
     label: 'Классы',
     to: '/classes',
-    access: [DefaultRoles.DISTRICT_ADMIN],
+    access: [DefaultRoles.SCHOOL_ADMIN, DefaultRoles.DISTRICT_ADMIN],
   },
   {
     id: 'subjects',
     label: 'Предметы',
     to: '/subjects',
-    access: [DefaultRoles.DISTRICT_ADMIN],
+    access: [DefaultRoles.SCHOOL_ADMIN, DefaultRoles.DISTRICT_ADMIN],
   },
   {
     id: 'subject-class',
