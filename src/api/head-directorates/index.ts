@@ -1,21 +1,21 @@
 // import { client } from '@/api/client.ts'
-import { type EducationDepartment } from '@/types/education_department.ts'
+import { type HeadDirectorate } from '@/types/head_directorate.ts'
 import { type LaravelPaginatedResource } from 'laravel-resource-pagination-type'
 import { sleep } from '@/lib/utils.ts'
-import { type EducationDepartmentForm } from '@/features/education-departments/create.tsx'
+import { type HeadDirectorateForm } from '@/features/head-directorate/create.tsx'
 
 export const fetchIndex = async (
   page: number
-): Promise<LaravelPaginatedResource<EducationDepartment>> => {
-  // const json: LaravelPaginatedResource<EducationDepartment> = await client.get(import.meta.env.API_URL + '/api/education-departments').json();
+): Promise<LaravelPaginatedResource<HeadDirectorate>> => {
+  // const json: LaravelPaginatedResource<HeadDirectorate> = await client.get(import.meta.env.API_URL + '/api/head-directorates').json();
   // return json
   await sleep(3000)
   return {
     data: Array.from({ length: 10 }).map((_, index) => ({
       id: index + 1 + '',
-      name_tg: `Маорифи №${index + 1}, page: ${page}`,
-      name_ru: `Маориф №${index + 1}, page: ${page}`,
-      name_en: `Education department №${index + 1}, page: ${page}`,
+      name_tg: `Сарраёсати №${index + 1}, page: ${page}`,
+      name_ru: `Сарраёсат №${index + 1}, page: ${page}`,
+      name_en: `Head Directorate department №${index + 1}, page: ${page}`,
     })),
     links: {
       first: '',
@@ -35,8 +35,8 @@ export const fetchIndex = async (
   }
 }
 
-export const create = async (data: EducationDepartmentForm) => {
-  // const json: EducationDepartment = await client.post(import.meta.env.API_URL + '/api/education-departments', {
+export const create = async (data: HeadDirectorateForm) => {
+  // const json: HeadDirectorate = await client.post(import.meta.env.API_URL + '/api/head-directorates', {
   //   body: JSON.stringify(data),
   // }).json();
   // return json
@@ -52,7 +52,7 @@ export const create = async (data: EducationDepartmentForm) => {
 }
 
 export const getById = async (id: string) => {
-  // const json: EducationDepartment = await client.get(import.meta.env.API_URL + `/api/education-departments/${id}`).json();
+  // const json: HeadDirectorate = await client.get(import.meta.env.API_URL + `/api/head-directorates/${id}`).json();
   // return json
 
   await sleep(3000)
@@ -65,8 +65,8 @@ export const getById = async (id: string) => {
   }
 }
 
-export const edit = async (id: string, data: EducationDepartmentForm) => {
-  // const json: EducationDepartment = await client.post(import.meta.env.API_URL + `/api/education-departments/${id}`, {
+export const edit = async (id: string, data: HeadDirectorateForm) => {
+  // const json: HeadDirectorate = await client.post(import.meta.env.API_URL + `/api/head-directorates/${id}`, {
   //   method: 'PUT',
   //   body: JSON.stringify(data),
   // }).json();
@@ -82,7 +82,7 @@ export const edit = async (id: string, data: EducationDepartmentForm) => {
 }
 
 export const deleteById = async (id: string) => {
-  // const json = await client.delete(import.meta.env.API_URL + `/api/education-departments/${id}`).json();
+  // const json = await client.delete(import.meta.env.API_URL + `/api/head-directorates/${id}`).json();
   // return json
 
   await sleep(3000)

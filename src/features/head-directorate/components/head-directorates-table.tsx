@@ -7,11 +7,11 @@ import {
   getPaginationRowModel,
   useReactTable,
 } from '@tanstack/react-table'
-import { type EducationDepartment } from '@/types/education_department.ts'
+import { type HeadDirectorate } from '@/types/head_directorate.ts'
 import { type LaravelPaginatedResource } from 'laravel-resource-pagination-type'
 import { LoaderCircle, PenLine, Trash } from 'lucide-react'
 import { toast } from 'sonner'
-import { deleteById, fetchIndex } from '@/api/education-departments'
+import { deleteById, fetchIndex } from '@/api/head-directorates'
 import { Button } from '@/components/ui/button.tsx'
 import {
   Table,
@@ -26,7 +26,7 @@ import { DataTablePagination } from '@/components/data-table'
 const getColumns = (opts: {
   deleting: string | null
   onDelete: (id: string) => void
-}): ColumnDef<EducationDepartment>[] => [
+}): ColumnDef<HeadDirectorate>[] => [
   {
     accessorKey: 'name_ru',
     header: 'Наименование',
@@ -50,8 +50,8 @@ const getColumns = (opts: {
       return (
         <div className='flex items-center gap-2'>
           <Link
-            params={{ departmentId: id }}
-            to='/education-departments/$departmentId/edit'
+            params={{ directorateId: id }}
+            to='/head-directorates/$directorateId/edit'
           >
             <PenLine className={'size-5'} />
           </Link>
@@ -75,9 +75,9 @@ const getColumns = (opts: {
   },
 ]
 
-export const EducationDepartmentsTable = () => {
-  const [departments, setDepartments] =
-    useState<LaravelPaginatedResource<EducationDepartment> | null>(null)
+export const HeadDirectoratesTable = () => {
+  const [directorates, setDirectorates] =
+    useState<LaravelPaginatedResource<HeadDirectorate> | null>(null)
   const [pagination, setPagination] = useState({
     pageIndex: 0,
     pageSize: 10,
@@ -89,7 +89,7 @@ export const EducationDepartmentsTable = () => {
     try {
       setDeleting(id)
       await deleteById(id)
-      toast.success('Маориф успешно удален')
+      toast.success('Сарраёсат успешно удален')
       await fetchData()
     } finally {
       setDeleting('')
@@ -101,10 +101,10 @@ export const EducationDepartmentsTable = () => {
   }, [deleting])
 
   const table = useReactTable({
-    data: departments?.data ?? [],
+    data: directorates?.data ?? [],
     columns: columns,
     getCoreRowModel: getCoreRowModel(),
-    pageCount: departments?.meta?.last_page ?? 1,
+    pageCount: directorates?.meta?.last_page ?? 1,
     manualPagination: true,
     getPaginationRowModel: getPaginationRowModel(),
     onPaginationChange: setPagination,
@@ -117,7 +117,7 @@ export const EducationDepartmentsTable = () => {
     try {
       setFetching(true)
       const response = await fetchIndex(pagination.pageIndex + 1)
-      setDepartments(response)
+      setDirectorates(response)
     } finally {
       setFetching(false)
     }
