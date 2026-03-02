@@ -1,35 +1,37 @@
 // import { client } from '@/api/client.ts'
-import { type LaravelPaginatedResource } from 'laravel-resource-pagination-type'
 import { type Region } from '@/types'
+import { type LaravelPaginatedResource } from 'laravel-resource-pagination-type'
 import { sleep } from '@/lib/utils.ts'
 import { type RegionForm } from '@/features/dictionaries/regions/create.tsx'
 
-export const fetchIndex = async (page: number): Promise<LaravelPaginatedResource<Region>> => {
+export const fetchIndex = async (
+  page: number
+): Promise<LaravelPaginatedResource<Region>> => {
   // const json: LaravelPaginatedResource<Region> = await client.get(import.meta.env.API_URL + '/api/dictionaries/regions').json();
   // return json
   await sleep(3000)
   return {
-    data: Array.from({length: 10}).map((_, index) => ({
+    data: Array.from({ length: 10 }).map((_, index) => ({
       id: index + 1 + '',
       name_tg: `Вилояти №${index + 1}, page: ${page}`,
       name_ru: `Область №${index + 1}, page: ${page}`,
       name_en: `Region №${index + 1}, page: ${page}`,
     })),
     links: {
-        first: '',
-        last: '',
-        prev: null,
-        next: null
+      first: '',
+      last: '',
+      prev: null,
+      next: null,
     },
     meta: {
-        current_page: 1,
-        from: 0,
-        last_page: 6,
-        path: '',
-        per_page: 10,
-        to: 0,
-        total: 60
-    }
+      current_page: 1,
+      from: 0,
+      last_page: 6,
+      path: '',
+      per_page: 10,
+      to: 0,
+      total: 60,
+    },
   }
 }
 
@@ -42,6 +44,7 @@ export const create = async (data: RegionForm) => {
   await sleep(3000)
   return {
     id: 1,
+    data,
     name_ru: 'Name in russian',
     name_tg: 'Name in tajik',
     name_en: 'Name in english',
@@ -54,7 +57,8 @@ export const getById = async (id: string) => {
 
   await sleep(3000)
   return {
-    id: "1",
+    id: '1',
+    id1: id,
     name_ru: 'Name in russian',
     name_tg: 'Name in tajik',
     name_en: 'Name in english',
@@ -82,15 +86,15 @@ export const deleteById = async (id: string) => {
   // return json
 
   await sleep(3000)
-  return true
+  return id
 }
 
-export const fetchAll = async (): Promise<{data: Region[]}> => {
+export const fetchAll = async (): Promise<{ data: Region[] }> => {
   // const json: LaravelPaginatedResource<Region> = await client.get(import.meta.env.API_URL + '/api/dictionaries/regions').json();
   // return json
   await sleep(3000)
   return {
-    data: Array.from({length: 10}).map((_, index) => ({
+    data: Array.from({ length: 10 }).map((_, index) => ({
       id: index + 1 + '',
       name_tg: `Вилояти №${index + 1}`,
       name_ru: `Область №${index + 1}`,

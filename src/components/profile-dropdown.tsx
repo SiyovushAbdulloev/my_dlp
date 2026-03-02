@@ -1,4 +1,3 @@
-import { Link } from '@tanstack/react-router'
 import { useAuthStore } from '@/stores/auth-store.ts'
 import useDialogState from '@/hooks/use-dialog-state'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -13,15 +12,13 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+// import { ChangePasswordDialog } from '@/components/change-password.tsx'
 import { SignOutDialog } from '@/components/sign-out-dialog'
-import { ChangePasswordDialog } from '@/components/change-password.tsx'
 
 export function ProfileDropdown() {
   const [open, setOpen] = useDialogState()
-  const [openChangePassword, setOpenChangePassword] = useDialogState()
-  const {
-    auth
-  } = useAuthStore()
+  // const [openChangePassword, setOpenChangePassword] = useDialogState()
+  const { auth } = useAuthStore()
 
   return (
     <>
@@ -37,7 +34,9 @@ export function ProfileDropdown() {
         <DropdownMenuContent className='w-56' align='end' forceMount>
           <DropdownMenuLabel className='font-normal'>
             <div className='flex flex-col gap-1.5'>
-              <p className='text-sm leading-none font-medium'>{auth.fullName()}</p>
+              <p className='text-sm leading-none font-medium'>
+                {auth.fullName()}
+              </p>
               <p className='text-xs leading-none text-muted-foreground'>
                 {auth.user?.email}
               </p>
@@ -45,10 +44,10 @@ export function ProfileDropdown() {
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
-            <DropdownMenuItem  onClick={() => setOpenChangePassword(true)}>
-              Изменить пароль
-              <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
-            </DropdownMenuItem>
+            {/*<DropdownMenuItem onClick={() => setOpenChangePassword(true)}>*/}
+            {/*  Изменить пароль*/}
+            {/*  <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>*/}
+            {/*</DropdownMenuItem>*/}
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
           <DropdownMenuItem variant='destructive' onClick={() => setOpen(true)}>
@@ -61,7 +60,10 @@ export function ProfileDropdown() {
       </DropdownMenu>
 
       <SignOutDialog open={!!open} onOpenChange={setOpen} />
-      <ChangePasswordDialog open={!!openChangePassword} onOpenChange={setOpenChangePassword} />
+      {/*<ChangePasswordDialog*/}
+      {/*  open={!!openChangePassword}*/}
+      {/*  onOpenChange={setOpenChangePassword}*/}
+      {/*/>*/}
     </>
   )
 }

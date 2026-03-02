@@ -1,30 +1,26 @@
-import { useCallback, useState } from "react"
-import { $isTableSelection } from "@lexical/table"
+import { useCallback, useState } from 'react'
+import { $isTableSelection } from '@lexical/table'
 import {
   $isRangeSelection,
-  BaseSelection,
+  type BaseSelection,
   FORMAT_TEXT_COMMAND,
-  TextFormatType,
-} from "lexical"
+  type TextFormatType,
+} from 'lexical'
 import {
   BoldIcon,
   ItalicIcon,
   StrikethroughIcon,
   UnderlineIcon,
-} from "lucide-react"
-
-import { useToolbarContext } from "@/components/editor/context/toolbar-context"
-import { useUpdateToolbarHandler } from "@/components/editor/editor-hooks/use-update-toolbar"
-import {
-  ToggleGroup,
-  ToggleGroupItem,
-} from "@/components/ui/toggle-group"
+} from 'lucide-react'
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
+import { useToolbarContext } from '@/components/editor/context/toolbar-context'
+import { useUpdateToolbarHandler } from '@/components/editor/editor-hooks/use-update-toolbar'
 
 const FORMATS = [
-  { format: "bold", icon: BoldIcon, label: "Bold" },
-  { format: "italic", icon: ItalicIcon, label: "Italic" },
-  { format: "underline", icon: UnderlineIcon, label: "Underline" },
-  { format: "strikethrough", icon: StrikethroughIcon, label: "Strikethrough" },
+  { format: 'bold', icon: BoldIcon, label: 'Bold' },
+  { format: 'italic', icon: ItalicIcon, label: 'Italic' },
+  { format: 'underline', icon: UnderlineIcon, label: 'Underline' },
+  { format: 'strikethrough', icon: StrikethroughIcon, label: 'Strikethrough' },
 ] as const
 
 export function FontFormatToolbarPlugin() {
@@ -56,11 +52,11 @@ export function FontFormatToolbarPlugin() {
 
   return (
     <ToggleGroup
-      type="multiple"
+      type='multiple'
       value={activeFormats}
       onValueChange={setActiveFormats}
-      variant="outline"
-      size="sm"
+      variant='outline'
+      size='sm'
     >
       {FORMATS.map(({ format, icon: Icon, label }) => (
         <ToggleGroupItem
@@ -74,7 +70,7 @@ export function FontFormatToolbarPlugin() {
             )
           }}
         >
-          <Icon className="size-4" />
+          <Icon className='size-4' />
         </ToggleGroupItem>
       ))}
     </ToggleGroup>

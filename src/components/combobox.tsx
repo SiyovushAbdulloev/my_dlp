@@ -1,9 +1,9 @@
 // src/components/async-combobox/async-combobox.tsx
 import * as React from 'react'
+import { type LaravelPaginatedResource } from 'laravel-resource-pagination-type'
 import { Check, ChevronDown, Loader } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import {
   Command,
   CommandEmpty,
@@ -12,7 +12,11 @@ import {
   CommandItem,
   CommandList,
 } from '@/components/ui/command'
-import { type LaravelPaginatedResource } from 'laravel-resource-pagination-type'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
 
 type ComboboxProps<T> = {
   value: string | undefined
@@ -25,7 +29,10 @@ type ComboboxProps<T> = {
   disabled?: boolean
   className?: string
 
-  load: (args: { q: string; page: number }) => Promise<LaravelPaginatedResource<T>>
+  load: (args: {
+    q: string
+    page: number
+  }) => Promise<LaravelPaginatedResource<T>>
   getValue: (item: T) => string
   getLabel: (item: T) => string
 
@@ -40,21 +47,21 @@ type ComboboxProps<T> = {
 }
 
 export function Combobox<T>({
-                              value,
-                              onChange,
-                              placeholder = 'Select...',
-                              searchPlaceholder = 'Search...',
-                              emptyText = 'Nothing found.',
-                              disabled,
-                              className,
-                              load,
-                              getValue,
-                              getLabel,
-                              initialItems = [],
-                              debounceMs = 300,
-                              initialSelected,
-                              selectedLabel,
-                            }: ComboboxProps<T>) {
+  value,
+  onChange,
+  placeholder = 'Select...',
+  searchPlaceholder = 'Search...',
+  emptyText = 'Nothing found.',
+  disabled,
+  className,
+  load,
+  getValue,
+  getLabel,
+  initialItems = [],
+  debounceMs = 300,
+  initialSelected,
+  selectedLabel,
+}: ComboboxProps<T>) {
   const [open, setOpen] = React.useState(false)
   const [q, setQ] = React.useState('')
   const [items, setItems] = React.useState<T[]>(initialItems)
@@ -92,6 +99,7 @@ export function Combobox<T>({
     async (args: { q: string; page: number; append: boolean }) => {
       const { q, page, append } = args
       try {
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
         append ? setLoadingMore(true) : setLoading(true)
 
         const res = await load({ q, page })
@@ -101,6 +109,7 @@ export function Combobox<T>({
         setPage(res.meta?.current_page ?? page)
         setLastPage(res.meta?.last_page ?? 1)
       } finally {
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
         append ? setLoadingMore(false) : setLoading(false)
       }
     },
@@ -135,7 +144,6 @@ export function Combobox<T>({
     const root = listRef.current
     const el = sentinelRef.current
 
-
     const io = new IntersectionObserver(
       (entries) => {
         const first = entries[0]
@@ -152,7 +160,7 @@ export function Combobox<T>({
   }, [open, hasMore, page, q, loading, loadingMore, fetchPage])
 
   // ✅ label logic: prefer selected from items, fallback to selectedLabel
-  const label = selected ? getLabel(selected) : selectedLabel ?? ''
+  const label = selected ? getLabel(selected) : (selectedLabel ?? '')
 
   return (
     <Popover open={open} onOpenChange={setOpen}>

@@ -53,8 +53,9 @@ export function SubjectsEdit() {
       form.reset()
       toast.success('Предмет успешно изменен')
       navigate({ to: '/subjects' })
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
-      console.log(err)
+      // console.log(err)
     } finally {
       setLoading(false)
     }

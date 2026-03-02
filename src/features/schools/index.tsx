@@ -1,8 +1,8 @@
-import { Main } from '@/components/layout/main'
-import { SchoolsTable } from './components/schools-table.tsx'
+import { useNavigate } from '@tanstack/react-router'
 import { Plus } from 'lucide-react'
 import { Button } from '@/components/ui/button.tsx'
-import { useNavigate } from '@tanstack/react-router'
+import { Main } from '@/components/layout/main'
+import { SchoolsTable } from './components/schools-table.tsx'
 
 export function Schools() {
   const navigate = useNavigate()
@@ -14,7 +14,10 @@ export function Schools() {
           <div>
             <h2 className='text-2xl font-bold tracking-tight'>Школы</h2>
           </div>
-          <Button className='space-x-1' onClick={() => navigate({to: '/schools/create'})}>
+          <Button
+            className='space-x-1'
+            onClick={() => navigate({ to: '/schools/create' })}
+          >
             <span>Создать школу</span> <Plus size={18} />
           </Button>
         </div>

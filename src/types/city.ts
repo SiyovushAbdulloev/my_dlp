@@ -12,7 +12,7 @@ export interface City {
 export type CityType = 'city' | 'town' | 'village'
 
 export const CityTypeLabel = {
-  'city': 'Город',
-  'town': 'Городок',
-  'village': 'Село',
+  city: 'Город',
+  town: 'Городок',
+  village: 'Село',
 }

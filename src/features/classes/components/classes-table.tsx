@@ -7,6 +7,7 @@ import {
   getPaginationRowModel,
   useReactTable,
 } from '@tanstack/react-table'
+import { type SchoolClass } from '@/types/school_class.ts'
 import { type LaravelPaginatedResource } from 'laravel-resource-pagination-type'
 import { LoaderCircle, PenLine, Trash } from 'lucide-react'
 import { toast } from 'sonner'
@@ -21,7 +22,6 @@ import {
   TableRow,
 } from '@/components/ui/table.tsx'
 import { DataTablePagination } from '@/components/data-table'
-import { type SchoolClass } from '@/types/school_class.ts'
 
 const getColumns = (opts: {
   deleting: string | null
@@ -39,15 +39,12 @@ const getColumns = (opts: {
     accessorKey: 'id',
     header: 'Действие',
     cell: (props) => {
-      const id: string = props.getValue()
+      const id: string = props.getValue() as string
       const isDeleting = opts.deleting === id
 
       return (
         <div className='flex items-center gap-2'>
-          <Link
-            params={{ classId: id }}
-            to='/classes/$classId/edit'
-          >
+          <Link params={{ classId: id }} to='/classes/$classId/edit'>
             <PenLine />
           </Link>
 

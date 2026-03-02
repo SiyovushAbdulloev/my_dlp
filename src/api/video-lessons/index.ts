@@ -1,17 +1,8 @@
 // import { client } from '@/api/client.ts'
-import { type VideoLesson } from '@/types/video_lesson.ts';
-import { type LaravelPaginatedResource } from 'laravel-resource-pagination-type';
-import { sleep } from '@/lib/utils.ts';
-import { VideoLessonForm } from '@/features/video-lessons/create.tsx';
-import { type WebinarForm } from '@/features/webinars/create.tsx';
-
-
-
-
-
-
-
-
+import { type VideoLesson } from '@/types/video_lesson.ts'
+import { type LaravelPaginatedResource } from 'laravel-resource-pagination-type'
+import { sleep } from '@/lib/utils.ts'
+import { type VideoLessonForm } from '@/features/video-lessons/create.tsx'
 
 export const fetchIndex = async (
   page: number
@@ -30,14 +21,15 @@ export const fetchIndex = async (
       class: {
         id: '1',
         number: 10,
-        letter: 'a'
+        letter: 'a',
       },
       subject: {
+        id: '1',
         name_ru: `Предмет №${index + 1}, page: ${page}`,
         name_en: `Subject №${index + 1}, page: ${page}`,
         name_tg: `Фан №${index + 1}, page: ${page}`,
       },
-      video_url: 'https://www.youtube.com/watch?v=yxfuE6h1pi4'
+      video_url: 'https://www.youtube.com/watch?v=eJnejBp9edA',
     })),
     links: {
       first: '',
@@ -66,12 +58,13 @@ export const create = async (data: VideoLessonForm) => {
   await sleep(3000)
   return {
     id: 1 + '',
+    data,
     title_ru: `Заголовок`,
     title_tg: `Заголовок`,
     title_en: `Title`,
     class_id: '1',
     subject_id: '1',
-    video_url: 'https://www.youtube.com/watch?v=yxfuE6h1pi4'
+    video_url: 'https://www.youtube.com/watch?v=eJnejBp9edA',
   }
 }
 
@@ -82,13 +75,14 @@ export const getById = async (id: string) => {
   await sleep(3000)
   return {
     id: 1 + '',
+    id1: id,
     title_ru: `Заголовок`,
     title_tg: `Заголовок`,
     title_en: `Title`,
     class_id: '1',
     subject_id: '1',
-    video_url: 'https://www.youtube.com/watch?v=yxfuE6h1pi4',
-    external_url: undefined
+    video_url: 'https://www.youtube.com/watch?v=eJnejBp9edA',
+    external_url: undefined,
   }
 }
 
@@ -102,12 +96,14 @@ export const edit = async (id: string, data: VideoLessonForm) => {
   await sleep(3000)
   return {
     id: 1 + '',
+    id1: id,
+    data,
     title_ru: `Заголовок`,
     title_tg: `Заголовок`,
     title_en: `Title`,
     class_id: '1',
     subject_id: '1',
-    video_url: 'https://www.youtube.com/watch?v=yxfuE6h1pi4'
+    video_url: 'https://www.youtube.com/watch?v=eJnejBp9edA',
   }
 }
 
@@ -116,5 +112,5 @@ export const deleteById = async (id: string) => {
   // return json
 
   await sleep(3000)
-  return true
+  return id
 }

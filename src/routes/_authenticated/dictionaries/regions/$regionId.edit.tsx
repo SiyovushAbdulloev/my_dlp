@@ -1,9 +1,9 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { RegionsEdit } from '@/features/dictionaries/regions/edit.tsx'
 import { getById } from '@/api/dictionaries/regions'
+import { RegionsEdit } from '@/features/dictionaries/regions/edit.tsx'
 
 export const Route = createFileRoute(
-  '/_authenticated/dictionaries/regions/$districtId/edit'
+  '/_authenticated/dictionaries/regions/$regionId/edit'
 )({
   beforeLoad: async ({ params }) => {
     const { regionId } = params

@@ -1,47 +1,32 @@
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useNavigate } from '@tanstack/react-router';
-import { Route } from '@/routes/_authenticated/dictionaries/regions/$districtId.edit.tsx';
-import { ArrowLeft, Loader2, LogIn } from 'lucide-react'
-import { create, edit } from '@/api/dictionaries/regions';
-import { Button } from '@/components/ui/button.tsx';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form.tsx';
-import { Input } from '@/components/ui/input.tsx';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs.tsx';
-import { Main } from '@/components/layout/main';
-import { type RegionForm, regionFormSchema } from '@/features/dictionaries/regions/create.tsx';
+import { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useNavigate } from '@tanstack/react-router'
+import { Route } from '@/routes/_authenticated/dictionaries/regions/$regionId.edit.tsx'
+import { ArrowLeft, Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+import { edit } from '@/api/dictionaries/regions'
+import { Button } from '@/components/ui/button.tsx'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form.tsx'
+import { Input } from '@/components/ui/input.tsx'
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from '@/components/ui/tabs.tsx'
+import { Main } from '@/components/layout/main'
+import {
+  type RegionForm,
+  regionFormSchema,
+} from '@/features/dictionaries/regions/create.tsx'
 
 const defaultLang = 'en'
 
@@ -68,8 +53,9 @@ export function RegionsEdit() {
       form.reset()
       toast.success('Регион успешно изменен')
       navigate({ to: '/dictionaries/regions' })
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
-      console.log(err)
+      // console.log(err)
     } finally {
       setLoading(false)
     }

@@ -15,9 +15,9 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form.tsx'
+import { MultiSelect } from '@/components/ui/multi-select.tsx'
 import { Main } from '@/components/layout/main'
 import { SelectDropdown } from '@/components/select-dropdown.tsx'
-import { MultiSelect } from '@/components/ui/multi-select.tsx'
 
 export const subjectClassFormSchema = z.object({
   class_id: z.string({ message: 'Класс обязателен' }),
@@ -44,8 +44,9 @@ export function SubjectClassCreate() {
       form.reset()
       toast.success('Предмет-класс успешно создан')
       navigate({ to: '/subject-class' })
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
-      console.log(err)
+      // console.log(err)
     } finally {
       setLoading(false)
     }
@@ -96,7 +97,7 @@ export function SubjectClassCreate() {
                   <FormItem className={'w-full'}>
                     <FormLabel className={'!w-full'}>Предметы</FormLabel>
                     <MultiSelect
-                      placeholder={"Выберите предметы"}
+                      placeholder={'Выберите предметы'}
                       options={subjects.data.map((s) => ({
                         value: s.id,
                         label: s.name_ru,

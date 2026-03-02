@@ -1,8 +1,8 @@
-import { Main } from '@/components/layout/main'
-import { WebinarsTable } from './components/webinars-table.tsx'
+import { useNavigate } from '@tanstack/react-router'
 import { Plus } from 'lucide-react'
 import { Button } from '@/components/ui/button.tsx'
-import { useNavigate } from '@tanstack/react-router'
+import { Main } from '@/components/layout/main'
+import { WebinarsTable } from './components/webinars-table.tsx'
 
 export function Webinars() {
   const navigate = useNavigate()
@@ -14,7 +14,10 @@ export function Webinars() {
           <div>
             <h2 className='text-2xl font-bold tracking-tight'>Вебинары</h2>
           </div>
-          <Button className='space-x-1' onClick={() => navigate({to: '/webinars/create'})}>
+          <Button
+            className='space-x-1'
+            onClick={() => navigate({ to: '/webinars/create' })}
+          >
             <span>Создать вебинар</span> <Plus size={18} />
           </Button>
         </div>

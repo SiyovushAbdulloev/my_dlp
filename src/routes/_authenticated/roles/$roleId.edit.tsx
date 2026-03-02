@@ -2,9 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { getById, fetchPermissions } from '@/api/roles'
 import { RolesEdit } from '@/features/roles/edit.tsx'
 
-export const Route = createFileRoute(
-  '/_authenticated/roles/$roleId/edit'
-)({
+export const Route = createFileRoute('/_authenticated/roles/$roleId/edit')({
   beforeLoad: async ({ params }) => {
     const { roleId } = params
     const role = await getById(roleId)
@@ -15,7 +13,7 @@ export const Route = createFileRoute(
     const permissions = await fetchPermissions()
     return {
       permissions,
-      role
+      role,
     }
   },
   component: RolesEdit,

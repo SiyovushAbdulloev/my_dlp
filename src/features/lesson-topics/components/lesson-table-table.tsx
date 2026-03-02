@@ -1,28 +1,29 @@
-import { type ReactNode, useEffect, useMemo, useState } from 'react';
-import { Link } from '@tanstack/react-router';
-import { type ColumnDef, flexRender, getCoreRowModel, getPaginationRowModel, useReactTable } from '@tanstack/react-table';
-import { type LessonTopic } from '@/types/lesson_topic.ts';
-import { type LaravelPaginatedResource } from 'laravel-resource-pagination-type';
-import { LoaderCircle, PenLine, Trash } from 'lucide-react';
-import { toast } from 'sonner';
-import { deleteById, fetchIndex } from '@/api/lesson-topics';
-import { Button } from '@/components/ui/button.tsx';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table.tsx';
-import { DataTablePagination } from '@/components/data-table';
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+import { type ReactNode, useEffect, useMemo, useState } from 'react'
+import { Link } from '@tanstack/react-router'
+import {
+  type ColumnDef,
+  flexRender,
+  getCoreRowModel,
+  getPaginationRowModel,
+  useReactTable,
+} from '@tanstack/react-table'
+import { type LessonTopic } from '@/types/lesson_topic.ts'
+import { type SchoolClass } from '@/types/school_class.ts'
+import { type Subject } from '@/types/subject.ts'
+import { type LaravelPaginatedResource } from 'laravel-resource-pagination-type'
+import { LoaderCircle, PenLine, Trash } from 'lucide-react'
+import { toast } from 'sonner'
+import { deleteById, fetchIndex } from '@/api/lesson-topics'
+import { Button } from '@/components/ui/button.tsx'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table.tsx'
+import { DataTablePagination } from '@/components/data-table'
 
 const getColumns = (opts: {
   deleting: string | null
@@ -36,18 +37,21 @@ const getColumns = (opts: {
   {
     accessorKey: 'class',
     header: 'Класс',
-    cell: (props) => <p>{props.getValue() ? `${props.getValue()?.number} ${props.getValue()?.letter}` : ''}</p>,
+    cell: (props) => {
+      const cls = props.getValue() as SchoolClass
+      return <p>{cls ? `${cls?.number} ${cls?.letter}` : ''}</p>
+    },
   },
   {
     accessorKey: 'subject',
     header: 'Предмет',
-    cell: (props) => <p>{props.getValue()?.name_ru}</p>,
+    cell: (props) => <p>{(props.getValue() as Subject)?.name_ru}</p>,
   },
   {
     accessorKey: 'id',
     header: 'Действие',
     cell: (props) => {
-      const id: string = props.getValue()
+      const id: string = props.getValue() as string
       const isDeleting = opts.deleting === id
 
       return (

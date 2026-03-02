@@ -1,8 +1,8 @@
-import { Main } from '@/components/layout/main'
-import { RegionsTable } from './components/regions-table'
+import { useNavigate } from '@tanstack/react-router'
 import { Plus } from 'lucide-react'
 import { Button } from '@/components/ui/button.tsx'
-import { useNavigate } from '@tanstack/react-router'
+import { Main } from '@/components/layout/main'
+import { RegionsTable } from './components/regions-table'
 
 export function Regions() {
   const navigate = useNavigate()
@@ -14,7 +14,10 @@ export function Regions() {
           <div>
             <h2 className='text-2xl font-bold tracking-tight'>Регионы</h2>
           </div>
-          <Button className='space-x-1' onClick={() => navigate({to: '/dictionaries/regions/create'})}>
+          <Button
+            className='space-x-1'
+            onClick={() => navigate({ to: '/dictionaries/regions/create' })}
+          >
             <span>Создать регион</span> <Plus size={18} />
           </Button>
         </div>

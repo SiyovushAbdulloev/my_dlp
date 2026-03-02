@@ -3,6 +3,7 @@ import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate } from '@tanstack/react-router'
+import { CityTypeLabel } from '@/types/city.ts'
 import { ArrowLeft, Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { create } from '@/api/dictionaries/cities'
@@ -26,7 +27,6 @@ import {
 import { Combobox } from '@/components/combobox.tsx'
 import { Main } from '@/components/layout/main'
 import { SelectDropdown } from '@/components/select-dropdown.tsx'
-import { CityTypeLabel } from '@/types/city.ts'
 
 export const cityFormSchema = z.object({
   name: z.object({
@@ -72,8 +72,9 @@ export function CitiesCreate() {
       form.reset()
       toast.success('Город успешно создан')
       navigate({ to: '/dictionaries/cities' })
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
-      console.log(err)
+      // console.log(err)
     } finally {
       setLoading(false)
     }
@@ -162,10 +163,12 @@ export function CitiesCreate() {
                   <SelectDropdown
                     defaultValue={field.value}
                     onValueChange={field.onChange}
-                    placeholder='Выберите регион'
-                    items={Object.keys(CityTypeLabel).map(key => ({
+                    placeholder='Выберите тип'
+                    items={Object.keys(CityTypeLabel).map((key) => ({
                       value: key,
-                      label: CityTypeLabel[key]
+                      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                      //@ts-expect-error
+                      label: CityTypeLabel[key],
                     }))}
                   />
                   <FormMessage />
@@ -185,8 +188,7 @@ export function CitiesCreate() {
                       onChange={field.onChange}
                       placeholder='Выберите район'
                       searchPlaceholder='Поиск по районам...'
-                      load={async ({ q, page }) => {
-                        console.log({ q, page })
+                      load={async ({ page }) => {
                         const res = await fetchIndex(page)
                         return res
                       }}

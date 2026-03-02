@@ -15,8 +15,8 @@ import {
   FormMessage,
 } from '@/components/ui/form.tsx'
 import { Main } from '@/components/layout/main'
-import { type ClassForm, classFormSchema } from '@/features/classes/create.tsx'
 import { SelectDropdown } from '@/components/select-dropdown.tsx'
+import { type ClassForm, classFormSchema } from '@/features/classes/create.tsx'
 
 export function ClassesEdit() {
   const navigate = useNavigate()
@@ -38,8 +38,9 @@ export function ClassesEdit() {
       form.reset()
       toast.success('Класс успешно изменен')
       navigate({ to: '/classes' })
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
-      console.log(err)
+      // console.log(err)
     } finally {
       setLoading(false)
     }
@@ -61,21 +62,21 @@ export function ClassesEdit() {
             onSubmit={form.handleSubmit(onSubmit)}
             className='space-y-6 px-4'
           >
-            <div className="grid grid-cols-2 gap-3">
+            <div className='grid grid-cols-2 gap-3'>
               <FormField
                 control={form.control}
                 name='number'
                 render={({ field }) => (
-                  <FormItem className={"w-full"}>
-                    <FormLabel className={"!w-full"}>Номер</FormLabel>
+                  <FormItem className={'w-full'}>
+                    <FormLabel className={'!w-full'}>Номер</FormLabel>
                     <SelectDropdown
-                      className={"!w-full"}
+                      className={'!w-full'}
                       defaultValue={field.value}
                       onValueChange={field.onChange}
                       placeholder='Выберите номер класса'
-                      items={Array.from({ length: 11}).map((_, i) => ({
-                        value: (i + 1) + '',
-                        label: (i + 1) + '',
+                      items={Array.from({ length: 11 }).map((_, i) => ({
+                        value: i + 1 + '',
+                        label: i + 1 + '',
                       }))}
                     />
                     <FormMessage />
@@ -87,14 +88,14 @@ export function ClassesEdit() {
                 control={form.control}
                 name='letter'
                 render={({ field }) => (
-                  <FormItem className={"w-full"}>
-                    <FormLabel className={"!w-full"}>Буква</FormLabel>
+                  <FormItem className={'w-full'}>
+                    <FormLabel className={'!w-full'}>Буква</FormLabel>
                     <SelectDropdown
-                      className={"!w-full"}
+                      className={'!w-full'}
                       defaultValue={field.value}
                       onValueChange={field.onChange}
                       placeholder='Выберите букву класса'
-                      items={Array.from({ length: 32}).map((_, i) => ({
+                      items={Array.from({ length: 32 }).map((_, i) => ({
                         value: String.fromCharCode(i + 1072),
                         label: String.fromCharCode(i + 1072),
                       }))}

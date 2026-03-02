@@ -68,8 +68,9 @@ export function WebinarsCreate() {
       form.reset()
       toast.success('Вебинар успешно создан')
       navigate({ to: '/webinars' })
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
-      console.log(err)
+      // console.log(err)
     } finally {
       setLoading(false)
     }

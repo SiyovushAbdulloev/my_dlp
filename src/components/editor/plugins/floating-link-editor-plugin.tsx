@@ -1,4 +1,4 @@
-"use client"
+'use client'
 
 /**
  * Copyright (c) Meta Platforms, Inc. and affiliates.
@@ -7,37 +7,43 @@
  * LICENSE file in the root directory of this source tree.
  *
  */
-import { Dispatch, JSX, useCallback, useEffect, useRef, useState } from "react"
+import {
+  type Dispatch,
+  type JSX,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
 import {
   $createLinkNode,
   $isAutoLinkNode,
   $isLinkNode,
   TOGGLE_LINK_COMMAND,
-} from "@lexical/link"
-import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext"
-import { $findMatchingParent, mergeRegister } from "@lexical/utils"
+} from '@lexical/link'
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext'
+import { $findMatchingParent, mergeRegister } from '@lexical/utils'
 import {
   $getSelection,
   $isLineBreakNode,
   $isNodeSelection,
   $isRangeSelection,
-  BaseSelection,
+  type BaseSelection,
   CLICK_COMMAND,
   COMMAND_PRIORITY_CRITICAL,
   COMMAND_PRIORITY_HIGH,
   COMMAND_PRIORITY_LOW,
   KEY_ESCAPE_COMMAND,
-  LexicalEditor,
+  type LexicalEditor,
   SELECTION_CHANGE_COMMAND,
-} from "lexical"
-import { Check, Pencil, Trash, X } from "lucide-react"
-import { createPortal } from "react-dom"
-
-import { getSelectedNode } from "@/components/editor/utils/get-selected-node"
-import { setFloatingElemPositionForLinkEditor } from "@/components/editor/utils/set-floating-elem-position-for-link-editor"
-import { sanitizeUrl } from "@/components/editor/utils/url"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+} from 'lexical'
+import { Check, Pencil, Trash, X } from 'lucide-react'
+import { createPortal } from 'react-dom'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { getSelectedNode } from '@/components/editor/utils/get-selected-node'
+import { setFloatingElemPositionForLinkEditor } from '@/components/editor/utils/set-floating-elem-position-for-link-editor'
+import { sanitizeUrl } from '@/components/editor/utils/url'
 
 function FloatingLinkEditor({
   editor,
@@ -56,8 +62,8 @@ function FloatingLinkEditor({
 }): JSX.Element {
   const editorRef = useRef<HTMLDivElement | null>(null)
   const inputRef = useRef<HTMLInputElement>(null)
-  const [linkUrl, setLinkUrl] = useState("")
-  const [editedLinkUrl, setEditedLinkUrl] = useState("https://")
+  const [linkUrl, setLinkUrl] = useState('')
+  const [editedLinkUrl, setEditedLinkUrl] = useState('https://')
   const [lastSelection, setLastSelection] = useState<BaseSelection | null>(null)
 
   const $updateLinkEditor = useCallback(() => {
@@ -71,7 +77,7 @@ function FloatingLinkEditor({
       } else if ($isLinkNode(node)) {
         setLinkUrl(node.getURL())
       } else {
-        setLinkUrl("")
+        setLinkUrl('')
       }
       if (isLinkEditMode) {
         setEditedLinkUrl(linkUrl)
@@ -101,13 +107,13 @@ function FloatingLinkEditor({
         setFloatingElemPositionForLinkEditor(domRect, editorElem, anchorElem)
       }
       setLastSelection(selection)
-    } else if (!activeElement || activeElement.className !== "link-input") {
+    } else if (!activeElement || activeElement.className !== 'link-input') {
       if (rootElement !== null) {
         setFloatingElemPositionForLinkEditor(null, editorElem, anchorElem)
       }
       setLastSelection(null)
       setIsLinkEditMode(false)
-      setLinkUrl("")
+      setLinkUrl('')
     }
 
     return true
@@ -122,17 +128,17 @@ function FloatingLinkEditor({
       })
     }
 
-    window.addEventListener("resize", update)
+    window.addEventListener('resize', update)
 
     if (scrollerElem) {
-      scrollerElem.addEventListener("scroll", update)
+      scrollerElem.addEventListener('scroll', update)
     }
 
     return () => {
-      window.removeEventListener("resize", update)
+      window.removeEventListener('resize', update)
 
       if (scrollerElem) {
-        scrollerElem.removeEventListener("scroll", update)
+        scrollerElem.removeEventListener('scroll', update)
       }
     }
   }, [anchorElem.parentElement, editor, $updateLinkEditor])
@@ -183,10 +189,10 @@ function FloatingLinkEditor({
   const monitorInputInteraction = (
     event: React.KeyboardEvent<HTMLInputElement>
   ) => {
-    if (event.key === "Enter") {
+    if (event.key === 'Enter') {
       event.preventDefault()
       handleLinkSubmission()
-    } else if (event.key === "Escape") {
+    } else if (event.key === 'Escape') {
       event.preventDefault()
       setIsLinkEditMode(false)
     }
@@ -194,7 +200,7 @@ function FloatingLinkEditor({
 
   const handleLinkSubmission = () => {
     if (lastSelection !== null) {
-      if (linkUrl !== "") {
+      if (linkUrl !== '') {
         editor.dispatchCommand(TOGGLE_LINK_COMMAND, sanitizeUrl(editedLinkUrl))
         editor.update(() => {
           const selection = $getSelection()
@@ -211,72 +217,72 @@ function FloatingLinkEditor({
           }
         })
       }
-      setEditedLinkUrl("https://")
+      setEditedLinkUrl('https://')
       setIsLinkEditMode(false)
     }
   }
   return (
     <div
       ref={editorRef}
-      className="absolute top-0 left-0 w-full max-w-sm rounded-md opacity-0 shadow-md"
+      className='absolute top-0 left-0 w-full max-w-sm rounded-md opacity-0 shadow-md'
     >
       {!isLink ? null : isLinkEditMode ? (
-        <div className="flex items-center space-x-2 rounded-md border p-1 pl-2">
+        <div className='flex items-center space-x-2 rounded-md border p-1 pl-2'>
           <Input
             ref={inputRef}
             value={editedLinkUrl}
             onChange={(event) => setEditedLinkUrl(event.target.value)}
             onKeyDown={monitorInputInteraction}
-            className="flex-grow"
+            className='flex-grow'
           />
           <Button
-            size="icon"
-            variant="ghost"
+            size='icon'
+            variant='ghost'
             onClick={() => {
               setIsLinkEditMode(false)
               setIsLink(false)
             }}
-            className="shrink-0"
+            className='shrink-0'
           >
-            <X className="h-4 w-4" />
+            <X className='h-4 w-4' />
           </Button>
           <Button
-            size="icon"
+            size='icon'
             onClick={handleLinkSubmission}
-            className="shrink-0"
+            className='shrink-0'
           >
-            <Check className="h-4 w-4" />
+            <Check className='h-4 w-4' />
           </Button>
         </div>
       ) : (
-        <div className="flex items-center justify-between rounded-md border p-1 pl-2">
+        <div className='flex items-center justify-between rounded-md border p-1 pl-2'>
           <a
             href={sanitizeUrl(linkUrl)}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="overflow-hidden text-sm text-ellipsis whitespace-nowrap"
+            target='_blank'
+            rel='noopener noreferrer'
+            className='overflow-hidden text-sm text-ellipsis whitespace-nowrap'
           >
             {linkUrl}
           </a>
-          <div className="flex">
+          <div className='flex'>
             <Button
-              size="icon"
-              variant="ghost"
+              size='icon'
+              variant='ghost'
               onClick={() => {
                 setEditedLinkUrl(linkUrl)
                 setIsLinkEditMode(true)
               }}
             >
-              <Pencil className="h-4 w-4" />
+              <Pencil className='h-4 w-4' />
             </Button>
             <Button
-              size="icon"
-              variant="destructive"
+              size='icon'
+              variant='destructive'
               onClick={() => {
                 editor.dispatchCommand(TOGGLE_LINK_COMMAND, null)
               }}
             >
-              <Trash className="h-4 w-4" />
+              <Trash className='h-4 w-4' />
             </Button>
           </div>
         </div>
@@ -366,7 +372,7 @@ function useFloatingLinkEditorToolbar(
             const node = getSelectedNode(selection)
             const linkNode = $findMatchingParent(node, $isLinkNode)
             if ($isLinkNode(linkNode) && (payload.metaKey || payload.ctrlKey)) {
-              window.open(linkNode.getURL(), "_blank")
+              window.open(linkNode.getURL(), '_blank')
               return true
             }
           }

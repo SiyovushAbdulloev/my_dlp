@@ -48,7 +48,7 @@ const getColumns = (opts: {
     accessorKey: 'id',
     header: 'Действие',
     cell: (props) => {
-      const id: string = props.getValue()
+      const id: string = props.getValue() as string
       const isDeleting = opts.deleting === id
 
       return (

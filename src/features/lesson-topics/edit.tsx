@@ -66,8 +66,9 @@ export function LessonTopicEdit() {
       await edit(topic.id, data)
       toast.success('Тема урока успешно редактирована')
       navigate({ to: '/lesson-topics' })
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (e) {
-      console.log(e)
+      // console.log(e)
     } finally {
       setLoading(false)
     }
@@ -188,13 +189,13 @@ export function LessonTopicEdit() {
                         editorSerializedState={
                           field.value
                             ? (JSON.parse(field.value) as SerializedEditorState)
-                            : ''
+                            : ('' as unknown as SerializedEditorState)
                         }
                         onSerializedChange={(value) => {
                           field.onChange(JSON.stringify(value))
                         }}
-                        placeholder='Напишите содержание урока...'
-                        className='min-h-[420px]'
+                        // placeholder='Напишите содержание урока...'
+                        // className='min-h-[420px]'
                       />
                     </FormControl>
                     <FormMessage />

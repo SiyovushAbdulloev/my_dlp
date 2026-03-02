@@ -1,8 +1,8 @@
-import { Main } from '@/components/layout/main'
-import { DistrictsTable } from './components/districts-table.tsx'
+import { useNavigate } from '@tanstack/react-router'
 import { Plus } from 'lucide-react'
 import { Button } from '@/components/ui/button.tsx'
-import { useNavigate } from '@tanstack/react-router'
+import { Main } from '@/components/layout/main'
+import { DistrictsTable } from './components/districts-table.tsx'
 
 export function Districts() {
   const navigate = useNavigate()
@@ -14,7 +14,10 @@ export function Districts() {
           <div>
             <h2 className='text-2xl font-bold tracking-tight'>Районы</h2>
           </div>
-          <Button className='space-x-1' onClick={() => navigate({to: '/dictionaries/districts/create'})}>
+          <Button
+            className='space-x-1'
+            onClick={() => navigate({ to: '/dictionaries/districts/create' })}
+          >
             <span>Создать район</span> <Plus size={18} />
           </Button>
         </div>

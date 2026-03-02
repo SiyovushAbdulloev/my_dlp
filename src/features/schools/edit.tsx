@@ -53,8 +53,9 @@ export function SchoolsEdit() {
       form.reset()
       toast.success('Школа успешно изменена')
       navigate({ to: '/schools' })
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
-      console.log(err)
+      // console.log(err)
     } finally {
       setLoading(false)
     }

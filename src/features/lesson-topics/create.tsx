@@ -72,8 +72,9 @@ export function LessonTopicCreate() {
       await create(data)
       toast.success('Тема урока успешно создана')
       navigate({ to: '/lesson-topics' })
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (e) {
-      console.log(e)
+      /* empty */
     } finally {
       setLoading(false)
     }
@@ -194,13 +195,13 @@ export function LessonTopicCreate() {
                         editorSerializedState={
                           field.value
                             ? (JSON.parse(field.value) as SerializedEditorState)
-                            : ''
+                            : ('' as unknown as SerializedEditorState)
                         }
                         onSerializedChange={(value) => {
                           field.onChange(JSON.stringify(value))
                         }}
-                        placeholder='Напишите содержание урока...'
-                        className='min-h-[420px]'
+                        // placeholder='Напишите содержание урока...'
+                        // className='min-h-[420px]'
                       />
                     </FormControl>
                     <FormMessage />

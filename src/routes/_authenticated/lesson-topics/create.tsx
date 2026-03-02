@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { LessonTopicCreate } from '@/features/lesson-topics/create.tsx'
-import { fetchAll } from '@/api/subjects'
 import { fetchAll as fetchAllClasses } from '@/api/classes'
+import { fetchAll } from '@/api/subjects'
+import { LessonTopicCreate } from '@/features/lesson-topics/create.tsx'
 
 export const Route = createFileRoute('/_authenticated/lesson-topics/create')({
   beforeLoad: async () => {

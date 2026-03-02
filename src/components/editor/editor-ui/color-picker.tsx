@@ -1,24 +1,23 @@
-import * as React from "react"
-import * as SliderPrimitive from "@radix-ui/react-slider"
-import { Slot } from "@radix-ui/react-slot"
-import { cva, type VariantProps } from "class-variance-authority"
-import { PipetteIcon } from "lucide-react"
-
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import * as React from 'react'
+import * as SliderPrimitive from '@radix-ui/react-slider'
+import { Slot } from '@radix-ui/react-slot'
+import { cva, type VariantProps } from 'class-variance-authority'
+import { PipetteIcon } from 'lucide-react'
+import { cn } from '@/lib/utils'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover"
+} from '@/components/ui/popover'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
+} from '@/components/ui/select'
 
 /**
  * @see https://github.com/radix-ui/primitives/blob/main/packages/react/compose-refs/src/compose-refs.tsx
@@ -31,7 +30,7 @@ type PossibleRef<T> = React.Ref<T> | undefined
  * This utility takes care of different types of refs: callback refs and RefObject(s)
  */
 function setRef<T>(ref: PossibleRef<T>, value: T) {
-  if (typeof ref === "function") {
+  if (typeof ref === 'function') {
     return ref(value)
   }
 
@@ -49,7 +48,7 @@ function composeRefs<T>(...refs: PossibleRef<T>[]): React.RefCallback<T> {
     let hasCleanup = false
     const cleanups = refs.map((ref) => {
       const cleanup = setRef(ref, node)
-      if (!hasCleanup && typeof cleanup === "function") {
+      if (!hasCleanup && typeof cleanup === 'function') {
         hasCleanup = true
       }
       return cleanup
@@ -63,7 +62,7 @@ function composeRefs<T>(...refs: PossibleRef<T>[]): React.RefCallback<T> {
       return () => {
         for (let i = 0; i < cleanups.length; i++) {
           const cleanup = cleanups[i]
-          if (typeof cleanup === "function") {
+          if (typeof cleanup === 'function') {
             cleanup()
           } else {
             setRef(refs[i], null)
@@ -80,16 +79,16 @@ function composeRefs<T>(...refs: PossibleRef<T>[]): React.RefCallback<T> {
  */
 function useComposedRefs<T>(...refs: PossibleRef<T>[]): React.RefCallback<T> {
   // biome-ignore lint/correctness/useExhaustiveDependencies: we want to memoize by all values
+  // eslint-disable-next-line react-hooks/use-memo
   return React.useCallback(composeRefs(...refs), refs)
 }
 
 type InputValue = string[] | string
 
-interface VisuallyHiddenInputProps<T = InputValue>
-  extends Omit<
-    React.InputHTMLAttributes<HTMLInputElement>,
-    "value" | "checked" | "onReset"
-  > {
+interface VisuallyHiddenInputProps<T = InputValue> extends Omit<
+  React.InputHTMLAttributes<HTMLInputElement>,
+  'value' | 'checked' | 'onReset'
+> {
   value?: T
   checked?: boolean
   control: HTMLElement | null
@@ -104,13 +103,13 @@ function VisuallyHiddenInput<T = InputValue>(
     value,
     checked,
     bubbles = true,
-    type = "hidden",
+    type = 'hidden',
     style,
     ...inputProps
   } = props
 
   const isCheckInput = React.useMemo(
-    () => type === "checkbox" || type === "radio" || type === "switch",
+    () => type === 'checkbox' || type === 'radio' || type === 'switch',
     [type]
   )
   const inputRef = React.useRef<HTMLInputElement>(null)
@@ -125,8 +124,11 @@ function VisuallyHiddenInput<T = InputValue>(
 
   const prevValue = React.useMemo(() => {
     const currentValue = isCheckInput ? checked : value
+    // eslint-disable-next-line react-hooks/refs
     if (prevValueRef.current.value !== currentValue) {
+      // eslint-disable-next-line react-hooks/refs
       prevValueRef.current.previous = prevValueRef.current.value
+      // eslint-disable-next-line react-hooks/refs
       prevValueRef.current.value = currentValue
     }
     return prevValueRef.current.previous
@@ -148,7 +150,7 @@ function VisuallyHiddenInput<T = InputValue>(
       height: control.offsetHeight,
     })
 
-    if (typeof window === "undefined") return
+    if (typeof window === 'undefined') return
 
     const resizeObserver = new ResizeObserver((entries) => {
       if (!Array.isArray(entries) || !entries.length) return
@@ -159,7 +161,7 @@ function VisuallyHiddenInput<T = InputValue>(
       let width: number
       let height: number
 
-      if ("borderBoxSize" in entry) {
+      if ('borderBoxSize' in entry) {
         const borderSizeEntry = entry.borderBoxSize
         const borderSize = Array.isArray(borderSizeEntry)
           ? borderSizeEntry[0]
@@ -174,7 +176,7 @@ function VisuallyHiddenInput<T = InputValue>(
       setControlSize({ width, height })
     })
 
-    resizeObserver.observe(control, { box: "border-box" })
+    resizeObserver.observe(control, { box: 'border-box' })
     return () => {
       resizeObserver.disconnect()
     }
@@ -185,13 +187,13 @@ function VisuallyHiddenInput<T = InputValue>(
     if (!input) return
 
     const inputProto = window.HTMLInputElement.prototype
-    const propertyKey = isCheckInput ? "checked" : "value"
-    const eventType = isCheckInput ? "click" : "input"
+    const propertyKey = isCheckInput ? 'checked' : 'value'
+    const eventType = isCheckInput ? 'click' : 'input'
     const currentValue = isCheckInput ? checked : value
 
     const serializedCurrentValue = isCheckInput
       ? checked
-      : typeof value === "object" && value !== null
+      : typeof value === 'object' && value !== null
         ? JSON.stringify(value)
         : value
 
@@ -204,6 +206,7 @@ function VisuallyHiddenInput<T = InputValue>(
       setter.call(input, serializedCurrentValue)
       input.dispatchEvent(event)
     }
+    // eslint-disable-next-line react-hooks/refs
   }, [prevValue, value, checked, bubbles, isCheckInput])
 
   const composedStyle = React.useMemo<React.CSSProperties>(() => {
@@ -213,15 +216,15 @@ function VisuallyHiddenInput<T = InputValue>(
         ? controlSize
         : {}),
       border: 0,
-      clip: "rect(0 0 0 0)",
-      clipPath: "inset(50%)",
-      height: "1px",
-      margin: "-1px",
-      overflow: "hidden",
+      clip: 'rect(0 0 0 0)',
+      clipPath: 'inset(50%)',
+      height: '1px',
+      margin: '-1px',
+      overflow: 'hidden',
       padding: 0,
-      position: "absolute",
-      whiteSpace: "nowrap",
-      width: "1px",
+      position: 'absolute',
+      whiteSpace: 'nowrap',
+      width: '1px',
     }
   }, [style, controlSize])
 
@@ -253,7 +256,7 @@ declare global {
   }
 }
 
-const colorFormats = ["hex", "rgb", "hsl", "hsb"] as const
+const colorFormats = ['hex', 'rgb', 'hsl', 'hsb'] as const
 type ColorFormat = (typeof colorFormats)[number]
 
 interface ColorValue {
@@ -274,9 +277,9 @@ function hexToRgb(hex: string, alpha?: number): ColorValue {
   const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
   return result
     ? {
-        r: Number.parseInt(result[1] ?? "0", 16),
-        g: Number.parseInt(result[2] ?? "0", 16),
-        b: Number.parseInt(result[3] ?? "0", 16),
+        r: Number.parseInt(result[1] ?? '0', 16),
+        g: Number.parseInt(result[2] ?? '0', 16),
+        b: Number.parseInt(result[3] ?? '0', 16),
         a: alpha ?? 1,
       }
     : { r: 0, g: 0, b: 0, a: alpha ?? 1 }
@@ -394,21 +397,21 @@ function hsvToRgb(hsv: HSVColorValue): ColorValue {
   }
 }
 
-function colorToString(color: ColorValue, format: ColorFormat = "hex"): string {
+function colorToString(color: ColorValue, format: ColorFormat = 'hex'): string {
   switch (format) {
-    case "hex":
+    case 'hex':
       return rgbToHex(color)
-    case "rgb":
+    case 'rgb':
       return color.a < 1
         ? `rgba(${color.r}, ${color.g}, ${color.b}, ${color.a})`
         : `rgb(${color.r}, ${color.g}, ${color.b})`
-    case "hsl": {
+    case 'hsl': {
       const hsl = rgbToHsl(color)
       return color.a < 1
         ? `hsla(${hsl.h}, ${hsl.s}%, ${hsl.l}%, ${color.a})`
         : `hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`
     }
-    case "hsb": {
+    case 'hsb': {
       const hsv = rgbToHsv(color)
       return color.a < 1
         ? `hsba(${hsv.h}, ${hsv.s}%, ${hsv.v}%, ${color.a})`
@@ -508,7 +511,7 @@ function parseColorString(value: string): ColorValue | null {
   const trimmed = value.trim()
 
   // Parse hex colors
-  if (trimmed.startsWith("#")) {
+  if (trimmed.startsWith('#')) {
     const hexMatch = trimmed.match(/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/)
     if (hexMatch) {
       return hexToRgb(trimmed)
@@ -521,9 +524,9 @@ function parseColorString(value: string): ColorValue | null {
   )
   if (rgbMatch) {
     return {
-      r: Number.parseInt(rgbMatch[1] ?? "0", 10),
-      g: Number.parseInt(rgbMatch[2] ?? "0", 10),
-      b: Number.parseInt(rgbMatch[3] ?? "0", 10),
+      r: Number.parseInt(rgbMatch[1] ?? '0', 10),
+      g: Number.parseInt(rgbMatch[2] ?? '0', 10),
+      b: Number.parseInt(rgbMatch[3] ?? '0', 10),
       a: rgbMatch[4] ? Number.parseFloat(rgbMatch[4]) : 1,
     }
   }
@@ -533,9 +536,9 @@ function parseColorString(value: string): ColorValue | null {
     /^hsla?\(\s*(\d+)\s*,\s*(\d+)%\s*,\s*(\d+)%\s*(?:,\s*([\d.]+))?\s*\)$/
   )
   if (hslMatch) {
-    const h = Number.parseInt(hslMatch[1] ?? "0", 10)
-    const s = Number.parseInt(hslMatch[2] ?? "0", 10) / 100
-    const l = Number.parseInt(hslMatch[3] ?? "0", 10) / 100
+    const h = Number.parseInt(hslMatch[1] ?? '0', 10)
+    const s = Number.parseInt(hslMatch[2] ?? '0', 10) / 100
+    const l = Number.parseInt(hslMatch[3] ?? '0', 10) / 100
     const a = hslMatch[4] ? Number.parseFloat(hslMatch[4]) : 1
 
     // Convert HSL to RGB
@@ -586,9 +589,9 @@ function parseColorString(value: string): ColorValue | null {
     /^hsba?\(\s*(\d+)\s*,\s*(\d+)%\s*,\s*(\d+)%\s*(?:,\s*([\d.]+))?\s*\)$/
   )
   if (hsbMatch) {
-    const h = Number.parseInt(hsbMatch[1] ?? "0", 10)
-    const s = Number.parseInt(hsbMatch[2] ?? "0", 10)
-    const v = Number.parseInt(hsbMatch[3] ?? "0", 10)
+    const h = Number.parseInt(hsbMatch[1] ?? '0', 10)
+    const s = Number.parseInt(hsbMatch[2] ?? '0', 10)
+    const v = Number.parseInt(hsbMatch[3] ?? '0', 10)
     const a = hsbMatch[4] ? Number.parseFloat(hsbMatch[4]) : 1
 
     return hsvToRgb({ h, s, v, a })
@@ -597,13 +600,13 @@ function parseColorString(value: string): ColorValue | null {
   return null
 }
 
-type Direction = "ltr" | "rtl"
+type Direction = 'ltr' | 'rtl'
 
 const DirectionContext = React.createContext<Direction | undefined>(undefined)
 
 function useDirection(dirProp?: Direction): Direction {
   const contextDir = React.useContext(DirectionContext)
-  return dirProp ?? contextDir ?? "ltr"
+  return dirProp ?? contextDir ?? 'ltr'
 }
 
 function useLazyRef<T>(fn: () => T) {
@@ -657,7 +660,7 @@ function createColorPickerStore(
         color: { r: 0, g: 0, b: 0, a: 1 },
         hsv: { h: 0, s: 0, v: 0, a: 1 },
         open: false,
-        format: "hex" as ColorFormat,
+        format: 'hex' as ColorFormat,
       },
     setColor: (value: ColorValue) => {
       if (!stateRef.current) return
@@ -737,7 +740,7 @@ function useColorPickerStoreContext(consumerName: string) {
 function useColorPickerStore<U>(
   selector: (state: ColorPickerStoreState) => U
 ): U {
-  const store = useColorPickerStoreContext("useColorPickerStoreSelector")
+  const store = useColorPickerStoreContext('useColorPickerStoreSelector')
 
   const getSnapshot = React.useCallback(
     () => selector(store.getState()),
@@ -773,10 +776,11 @@ function useColorPickerContext(consumerName: string) {
 }
 
 interface ColorPickerRootProps
-  extends Omit<React.ComponentProps<"div">, "onValueChange">,
+  extends
+    Omit<React.ComponentProps<'div'>, 'onValueChange'>,
     Pick<
       React.ComponentProps<typeof Popover>,
-      "defaultOpen" | "open" | "onOpenChange" | "modal"
+      'defaultOpen' | 'open' | 'onOpenChange' | 'modal'
     > {
   value?: string
   defaultValue?: string
@@ -796,10 +800,10 @@ interface ColorPickerRootProps
 const ColorPickerRoot = React.memo((props: ColorPickerRootProps) => {
   const {
     value: valueProp,
-    defaultValue = "#000000",
+    defaultValue = '#000000',
     onValueChange,
     format: formatProp,
-    defaultFormat = "hex",
+    defaultFormat = 'hex',
     onFormatChange,
     defaultOpen,
     open: openProp,
@@ -866,15 +870,14 @@ const ColorPickerRoot = React.memo((props: ColorPickerRootProps) => {
   )
 })
 
-interface ColorPickerRootImplProps
-  extends Omit<
-    ColorPickerRootProps,
-    | "defaultValue"
-    | "onValueChange"
-    | "format"
-    | "defaultFormat"
-    | "onFormatChange"
-  > {}
+type ColorPickerRootImplProps = Omit<
+  ColorPickerRootProps,
+  | 'defaultValue'
+  | 'onValueChange'
+  | 'format'
+  | 'defaultFormat'
+  | 'onFormatChange'
+>
 
 function ColorPickerRootImpl(props: ColorPickerRootImplProps) {
   const {
@@ -894,7 +897,7 @@ function ColorPickerRootImpl(props: ColorPickerRootImplProps) {
     ...rootProps
   } = props
 
-  const store = useColorPickerStoreContext("ColorPickerRootImpl")
+  const store = useColorPickerStoreContext('ColorPickerRootImpl')
 
   const dir = useDirection(dirProp)
 
@@ -903,7 +906,7 @@ function ColorPickerRootImpl(props: ColorPickerRootImplProps) {
   )
   const composedRef = useComposedRefs(ref, (node) => setFormTrigger(node))
 
-  const isFormControl = formTrigger ? !!formTrigger.closest("form") : true
+  const isFormControl = formTrigger ? !!formTrigger.closest('form') : true
 
   React.useEffect(() => {
     if (valueProp !== undefined) {
@@ -937,6 +940,7 @@ function ColorPickerRootImpl(props: ColorPickerRootImplProps) {
   const open = useColorPickerStore((state) => state.open)
 
   const onPopoverOpenChange = React.useCallback(
+    // eslint-disable-next-line react-hooks/preserve-manual-memoization
     (newOpen: boolean) => {
       store.setOpen(newOpen)
       onOpenChange?.(newOpen)
@@ -944,7 +948,7 @@ function ColorPickerRootImpl(props: ColorPickerRootImplProps) {
     [store.setOpen, onOpenChange]
   )
 
-  const RootPrimitive = asChild ? Slot : "div"
+  const RootPrimitive = asChild ? Slot : 'div'
 
   if (inline) {
     return (
@@ -952,7 +956,7 @@ function ColorPickerRootImpl(props: ColorPickerRootImplProps) {
         <RootPrimitive {...rootProps} ref={composedRef} />
         {isFormControl && (
           <VisuallyHiddenInput
-            type="hidden"
+            type='hidden'
             control={formTrigger}
             name={name}
             value={value}
@@ -976,7 +980,7 @@ function ColorPickerRootImpl(props: ColorPickerRootImplProps) {
         <RootPrimitive {...rootProps} ref={composedRef} />
         {isFormControl && (
           <VisuallyHiddenInput
-            type="hidden"
+            type='hidden'
             control={formTrigger}
             name={name}
             value={value}
@@ -990,37 +994,35 @@ function ColorPickerRootImpl(props: ColorPickerRootImplProps) {
   )
 }
 
-interface ColorPickerTriggerProps
-  extends React.ComponentProps<typeof PopoverTrigger> {}
+type ColorPickerTriggerProps = React.ComponentProps<typeof PopoverTrigger>
 
 function ColorPickerTrigger(props: ColorPickerTriggerProps) {
   const { asChild, ...triggerProps } = props
-  const context = useColorPickerContext("ColorPickerTrigger")
+  const context = useColorPickerContext('ColorPickerTrigger')
 
   const TriggerPrimitive = asChild ? Slot : Button
 
   return (
     <PopoverTrigger asChild disabled={context.disabled}>
-      <TriggerPrimitive data-slot="color-picker-trigger" {...triggerProps} />
+      <TriggerPrimitive data-slot='color-picker-trigger' {...triggerProps} />
     </PopoverTrigger>
   )
 }
 
-interface ColorPickerContentProps
-  extends React.ComponentProps<typeof PopoverContent> {}
+type ColorPickerContentProps = React.ComponentProps<typeof PopoverContent>
 
 function ColorPickerContent(props: ColorPickerContentProps) {
   const { asChild, className, children, ...popoverContentProps } = props
-  const context = useColorPickerContext("ColorPickerContent")
+  const context = useColorPickerContext('ColorPickerContent')
 
   if (context.inline) {
-    const ContentPrimitive = asChild ? Slot : "div"
+    const ContentPrimitive = asChild ? Slot : 'div'
 
     return (
       <ContentPrimitive
-        data-slot="color-picker-content"
+        data-slot='color-picker-content'
         {...popoverContentProps}
-        className={cn("flex w-[340px] flex-col gap-4 p-4", className)}
+        className={cn('flex w-[340px] flex-col gap-4 p-4', className)}
       >
         {children}
       </ContentPrimitive>
@@ -1029,24 +1031,24 @@ function ColorPickerContent(props: ColorPickerContentProps) {
 
   return (
     <PopoverContent
-      data-slot="color-picker-content"
+      data-slot='color-picker-content'
       asChild={asChild}
       {...popoverContentProps}
-      className={cn("flex w-[340px] flex-col gap-4 p-4", className)}
+      className={cn('flex w-[340px] flex-col gap-4 p-4', className)}
     >
       {children}
     </PopoverContent>
   )
 }
 
-interface ColorPickerAreaProps extends React.ComponentProps<"div"> {
+interface ColorPickerAreaProps extends React.ComponentProps<'div'> {
   asChild?: boolean
 }
 
 function ColorPickerArea(props: ColorPickerAreaProps) {
   const { asChild, className, ref, ...areaProps } = props
-  const context = useColorPickerContext("ColorPickerArea")
-  const store = useColorPickerStoreContext("ColorPickerArea")
+  const context = useColorPickerContext('ColorPickerArea')
+  const store = useColorPickerStoreContext('ColorPickerArea')
 
   const hsv = useColorPickerStore((state) => state.hsv)
 
@@ -1103,15 +1105,15 @@ function ColorPickerArea(props: ColorPickerAreaProps) {
   const hue = hsv?.h ?? 0
   const backgroundHue = hsvToRgb({ h: hue, s: 100, v: 100, a: 1 })
 
-  const AreaPrimitive = asChild ? Slot : "div"
+  const AreaPrimitive = asChild ? Slot : 'div'
 
   return (
     <AreaPrimitive
-      data-slot="color-picker-area"
+      data-slot='color-picker-area'
       {...areaProps}
       className={cn(
-        "relative h-40 w-full cursor-crosshair touch-none rounded-sm border",
-        context.disabled && "pointer-events-none opacity-50",
+        'relative h-40 w-full cursor-crosshair touch-none rounded-sm border',
+        context.disabled && 'pointer-events-none opacity-50',
         className
       )}
       ref={composedRef}
@@ -1119,28 +1121,28 @@ function ColorPickerArea(props: ColorPickerAreaProps) {
       onPointerMove={onPointerMove}
       onPointerUp={onPointerUp}
     >
-      <div className="absolute inset-0 overflow-hidden rounded-sm">
+      <div className='absolute inset-0 overflow-hidden rounded-sm'>
         <div
-          className="absolute inset-0"
+          className='absolute inset-0'
           style={{
             backgroundColor: `rgb(${backgroundHue.r}, ${backgroundHue.g}, ${backgroundHue.b})`,
           }}
         />
         <div
-          className="absolute inset-0"
+          className='absolute inset-0'
           style={{
-            background: "linear-gradient(to right, #fff, transparent)",
+            background: 'linear-gradient(to right, #fff, transparent)',
           }}
         />
         <div
-          className="absolute inset-0"
+          className='absolute inset-0'
           style={{
-            background: "linear-gradient(to bottom, transparent, #000)",
+            background: 'linear-gradient(to bottom, transparent, #000)',
           }}
         />
       </div>
       <div
-        className="absolute size-3 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white shadow-sm"
+        className='absolute size-3 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white shadow-sm'
         style={{
           left: `${hsv?.s ?? 0}%`,
           top: `${100 - (hsv?.v ?? 0)}%`,
@@ -1150,13 +1152,14 @@ function ColorPickerArea(props: ColorPickerAreaProps) {
   )
 }
 
-interface ColorPickerHueSliderProps
-  extends React.ComponentProps<typeof SliderPrimitive.Root> {}
+type ColorPickerHueSliderProps = React.ComponentProps<
+  typeof SliderPrimitive.Root
+>
 
 function ColorPickerHueSlider(props: ColorPickerHueSliderProps) {
   const { className, ...sliderProps } = props
-  const context = useColorPickerContext("ColorPickerHueSlider")
-  const store = useColorPickerStoreContext("ColorPickerHueSlider")
+  const context = useColorPickerContext('ColorPickerHueSlider')
+  const store = useColorPickerStoreContext('ColorPickerHueSlider')
 
   const hsv = useColorPickerStore((state) => state.hsv)
 
@@ -1176,33 +1179,34 @@ function ColorPickerHueSlider(props: ColorPickerHueSliderProps) {
 
   return (
     <SliderPrimitive.Root
-      data-slot="color-picker-hue-slider"
+      data-slot='color-picker-hue-slider'
       {...sliderProps}
       max={360}
       step={1}
       className={cn(
-        "relative flex w-full touch-none items-center select-none",
+        'relative flex w-full touch-none items-center select-none',
         className
       )}
       value={[hsv?.h ?? 0]}
       onValueChange={onValueChange}
       disabled={context.disabled}
     >
-      <SliderPrimitive.Track className="relative h-3 w-full grow overflow-hidden rounded-full bg-[linear-gradient(to_right,#ff0000_0%,#ffff00_16.66%,#00ff00_33.33%,#00ffff_50%,#0000ff_66.66%,#ff00ff_83.33%,#ff0000_100%)]">
-        <SliderPrimitive.Range className="absolute h-full" />
+      <SliderPrimitive.Track className='relative h-3 w-full grow overflow-hidden rounded-full bg-[linear-gradient(to_right,#ff0000_0%,#ffff00_16.66%,#00ff00_33.33%,#00ffff_50%,#0000ff_66.66%,#ff00ff_83.33%,#ff0000_100%)]'>
+        <SliderPrimitive.Range className='absolute h-full' />
       </SliderPrimitive.Track>
-      <SliderPrimitive.Thumb className="border-primary/50 bg-background focus-visible:ring-ring block size-4 rounded-full border shadow transition-colors focus-visible:ring-1 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50" />
+      <SliderPrimitive.Thumb className='block size-4 rounded-full border border-primary/50 bg-background shadow transition-colors focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50' />
     </SliderPrimitive.Root>
   )
 }
 
-interface ColorPickerAlphaSliderProps
-  extends React.ComponentProps<typeof SliderPrimitive.Root> {}
+type ColorPickerAlphaSliderProps = React.ComponentProps<
+  typeof SliderPrimitive.Root
+>
 
 function ColorPickerAlphaSlider(props: ColorPickerAlphaSliderProps) {
   const { className, ...sliderProps } = props
-  const context = useColorPickerContext("ColorPickerAlphaSlider")
-  const store = useColorPickerStoreContext("ColorPickerAlphaSlider")
+  const context = useColorPickerContext('ColorPickerAlphaSlider')
+  const store = useColorPickerStoreContext('ColorPickerAlphaSlider')
 
   const color = useColorPickerStore((state) => state.color)
   const hsv = useColorPickerStore((state) => state.hsv)
@@ -1222,47 +1226,47 @@ function ColorPickerAlphaSlider(props: ColorPickerAlphaSliderProps) {
 
   return (
     <SliderPrimitive.Root
-      data-slot="color-picker-alpha-slider"
+      data-slot='color-picker-alpha-slider'
       {...sliderProps}
       max={100}
       step={1}
       disabled={context.disabled}
       className={cn(
-        "relative flex w-full touch-none items-center select-none",
+        'relative flex w-full touch-none items-center select-none',
         className
       )}
       value={[Math.round((color?.a ?? 1) * 100)]}
       onValueChange={onValueChange}
     >
       <SliderPrimitive.Track
-        className="relative h-3 w-full grow overflow-hidden rounded-full"
+        className='relative h-3 w-full grow overflow-hidden rounded-full'
         style={{
           background:
-            "linear-gradient(45deg, #ccc 25%, transparent 25%), linear-gradient(-45deg, #ccc 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #ccc 75%), linear-gradient(-45deg, transparent 75%, #ccc 75%)",
-          backgroundSize: "8px 8px",
-          backgroundPosition: "0 0, 0 4px, 4px -4px, -4px 0px",
+            'linear-gradient(45deg, #ccc 25%, transparent 25%), linear-gradient(-45deg, #ccc 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #ccc 75%), linear-gradient(-45deg, transparent 75%, #ccc 75%)',
+          backgroundSize: '8px 8px',
+          backgroundPosition: '0 0, 0 4px, 4px -4px, -4px 0px',
         }}
       >
         <div
-          className="absolute inset-0 rounded-full"
+          className='absolute inset-0 rounded-full'
           style={{
             background: `linear-gradient(to right, transparent, ${gradientColor})`,
           }}
         />
-        <SliderPrimitive.Range className="absolute h-full" />
+        <SliderPrimitive.Range className='absolute h-full' />
       </SliderPrimitive.Track>
-      <SliderPrimitive.Thumb className="border-primary/50 bg-background focus-visible:ring-ring block size-4 rounded-full border shadow transition-colors focus-visible:ring-1 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50" />
+      <SliderPrimitive.Thumb className='block size-4 rounded-full border border-primary/50 bg-background shadow transition-colors focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50' />
     </SliderPrimitive.Root>
   )
 }
 
-interface ColorPickerSwatchProps extends React.ComponentProps<"div"> {
+interface ColorPickerSwatchProps extends React.ComponentProps<'div'> {
   asChild?: boolean
 }
 
 function ColorPickerSwatch(props: ColorPickerSwatchProps) {
   const { asChild, className, ...swatchProps } = props
-  const context = useColorPickerContext("ColorPickerSwatch")
+  const context = useColorPickerContext('ColorPickerSwatch')
 
   const color = useColorPickerStore((state) => state.color)
   const format = useColorPickerStore((state) => state.format)
@@ -1271,7 +1275,7 @@ function ColorPickerSwatch(props: ColorPickerSwatchProps) {
     if (!color) {
       return {
         background:
-          "linear-gradient(to bottom right, transparent calc(50% - 1px), hsl(var(--destructive)) calc(50% - 1px) calc(50% + 1px), transparent calc(50% + 1px)) no-repeat",
+          'linear-gradient(to bottom right, transparent calc(50% - 1px), hsl(var(--destructive)) calc(50% - 1px) calc(50% + 1px), transparent calc(50% + 1px)) no-repeat',
       }
     }
 
@@ -1289,37 +1293,36 @@ function ColorPickerSwatch(props: ColorPickerSwatchProps) {
   }, [color])
 
   const ariaLabel = !color
-    ? "No color selected"
+    ? 'No color selected'
     : `Current color: ${colorToString(color, format)}`
 
-  const SwatchPrimitive = asChild ? Slot : "div"
+  const SwatchPrimitive = asChild ? Slot : 'div'
 
   return (
     <SwatchPrimitive
-      role="img"
+      role='img'
       aria-label={ariaLabel}
-      data-slot="color-picker-swatch"
+      data-slot='color-picker-swatch'
       {...swatchProps}
       className={cn(
-        "box-border size-8 rounded-sm border shadow-sm",
-        context.disabled && "opacity-50",
+        'box-border size-8 rounded-sm border shadow-sm',
+        context.disabled && 'opacity-50',
         className
       )}
       style={{
         ...backgroundStyle,
-        forcedColorAdjust: "none",
+        forcedColorAdjust: 'none',
       }}
     />
   )
 }
 
-interface ColorPickerEyeDropperProps
-  extends React.ComponentProps<typeof Button> {}
+type ColorPickerEyeDropperProps = React.ComponentProps<typeof Button>
 
 function ColorPickerEyeDropper(props: ColorPickerEyeDropperProps) {
   const { children, size, ...buttonProps } = props
-  const context = useColorPickerContext("ColorPickerEyeDropper")
-  const store = useColorPickerStoreContext("ColorPickerEyeDropper")
+  const context = useColorPickerContext('ColorPickerEyeDropper')
+  const store = useColorPickerStoreContext('ColorPickerEyeDropper')
 
   const color = useColorPickerStore((state) => state.color)
 
@@ -1337,22 +1340,23 @@ function ColorPickerEyeDropper(props: ColorPickerEyeDropperProps) {
         store.setColor(newColor)
         store.setHsv(newHsv)
       }
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
-      console.warn("EyeDropper error:", error)
+      /* empty */
     }
   }, [color, store])
 
-  const hasEyeDropper = typeof window !== "undefined" && !!window.EyeDropper
+  const hasEyeDropper = typeof window !== 'undefined' && !!window.EyeDropper
 
   if (!hasEyeDropper) return null
 
-  const buttonSize = size ?? (children ? "default" : "icon")
+  const buttonSize = size ?? (children ? 'default' : 'icon')
 
   return (
     <Button
-      data-slot="color-picker-eye-dropper"
+      data-slot='color-picker-eye-dropper'
       {...buttonProps}
-      variant="outline"
+      variant='outline'
       size={buttonSize}
       onClick={onEyeDropper}
       disabled={context.disabled}
@@ -1363,13 +1367,14 @@ function ColorPickerEyeDropper(props: ColorPickerEyeDropperProps) {
 }
 
 interface ColorPickerFormatSelectProps
-  extends Omit<React.ComponentProps<typeof Select>, "value" | "onValueChange">,
-    Pick<React.ComponentProps<typeof SelectTrigger>, "size" | "className"> {}
+  extends
+    Omit<React.ComponentProps<typeof Select>, 'value' | 'onValueChange'>,
+    Pick<React.ComponentProps<typeof SelectTrigger>, 'size' | 'className'> {}
 
 function ColorPickerFormatSelect(props: ColorPickerFormatSelectProps) {
   const { size, className, ...selectProps } = props
-  const context = useColorPickerContext("ColorPickerFormatSelector")
-  const store = useColorPickerStoreContext("ColorPickerFormatSelector")
+  const context = useColorPickerContext('ColorPickerFormatSelector')
+  const store = useColorPickerStoreContext('ColorPickerFormatSelector')
 
   const format = useColorPickerStore((state) => state.format)
 
@@ -1382,15 +1387,15 @@ function ColorPickerFormatSelect(props: ColorPickerFormatSelectProps) {
 
   return (
     <Select
-      data-slot="color-picker-format-select"
+      data-slot='color-picker-format-select'
       {...selectProps}
       value={format}
       onValueChange={onFormatChange}
       disabled={context.disabled}
     >
       <SelectTrigger
-        data-slot="color-picker-format-select-trigger"
-        size={size ?? "sm"}
+        data-slot='color-picker-format-select-trigger'
+        size={size ?? 'sm'}
         className={cn(className)}
       >
         <SelectValue />
@@ -1406,17 +1411,16 @@ function ColorPickerFormatSelect(props: ColorPickerFormatSelectProps) {
   )
 }
 
-interface ColorPickerInputProps
-  extends Omit<
-    React.ComponentProps<typeof Input>,
-    "value" | "onChange" | "color"
-  > {
+interface ColorPickerInputProps extends Omit<
+  React.ComponentProps<typeof Input>,
+  'value' | 'onChange' | 'color'
+> {
   withoutAlpha?: boolean
 }
 
 function ColorPickerInput(props: ColorPickerInputProps) {
-  const context = useColorPickerContext("ColorPickerInput")
-  const store = useColorPickerStoreContext("ColorPickerInput")
+  const context = useColorPickerContext('ColorPickerInput')
+  const store = useColorPickerStoreContext('ColorPickerInput')
 
   const color = useColorPickerStore((state) => state.color)
   const format = useColorPickerStore((state) => state.format)
@@ -1431,7 +1435,7 @@ function ColorPickerInput(props: ColorPickerInputProps) {
     [store]
   )
 
-  if (format === "hex") {
+  if (format === 'hex') {
     return (
       <HexInput
         color={color}
@@ -1442,7 +1446,7 @@ function ColorPickerInput(props: ColorPickerInputProps) {
     )
   }
 
-  if (format === "rgb") {
+  if (format === 'rgb') {
     return (
       <RgbInput
         color={color}
@@ -1453,7 +1457,7 @@ function ColorPickerInput(props: ColorPickerInputProps) {
     )
   }
 
-  if (format === "hsl") {
+  if (format === 'hsl') {
     return (
       <HslInput
         color={color}
@@ -1464,7 +1468,7 @@ function ColorPickerInput(props: ColorPickerInputProps) {
     )
   }
 
-  if (format === "hsb") {
+  if (format === 'hsb') {
     return (
       <HsbInput
         hsv={hsv}
@@ -1477,24 +1481,25 @@ function ColorPickerInput(props: ColorPickerInputProps) {
 }
 
 const inputGroupItemVariants = cva(
-  "h-8 [-moz-appearance:_textfield] focus-visible:z-10 focus-visible:ring-1 [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none",
+  'h-8 [-moz-appearance:_textfield] focus-visible:z-10 focus-visible:ring-1 [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none',
   {
     variants: {
       position: {
-        first: "rounded-e-none",
-        middle: "-ms-px rounded-none border-l-0",
-        last: "-ms-px rounded-s-none border-l-0",
-        isolated: "",
+        first: 'rounded-e-none',
+        middle: '-ms-px rounded-none border-l-0',
+        last: '-ms-px rounded-s-none border-l-0',
+        isolated: '',
       },
     },
     defaultVariants: {
-      position: "isolated",
+      position: 'isolated',
     },
   }
 )
 
 interface InputGroupItemProps
-  extends React.ComponentProps<typeof Input>,
+  extends
+    React.ComponentProps<typeof Input>,
     VariantProps<typeof inputGroupItemVariants> {}
 
 function InputGroupItem({
@@ -1504,7 +1509,7 @@ function InputGroupItem({
 }: InputGroupItemProps) {
   return (
     <Input
-      data-slot="color-picker-input"
+      data-slot='color-picker-input'
       className={cn(inputGroupItemVariants({ position }), className)}
       {...props}
     />
@@ -1554,11 +1559,11 @@ function HexInput(props: FormatInputProps) {
   if (withoutAlpha) {
     return (
       <InputGroupItem
-        aria-label="Hex color value"
-        position="isolated"
+        aria-label='Hex color value'
+        position='isolated'
         {...inputProps}
-        placeholder="#000000"
-        className={cn("font-mono", className)}
+        placeholder='#000000'
+        className={cn('font-mono', className)}
         value={hexValue}
         onChange={onHexChange}
         disabled={context.disabled}
@@ -1568,29 +1573,29 @@ function HexInput(props: FormatInputProps) {
 
   return (
     <div
-      data-slot="color-picker-input-wrapper"
-      className={cn("flex items-center", className)}
+      data-slot='color-picker-input-wrapper'
+      className={cn('flex items-center', className)}
     >
       <InputGroupItem
-        aria-label="Hex color value"
-        position="first"
+        aria-label='Hex color value'
+        position='first'
         {...inputProps}
-        placeholder="#000000"
-        className="flex-1 font-mono"
+        placeholder='#000000'
+        className='flex-1 font-mono'
         value={hexValue}
         onChange={onHexChange}
         disabled={context.disabled}
       />
       <InputGroupItem
-        aria-label="Alpha transparency percentage"
-        position="last"
+        aria-label='Alpha transparency percentage'
+        position='last'
         {...inputProps}
-        placeholder="100"
-        inputMode="numeric"
-        pattern="[0-9]*"
-        min="0"
-        max="100"
-        className="w-14"
+        placeholder='100'
+        inputMode='numeric'
+        pattern='[0-9]*'
+        min='0'
+        max='100'
+        className='w-14'
         value={alphaValue}
         onChange={onAlphaChange}
         disabled={context.disabled}
@@ -1615,7 +1620,7 @@ function RgbInput(props: FormatInputProps) {
   const alphaValue = Math.round((color?.a ?? 1) * 100)
 
   const onChannelChange = React.useCallback(
-    (channel: "r" | "g" | "b" | "a", max: number, isAlpha = false) =>
+    (channel: 'r' | 'g' | 'b' | 'a', max: number, isAlpha = false) =>
       (event: React.ChangeEvent<HTMLInputElement>) => {
         const value = Number.parseInt(event.target.value, 10)
         if (!Number.isNaN(value) && value >= 0 && value <= max) {
@@ -1628,64 +1633,64 @@ function RgbInput(props: FormatInputProps) {
 
   return (
     <div
-      data-slot="color-picker-input-wrapper"
-      className={cn("flex items-center", className)}
+      data-slot='color-picker-input-wrapper'
+      className={cn('flex items-center', className)}
     >
       <InputGroupItem
-        aria-label="Red color component (0-255)"
-        position="first"
+        aria-label='Red color component (0-255)'
+        position='first'
         {...inputProps}
-        placeholder="0"
-        inputMode="numeric"
-        pattern="[0-9]*"
-        min="0"
-        max="255"
-        className="w-14"
+        placeholder='0'
+        inputMode='numeric'
+        pattern='[0-9]*'
+        min='0'
+        max='255'
+        className='w-14'
         value={rValue}
-        onChange={onChannelChange("r", 255)}
+        onChange={onChannelChange('r', 255)}
         disabled={context.disabled}
       />
       <InputGroupItem
-        aria-label="Green color component (0-255)"
-        position="middle"
+        aria-label='Green color component (0-255)'
+        position='middle'
         {...inputProps}
-        placeholder="0"
-        inputMode="numeric"
-        pattern="[0-9]*"
-        min="0"
-        max="255"
-        className="w-14"
+        placeholder='0'
+        inputMode='numeric'
+        pattern='[0-9]*'
+        min='0'
+        max='255'
+        className='w-14'
         value={gValue}
-        onChange={onChannelChange("g", 255)}
+        onChange={onChannelChange('g', 255)}
         disabled={context.disabled}
       />
       <InputGroupItem
-        aria-label="Blue color component (0-255)"
-        position={withoutAlpha ? "last" : "middle"}
+        aria-label='Blue color component (0-255)'
+        position={withoutAlpha ? 'last' : 'middle'}
         {...inputProps}
-        placeholder="0"
-        inputMode="numeric"
-        pattern="[0-9]*"
-        min="0"
-        max="255"
-        className="w-14"
+        placeholder='0'
+        inputMode='numeric'
+        pattern='[0-9]*'
+        min='0'
+        max='255'
+        className='w-14'
         value={bValue}
-        onChange={onChannelChange("b", 255)}
+        onChange={onChannelChange('b', 255)}
         disabled={context.disabled}
       />
       {!withoutAlpha && (
         <InputGroupItem
-          aria-label="Alpha transparency percentage"
-          position="last"
+          aria-label='Alpha transparency percentage'
+          position='last'
           {...inputProps}
-          placeholder="100"
-          inputMode="numeric"
-          pattern="[0-9]*"
-          min="0"
-          max="100"
-          className="w-14"
+          placeholder='100'
+          inputMode='numeric'
+          pattern='[0-9]*'
+          min='0'
+          max='100'
+          className='w-14'
           value={alphaValue}
-          onChange={onChannelChange("a", 100, true)}
+          onChange={onChannelChange('a', 100, true)}
           disabled={context.disabled}
         />
       )}
@@ -1707,7 +1712,7 @@ function HslInput(props: FormatInputProps) {
   const alphaValue = Math.round((color?.a ?? 1) * 100)
 
   const onHslChannelChange = React.useCallback(
-    (channel: "h" | "s" | "l", max: number) =>
+    (channel: 'h' | 's' | 'l', max: number) =>
       (event: React.ChangeEvent<HTMLInputElement>) => {
         const value = Number.parseInt(event.target.value, 10)
         if (!Number.isNaN(value) && value >= 0 && value <= max) {
@@ -1731,62 +1736,62 @@ function HslInput(props: FormatInputProps) {
 
   return (
     <div
-      data-slot="color-picker-input-wrapper"
-      className={cn("flex items-center", className)}
+      data-slot='color-picker-input-wrapper'
+      className={cn('flex items-center', className)}
     >
       <InputGroupItem
-        aria-label="Hue degree (0-360)"
-        position="first"
+        aria-label='Hue degree (0-360)'
+        position='first'
         {...inputProps}
-        placeholder="0"
-        inputMode="numeric"
-        pattern="[0-9]*"
-        min="0"
-        max="360"
-        className="w-14"
+        placeholder='0'
+        inputMode='numeric'
+        pattern='[0-9]*'
+        min='0'
+        max='360'
+        className='w-14'
         value={hsl.h}
-        onChange={onHslChannelChange("h", 360)}
+        onChange={onHslChannelChange('h', 360)}
         disabled={context.disabled}
       />
       <InputGroupItem
-        aria-label="Saturation percentage (0-100)"
-        position="middle"
+        aria-label='Saturation percentage (0-100)'
+        position='middle'
         {...inputProps}
-        placeholder="0"
-        inputMode="numeric"
-        pattern="[0-9]*"
-        min="0"
-        max="100"
-        className="w-14"
+        placeholder='0'
+        inputMode='numeric'
+        pattern='[0-9]*'
+        min='0'
+        max='100'
+        className='w-14'
         value={hsl.s}
-        onChange={onHslChannelChange("s", 100)}
+        onChange={onHslChannelChange('s', 100)}
         disabled={context.disabled}
       />
       <InputGroupItem
-        aria-label="Lightness percentage (0-100)"
-        position={withoutAlpha ? "last" : "middle"}
+        aria-label='Lightness percentage (0-100)'
+        position={withoutAlpha ? 'last' : 'middle'}
         {...inputProps}
-        placeholder="0"
-        inputMode="numeric"
-        pattern="[0-9]*"
-        min="0"
-        max="100"
-        className="w-14"
+        placeholder='0'
+        inputMode='numeric'
+        pattern='[0-9]*'
+        min='0'
+        max='100'
+        className='w-14'
         value={hsl.l}
-        onChange={onHslChannelChange("l", 100)}
+        onChange={onHslChannelChange('l', 100)}
         disabled={context.disabled}
       />
       {!withoutAlpha && (
         <InputGroupItem
-          aria-label="Alpha transparency percentage"
-          position="last"
+          aria-label='Alpha transparency percentage'
+          position='last'
           {...inputProps}
-          placeholder="100"
-          inputMode="numeric"
-          pattern="[0-9]*"
-          min="0"
-          max="100"
-          className="w-14"
+          placeholder='100'
+          inputMode='numeric'
+          pattern='[0-9]*'
+          min='0'
+          max='100'
+          className='w-14'
           value={alphaValue}
           onChange={onAlphaChange}
           disabled={context.disabled}
@@ -1796,7 +1801,7 @@ function HslInput(props: FormatInputProps) {
   )
 }
 
-interface HsbInputProps extends Omit<FormatInputProps, "color"> {
+interface HsbInputProps extends Omit<FormatInputProps, 'color'> {
   hsv: HSVColorValue
 }
 
@@ -1813,7 +1818,7 @@ function HsbInput(props: HsbInputProps) {
   const alphaValue = Math.round((hsv?.a ?? 1) * 100)
 
   const onHsvChannelChange = React.useCallback(
-    (channel: "h" | "s" | "v", max: number) =>
+    (channel: 'h' | 's' | 'v', max: number) =>
       (event: React.ChangeEvent<HTMLInputElement>) => {
         const value = Number.parseInt(event.target.value, 10)
         if (!Number.isNaN(value) && value >= 0 && value <= max) {
@@ -1838,62 +1843,62 @@ function HsbInput(props: HsbInputProps) {
 
   return (
     <div
-      data-slot="color-picker-input-wrapper"
-      className={cn("flex items-center", className)}
+      data-slot='color-picker-input-wrapper'
+      className={cn('flex items-center', className)}
     >
       <InputGroupItem
-        aria-label="Hue degree (0-360)"
-        position="first"
+        aria-label='Hue degree (0-360)'
+        position='first'
         {...inputProps}
-        placeholder="0"
-        inputMode="numeric"
-        pattern="[0-9]*"
-        min="0"
-        max="360"
-        className="w-14"
+        placeholder='0'
+        inputMode='numeric'
+        pattern='[0-9]*'
+        min='0'
+        max='360'
+        className='w-14'
         value={hsv?.h ?? 0}
-        onChange={onHsvChannelChange("h", 360)}
+        onChange={onHsvChannelChange('h', 360)}
         disabled={context.disabled}
       />
       <InputGroupItem
-        aria-label="Saturation percentage (0-100)"
-        position="middle"
+        aria-label='Saturation percentage (0-100)'
+        position='middle'
         {...inputProps}
-        placeholder="0"
-        inputMode="numeric"
-        pattern="[0-9]*"
-        min="0"
-        max="100"
-        className="w-14"
+        placeholder='0'
+        inputMode='numeric'
+        pattern='[0-9]*'
+        min='0'
+        max='100'
+        className='w-14'
         value={hsv?.s ?? 0}
-        onChange={onHsvChannelChange("s", 100)}
+        onChange={onHsvChannelChange('s', 100)}
         disabled={context.disabled}
       />
       <InputGroupItem
-        aria-label="Brightness percentage (0-100)"
-        position={withoutAlpha ? "last" : "middle"}
+        aria-label='Brightness percentage (0-100)'
+        position={withoutAlpha ? 'last' : 'middle'}
         {...inputProps}
-        placeholder="0"
-        inputMode="numeric"
-        pattern="[0-9]*"
-        min="0"
-        max="100"
-        className="w-14"
+        placeholder='0'
+        inputMode='numeric'
+        pattern='[0-9]*'
+        min='0'
+        max='100'
+        className='w-14'
         value={hsv?.v ?? 0}
-        onChange={onHsvChannelChange("v", 100)}
+        onChange={onHsvChannelChange('v', 100)}
         disabled={context.disabled}
       />
       {!withoutAlpha && (
         <InputGroupItem
-          aria-label="Alpha transparency percentage"
-          position="last"
+          aria-label='Alpha transparency percentage'
+          position='last'
           {...inputProps}
-          placeholder="100"
-          inputMode="numeric"
-          pattern="[0-9]*"
-          min="0"
-          max="100"
-          className="w-14"
+          placeholder='100'
+          inputMode='numeric'
+          pattern='[0-9]*'
+          min='0'
+          max='100'
+          className='w-14'
           value={alphaValue}
           onChange={onAlphaChange}
           disabled={context.disabled}

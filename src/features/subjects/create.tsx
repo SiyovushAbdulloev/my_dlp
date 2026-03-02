@@ -58,8 +58,9 @@ export function SubjectsCreate() {
       form.reset()
       toast.success('Регион успешно создан')
       navigate({ to: '/subjects' })
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
-      console.log(err)
+      // console.log(err)
     } finally {
       setLoading(false)
     }

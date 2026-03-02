@@ -1,17 +1,8 @@
 // import { client } from '@/api/client.ts'
-import { type LessonTopic } from '@/types/lesson_topic.ts';
-import { type LaravelPaginatedResource } from 'laravel-resource-pagination-type';
-import { sleep } from '@/lib/utils.ts';
-import { type RegionForm } from '@/features/dictionaries/regions/create.tsx';
-import { LessonTopicForm } from '@/features/lesson-topics/create.tsx';
-
-
-
-
-
-
-
-
+import { type LessonTopic } from '@/types/lesson_topic.ts'
+import { type LaravelPaginatedResource } from 'laravel-resource-pagination-type'
+import { sleep } from '@/lib/utils.ts'
+import { type LessonTopicForm } from '@/features/lesson-topics/create.tsx'
 
 export const fetchIndex = async (
   page: number
@@ -21,12 +12,12 @@ export const fetchIndex = async (
   await sleep(3000)
   return {
     data: Array.from({ length: 10 }).map((_, index) => ({
-      id: index + 1 + '',
+      id: index + 1 + `${page}`,
       class_id: '',
       class: {
         id: '',
         number: 10,
-        letter: 'a'
+        letter: 'a',
       },
       subject_id: '',
       subject: {
@@ -36,7 +27,7 @@ export const fetchIndex = async (
         name_tg: 'Геометрия',
       },
       topic: 'Площадь многоугольников',
-      content: 'alksdfjlkasdfj klasfjsda'
+      content: 'alksdfjlkasdfj klasfjsda',
     })),
     links: {
       first: '',
@@ -66,10 +57,11 @@ export const create = async (data: LessonTopicForm) => {
   return {
     id: '1',
     class_id: '',
+    data,
     class: {
       id: '',
       number: 10,
-      letter: 'a'
+      letter: 'a',
     },
     subject_id: '',
     subject: {
@@ -79,7 +71,7 @@ export const create = async (data: LessonTopicForm) => {
       name_tg: 'Геометрия',
     },
     topic: 'Площадь многоугольников',
-    content: 'alksdfjlkasdfj klasfjsda'
+    content: 'alksdfjlkasdfj klasfjsda',
   }
 }
 
@@ -91,10 +83,11 @@ export const getById = async (id: string) => {
   return {
     id: '1',
     class_id: '1',
+    id1: id,
     class: {
       id: '',
       number: 10,
-      letter: 'a'
+      letter: 'a',
     },
     subject_id: '1',
     subject: {
@@ -104,7 +97,7 @@ export const getById = async (id: string) => {
       name_tg: 'Геометрия',
     },
     topic: 'Площадь многоугольников',
-    content: 'alksdfjlkasdfj klasfjsda'
+    content: 'alksdfjlkasdfj klasfjsda',
   }
 }
 
@@ -118,11 +111,12 @@ export const edit = async (id: string, data: LessonTopicForm) => {
   await sleep(3000)
   return {
     id: id,
+    data,
     class_id: '1',
     class: {
       id: '',
       number: 10,
-      letter: 'a'
+      letter: 'a',
     },
     subject_id: '1',
     subject: {
@@ -132,7 +126,7 @@ export const edit = async (id: string, data: LessonTopicForm) => {
       name_tg: 'Геометрия',
     },
     topic: 'Площадь многоугольников',
-    content: 'alksdfjlkasdfj klasfjsda'
+    content: 'alksdfjlkasdfj klasfjsda',
   }
 }
 
@@ -141,5 +135,5 @@ export const deleteById = async (id: string) => {
   // return json
 
   await sleep(3000)
-  return true
+  return id
 }

@@ -1,40 +1,27 @@
-import { type ReactNode, useEffect, useMemo, useState } from 'react';
-import { Link } from '@tanstack/react-router';
-import { type ColumnDef, flexRender, getCoreRowModel, getPaginationRowModel, useReactTable } from '@tanstack/react-table';
-import { type LaravelPaginatedResource } from 'laravel-resource-pagination-type';
+import { type ReactNode, useEffect, useMemo, useState } from 'react'
+import { Link } from '@tanstack/react-router'
+import {
+  type ColumnDef,
+  flexRender,
+  getCoreRowModel,
+  getPaginationRowModel,
+  useReactTable,
+} from '@tanstack/react-table'
+import { type Subject } from '@/types/subject.ts'
+import { type LaravelPaginatedResource } from 'laravel-resource-pagination-type'
 import { LoaderCircle, PenLine, Trash } from 'lucide-react'
 import { toast } from 'sonner'
-import { deleteById, fetchIndex } from '@/api/subjects';
-import { Button } from '@/components/ui/button.tsx';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table.tsx';
-import { DataTablePagination } from '@/components/data-table';
-import { type Subject } from '@/types/subject.ts'
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+import { deleteById, fetchIndex } from '@/api/subjects'
+import { Button } from '@/components/ui/button.tsx'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table.tsx'
+import { DataTablePagination } from '@/components/data-table'
 
 const getColumns = (opts: {
   deleting: string | null
@@ -57,23 +44,27 @@ const getColumns = (opts: {
     accessorKey: 'id',
     header: 'Действие',
     cell: (props) => {
-      const id: string = props.getValue()
+      const id: string = props.getValue() as string
       const isDeleting = opts.deleting === id
 
       return (
-        <div className="flex items-center gap-2">
-          <Link params={{ subjectId: id }} to="/subjects/$subjectId/edit">
+        <div className='flex items-center gap-2'>
+          <Link params={{ subjectId: id }} to='/subjects/$subjectId/edit'>
             <PenLine />
           </Link>
 
           <Button
-            type="button"
-            variant="ghost"
+            type='button'
+            variant='ghost'
             disabled={isDeleting}
             onClick={() => opts.onDelete(id)}
-            className="px-2"
+            className='px-2'
           >
-            {isDeleting ? <LoaderCircle className="size-5 animate-spin" /> : <Trash />}
+            {isDeleting ? (
+              <LoaderCircle className='size-5 animate-spin' />
+            ) : (
+              <Trash />
+            )}
           </Button>
         </div>
       )

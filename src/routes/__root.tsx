@@ -2,14 +2,14 @@ import { type QueryClient } from '@tanstack/react-query'
 import { createRootRouteWithContext, Outlet } from '@tanstack/react-router'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
+import { type AuthState } from '@/stores/auth-store.ts'
 import { Toaster } from '@/components/ui/sonner'
 import { NavigationProgress } from '@/components/navigation-progress'
 import { GeneralError } from '@/features/errors/general-error'
 import { NotFoundError } from '@/features/errors/not-found-error'
-import { type AuthState } from '@/stores/auth-store.ts'
 
 export const Route = createRootRouteWithContext<{
-  queryClient: QueryClient,
+  queryClient: QueryClient
   auth: AuthState
 }>()({
   component: () => {

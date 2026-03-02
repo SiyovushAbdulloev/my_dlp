@@ -37,11 +37,6 @@ export function VideoLessonsEdit() {
   const [loading, setLoading] = useState<boolean>(false)
   const { lesson, classes, subjects } = Route.useRouteContext()
   const [filePreview, setFilePreview] = useState<string | null>(null)
-  console.log({ lesson })
-  console.log(
-    'True:',
-    (lesson.video_url || lesson.external_url) && !filePreview
-  )
   const fileInputRef = useRef<HTMLInputElement | null>(null)
 
   const form = useForm<VideoLessonForm>({
@@ -68,8 +63,9 @@ export function VideoLessonsEdit() {
       setFilePreview(null)
       toast.success('Видео-урок успешно редактирован')
       navigate({ to: '/video-lessons' })
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
-      console.log(err)
+      // console.log(err)
     } finally {
       setLoading(false)
     }

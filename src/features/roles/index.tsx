@@ -1,8 +1,8 @@
-import { Main } from '@/components/layout/main'
-import { RolesTable } from './components/roles-table.tsx'
+import { useNavigate } from '@tanstack/react-router'
 import { Plus } from 'lucide-react'
 import { Button } from '@/components/ui/button.tsx'
-import { useNavigate } from '@tanstack/react-router'
+import { Main } from '@/components/layout/main'
+import { RolesTable } from './components/roles-table.tsx'
 
 export function Roles() {
   const navigate = useNavigate()
@@ -14,7 +14,10 @@ export function Roles() {
           <div>
             <h2 className='text-2xl font-bold tracking-tight'>Роли и права</h2>
           </div>
-          <Button className='space-x-1' onClick={() => navigate({to: '/roles/create'})}>
+          <Button
+            className='space-x-1'
+            onClick={() => navigate({ to: '/roles/create' })}
+          >
             <span>Создать роль</span> <Plus size={18} />
           </Button>
         </div>

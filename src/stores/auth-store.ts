@@ -1,6 +1,6 @@
+import { type User } from '@/types/user.ts'
 import { create } from 'zustand'
 import { getCookie, setCookie, removeCookie } from '@/lib/cookies'
-import { type User } from '@/types/user.ts'
 
 const ACCESS_TOKEN = 'thisisjustarandomstring'
 

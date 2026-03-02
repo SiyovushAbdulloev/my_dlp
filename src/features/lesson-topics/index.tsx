@@ -1,8 +1,8 @@
-import { Main } from '@/components/layout/main'
-import { LessonTableTable } from './components/lesson-table-table.tsx'
+import { useNavigate } from '@tanstack/react-router'
 import { Plus } from 'lucide-react'
 import { Button } from '@/components/ui/button.tsx'
-import { useNavigate } from '@tanstack/react-router'
+import { Main } from '@/components/layout/main'
+import { LessonTableTable } from './components/lesson-table-table.tsx'
 
 export function LessonTopics() {
   const navigate = useNavigate()
@@ -14,7 +14,10 @@ export function LessonTopics() {
           <div>
             <h2 className='text-2xl font-bold tracking-tight'>Темы уроков</h2>
           </div>
-          <Button className='space-x-1' onClick={() => navigate({to: '/lesson-topics/create'})}>
+          <Button
+            className='space-x-1'
+            onClick={() => navigate({ to: '/lesson-topics/create' })}
+          >
             <span>Создать тему урока</span> <Plus size={18} />
           </Button>
         </div>

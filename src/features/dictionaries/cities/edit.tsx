@@ -1,39 +1,36 @@
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useNavigate } from '@tanstack/react-router';
-import { Route } from '@/routes/_authenticated/dictionaries/cities/$cityId.edit.tsx';
-import { ArrowLeft, Loader2 } from 'lucide-react';
-import { toast } from 'sonner';
-import { edit } from '@/api/dictionaries/cities';
-import { Button } from '@/components/ui/button.tsx';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form.tsx';
-import { Input } from '@/components/ui/input.tsx';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs.tsx';
-import { Main } from '@/components/layout/main';
-import { SelectDropdown } from '@/components/select-dropdown.tsx';
-import { type CityForm, cityFormSchema } from '@/features/dictionaries/cities/create.tsx';
+import { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useNavigate } from '@tanstack/react-router'
+import { Route } from '@/routes/_authenticated/dictionaries/cities/$cityId.edit.tsx'
 import { CityTypeLabel } from '@/types/city.ts'
-import { Combobox } from '@/components/combobox.tsx'
+import { ArrowLeft, Loader2 } from 'lucide-react'
+import { toast } from 'sonner'
+import { edit } from '@/api/dictionaries/cities'
 import { fetchIndex } from '@/api/dictionaries/districts'
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+import { Button } from '@/components/ui/button.tsx'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form.tsx'
+import { Input } from '@/components/ui/input.tsx'
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from '@/components/ui/tabs.tsx'
+import { Combobox } from '@/components/combobox.tsx'
+import { Main } from '@/components/layout/main'
+import { SelectDropdown } from '@/components/select-dropdown.tsx'
+import {
+  type CityForm,
+  cityFormSchema,
+} from '@/features/dictionaries/cities/create.tsx'
 
 const defaultLang = 'en'
 
@@ -51,7 +48,7 @@ export function CitiesEdit() {
         tg: city.name_tg,
       },
       type: city.type,
-      district_id: city.district.id
+      district_id: city.district.id,
     },
   })
 
@@ -62,8 +59,9 @@ export function CitiesEdit() {
       form.reset()
       toast.success('Город успешно изменен')
       navigate({ to: '/dictionaries/cities' })
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
-      console.log(err)
+      // console.log(err)
     } finally {
       setLoading(false)
     }
@@ -153,9 +151,11 @@ export function CitiesEdit() {
                     defaultValue={field.value}
                     onValueChange={field.onChange}
                     placeholder='Выберите регион'
-                    items={Object.keys(CityTypeLabel).map(key => ({
+                    items={Object.keys(CityTypeLabel).map((key) => ({
                       value: key,
-                      label: CityTypeLabel[key]
+                      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                      //@ts-expect-error
+                      label: CityTypeLabel[key],
                     }))}
                   />
                   <FormMessage />
@@ -173,9 +173,9 @@ export function CitiesEdit() {
                     <Combobox
                       value={field.value}
                       onChange={field.onChange}
-                      placeholder="Выберите район"
-                      searchPlaceholder="Поиск по районам..."
-                      load={({ q, page }) => fetchIndex(page)} // позже добавишь q в API
+                      placeholder='Выберите район'
+                      searchPlaceholder='Поиск по районам...'
+                      load={({ page }) => fetchIndex(page)} // позже добавишь q в API
                       getValue={(d) => String(d.id)}
                       getLabel={(d) => d.name_ru}
                       initialSelected={city.district} // ✅ объект выбранного района

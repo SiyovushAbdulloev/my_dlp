@@ -1,8 +1,8 @@
-import { Main } from '@/components/layout/main'
-import { ClassesTable } from './components/classes-table.tsx'
+import { useNavigate } from '@tanstack/react-router'
 import { Plus } from 'lucide-react'
 import { Button } from '@/components/ui/button.tsx'
-import { useNavigate } from '@tanstack/react-router'
+import { Main } from '@/components/layout/main'
+import { ClassesTable } from './components/classes-table.tsx'
 
 export function Classes() {
   const navigate = useNavigate()
@@ -14,7 +14,10 @@ export function Classes() {
           <div>
             <h2 className='text-2xl font-bold tracking-tight'>Классы</h2>
           </div>
-          <Button className='space-x-1' onClick={() => navigate({to: '/classes/create'})}>
+          <Button
+            className='space-x-1'
+            onClick={() => navigate({ to: '/classes/create' })}
+          >
             <span>Создать класс</span> <Plus size={18} />
           </Button>
         </div>

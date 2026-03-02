@@ -42,8 +42,9 @@ export function SubjectClassEdit() {
       form.reset()
       toast.success('Предмет-класс успешно редактирован')
       navigate({ to: '/subject-class' })
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
-      console.log(err)
+      // console.log(err)
     } finally {
       setLoading(false)
     }

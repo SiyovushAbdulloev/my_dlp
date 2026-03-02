@@ -1,7 +1,7 @@
-"use client"
+'use client'
 
-import { createContext, JSX, useContext } from "react"
-import { LexicalEditor } from "lexical"
+import { createContext, type JSX, useContext } from 'react'
+import { type LexicalEditor } from 'lexical'
 
 const Context = createContext<{
   activeEditor: LexicalEditor
@@ -15,7 +15,7 @@ const Context = createContext<{
 }>({
   activeEditor: {} as LexicalEditor,
   $updateToolbar: () => {},
-  blockType: "paragraph",
+  blockType: 'paragraph',
   setBlockType: () => {},
   showModal: () => {},
 })

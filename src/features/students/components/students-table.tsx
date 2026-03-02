@@ -6,6 +6,8 @@ import {
   getPaginationRowModel,
   useReactTable,
 } from '@tanstack/react-table'
+import { type SchoolClass } from '@/types/school_class.ts'
+import { type Student } from '@/types/student.ts'
 import { type LaravelPaginatedResource } from 'laravel-resource-pagination-type'
 import { LoaderCircle } from 'lucide-react'
 import { fetchIndex } from '@/api/students'
@@ -18,7 +20,6 @@ import {
   TableRow,
 } from '@/components/ui/table.tsx'
 import { DataTablePagination } from '@/components/data-table'
-import { type Student } from '@/types/student.ts'
 
 const getColumns = (): ColumnDef<Student>[] => [
   {
@@ -29,7 +30,11 @@ const getColumns = (): ColumnDef<Student>[] => [
   {
     accessorKey: 'class',
     header: 'Класс',
-    cell: (props) => <p>{props.getValue() ? `${props.getValue()?.number} ${props.getValue()?.letter}` : ''}</p>,
+    cell: (props) => {
+      const cls = props.getValue() as SchoolClass
+
+      return <p>{props.getValue() ? `${cls?.number} ${cls?.letter}` : ''}</p>
+    },
   },
 ]
 

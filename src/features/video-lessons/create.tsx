@@ -5,6 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate } from '@tanstack/react-router'
 import { Route } from '@/routes/_authenticated/video-lessons/create'
 import { ArrowLeft, Loader2, Trash } from 'lucide-react'
+import ReactPlayer from 'react-player'
 import { toast } from 'sonner'
 import { create } from '@/api/video-lessons'
 import { Button } from '@/components/ui/button.tsx'
@@ -25,7 +26,6 @@ import {
 } from '@/components/ui/tabs.tsx'
 import { Main } from '@/components/layout/main'
 import { SelectDropdown } from '@/components/select-dropdown.tsx'
-import ReactPlayer from 'react-player'
 
 export const videoLessonFormSchema = z
   .object({
@@ -74,8 +74,9 @@ export function VideoLessonsCreate() {
       setFilePreview(null)
       toast.success('Видео-урок успешно создан')
       navigate({ to: '/video-lessons' })
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
-      console.log(err)
+      // console.log(err)
     } finally {
       setLoading(false)
     }

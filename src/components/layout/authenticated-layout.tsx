@@ -1,8 +1,11 @@
-import { Link, Outlet } from '@tanstack/react-router';
-import { getCookie } from '@/lib/cookies';
-import { cn } from '@/lib/utils';
-import { LayoutProvider } from '@/context/layout-provider';
-import { SearchProvider } from '@/context/search-provider';
+import { Link, Outlet } from '@tanstack/react-router'
+import { type NavItem } from '@/routes/_authenticated/components/menu.tsx'
+import { useNav } from '@/routes/_authenticated/lib/useNav.ts'
+import { getCookie } from '@/lib/cookies'
+import { cn } from '@/lib/utils'
+import { LayoutProvider } from '@/context/layout-provider'
+import { SearchProvider } from '@/context/search-provider'
+import { useIsMobile } from '@/hooks/use-mobile.tsx'
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -13,15 +16,12 @@ import {
 } from '@/components/ui/navigation-menu.tsx'
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
 import { ConfigDrawer } from '@/components/config-drawer.tsx'
-import { AppSidebar } from '@/components/layout/app-sidebar';
-import { Header } from '@/components/layout/header.tsx';
-import { ProfileDropdown } from '@/components/profile-dropdown.tsx';
-import { Search } from '@/components/search.tsx';
-import { SkipToMain } from '@/components/skip-to-main';
-import { ThemeSwitch } from '@/components/theme-switch.tsx';
-import { useIsMobile } from '@/hooks/use-mobile.tsx'
-import { useNav } from '@/routes/_authenticated/lib/useNav.ts'
-import { type NavItem } from '@/routes/_authenticated/components/menu.tsx'
+// import { AppSidebar } from '@/components/layout/app-sidebar';
+import { Header } from '@/components/layout/header.tsx'
+import { ProfileDropdown } from '@/components/profile-dropdown.tsx'
+import { Search } from '@/components/search.tsx'
+import { SkipToMain } from '@/components/skip-to-main'
+import { ThemeSwitch } from '@/components/theme-switch.tsx'
 
 type AuthenticatedLayoutProps = {
   children?: React.ReactNode
@@ -55,37 +55,41 @@ export function AuthenticatedLayout({ children }: AuthenticatedLayoutProps) {
             <Header>
               {/*<TopNav links={topNav} />*/}
               <NavigationMenu viewport={isMobile}>
-                <NavigationMenuList className="flex-wrap">
+                <NavigationMenuList className='flex-wrap'>
                   {navItems.map((navItem: NavItem) => (
                     <NavigationMenuItem
-                      className="hidden md:block"
+                      className='hidden md:block'
                       key={navItem.id}
                     >
                       {navItem.children?.length ? (
-                          <>
-                            <NavigationMenuTrigger>
-                              {navItem.children?.length ? (navItem.label) : (
-                                <Link to={navItem.to}>{navItem.label}</Link>
-                              )}
-                            </NavigationMenuTrigger>
-                            <NavigationMenuContent>
-                              <ul className="grid w-[300px] gap-1">
-                                {navItem.children.map((child) => (
-                                  <li key={child.id}>
-                                    <NavigationMenuLink asChild>
-                                      <Link to={child.to}>
-                                        <div className="font-medium">{child.label}</div>
-                                      </Link>
-                                    </NavigationMenuLink>
-                                  </li>
-                                ))}
-                              </ul>
-                            </NavigationMenuContent>
-                          </>
-                        ) : (
+                        <>
+                          <NavigationMenuTrigger>
+                            {navItem.children?.length ? (
+                              navItem.label
+                            ) : (
+                              <Link to={navItem.to}>{navItem.label}</Link>
+                            )}
+                          </NavigationMenuTrigger>
+                          <NavigationMenuContent>
+                            <ul className='grid w-[300px] gap-1'>
+                              {navItem.children.map((child) => (
+                                <li key={child.id}>
+                                  <NavigationMenuLink asChild>
+                                    <Link to={child.to}>
+                                      <div className='font-medium'>
+                                        {child.label}
+                                      </div>
+                                    </Link>
+                                  </NavigationMenuLink>
+                                </li>
+                              ))}
+                            </ul>
+                          </NavigationMenuContent>
+                        </>
+                      ) : (
                         <NavigationMenuLink asChild>
                           <Link to={navItem.to}>
-                            <div className="font-medium">{navItem.label}</div>
+                            <div className='font-medium'>{navItem.label}</div>
                           </Link>
                         </NavigationMenuLink>
                       )}

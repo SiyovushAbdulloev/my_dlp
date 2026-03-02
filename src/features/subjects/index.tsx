@@ -1,8 +1,8 @@
-import { Main } from '@/components/layout/main'
-import { SubjectsTable } from './components/subjects-table.tsx'
+import { useNavigate } from '@tanstack/react-router'
 import { Plus } from 'lucide-react'
 import { Button } from '@/components/ui/button.tsx'
-import { useNavigate } from '@tanstack/react-router'
+import { Main } from '@/components/layout/main'
+import { SubjectsTable } from './components/subjects-table.tsx'
 
 export function Subjects() {
   const navigate = useNavigate()
@@ -14,7 +14,10 @@ export function Subjects() {
           <div>
             <h2 className='text-2xl font-bold tracking-tight'>Предметы</h2>
           </div>
-          <Button className='space-x-1' onClick={() => navigate({to: '/subjects/create'})}>
+          <Button
+            className='space-x-1'
+            onClick={() => navigate({ to: '/subjects/create' })}
+          >
             <span>Создать предмет</span> <Plus size={18} />
           </Button>
         </div>

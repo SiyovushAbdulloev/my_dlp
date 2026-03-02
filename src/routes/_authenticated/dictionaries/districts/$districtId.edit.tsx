@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { fetchAll } from '@/api/dictionaries/regions'
 import { getById } from '@/api/dictionaries/districts'
+import { fetchAll } from '@/api/dictionaries/regions'
 import { DistrictsEdit } from '@/features/dictionaries/districts/edit.tsx'
 
 export const Route = createFileRoute(

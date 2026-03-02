@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { NAV, type NavItem } from '@/routes/_authenticated/components/menu.tsx'
-import { useAuthStore } from '@/stores/auth-store.ts'
 import { type User } from '@/types/user.ts'
+import { useAuthStore } from '@/stores/auth-store.ts'
 
 const filterNav = (items: NavItem[], user: User): NavItem[] => {
   return items

@@ -4,9 +4,9 @@ export const client = ky.extend({
   credentials: 'include',
   hooks: {
     beforeRequest: [
-      (request, options) => {
+      (request) => {
         request.headers.set('Accept', 'application/json')
-      }
-    ]
-  }
+      },
+    ],
+  },
 })

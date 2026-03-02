@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { fetchAll } from '@/api/subjects'
 import { fetchAll as fetchAllClasses } from '@/api/classes'
+import { fetchAll } from '@/api/subjects'
 import { SubjectClassCreate } from '@/features/subject-class/create.tsx'
 
 export const Route = createFileRoute('/_authenticated/subject-class/create')({
@@ -10,7 +10,7 @@ export const Route = createFileRoute('/_authenticated/subject-class/create')({
 
     return {
       subjects,
-      classes
+      classes,
     }
   },
   component: SubjectClassCreate,

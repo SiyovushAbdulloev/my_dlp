@@ -7,6 +7,7 @@ import {
   getPaginationRowModel,
   useReactTable,
 } from '@tanstack/react-table'
+import { type City, CityTypeLabel } from '@/types/city.ts'
 import { type LaravelPaginatedResource } from 'laravel-resource-pagination-type'
 import { LoaderCircle, PenLine, Trash } from 'lucide-react'
 import { toast } from 'sonner'
@@ -21,7 +22,6 @@ import {
   TableRow,
 } from '@/components/ui/table.tsx'
 import { DataTablePagination } from '@/components/data-table'
-import { type City, CityTypeLabel } from '@/types/city.ts'
 
 const getColumns = (opts: {
   deleting: string | null
@@ -43,7 +43,15 @@ const getColumns = (opts: {
   {
     accessorKey: 'type',
     header: 'Тип',
-    cell: (props) => <p>{CityTypeLabel[props.getValue()]}</p>,
+    cell: (props) => (
+      <p>
+        {
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          //@ts-expect-error
+          CityTypeLabel[props.getValue() as string]
+        }
+      </p>
+    ),
   },
   {
     accessorKey: 'district.name_ru',
@@ -53,15 +61,12 @@ const getColumns = (opts: {
     accessorKey: 'id',
     header: 'Действие',
     cell: (props) => {
-      const id: string = props.getValue()
+      const id: string = props.getValue() as string
       const isDeleting = opts.deleting === id
 
       return (
         <div className='flex items-center gap-2'>
-          <Link
-            params={{ cityId: id }}
-            to='/dictionaries/cities/$cityId/edit'
-          >
+          <Link params={{ cityId: id }} to='/dictionaries/cities/$cityId/edit'>
             <PenLine />
           </Link>
 
@@ -85,8 +90,9 @@ const getColumns = (opts: {
 ]
 
 export const CitiesTable = () => {
-  const [cities, setCities] =
-    useState<LaravelPaginatedResource<City> | null>(null)
+  const [cities, setCities] = useState<LaravelPaginatedResource<City> | null>(
+    null
+  )
   const [pagination, setPagination] = useState({
     pageIndex: 0,
     pageSize: 10,

@@ -1,24 +1,24 @@
 // import { client } from '@/api/client.ts'
-import { sleep } from '@/lib/utils.ts'
 import { type Role } from '@/types'
-import { type RoleForm } from '@/features/roles/create.tsx'
 import { type Permission } from '@/types/role.ts'
+import { sleep } from '@/lib/utils.ts'
+import { type RoleForm } from '@/features/roles/create.tsx'
 
-export const fetchAll = async (): Promise<{data: Role[]}> => {
+export const fetchAll = async (): Promise<{ data: Role[] }> => {
   // const json: LaravelPaginatedResource<District> = await client.get(import.meta.env.API_URL + '/api/roles').json();
   // return json
   await sleep(3000)
   return {
-    data: Array.from({length: 10}).map((_, index) => ({
+    data: Array.from({ length: 10 }).map((_, index) => ({
       id: index + 1 + '',
       name: `Роль №${index + 1}`,
       is_static: false,
-      permissions: []
-    }))
+      permissions: [],
+    })),
   }
 }
 
-export const fetchPermissions = async (): Promise<{data: Permission[]}> => {
+export const fetchPermissions = async (): Promise<{ data: Permission[] }> => {
   // const json: LaravelPaginatedResource<District> = await client.get(import.meta.env.API_URL + '/api/permissions').json();
   // return json
   await sleep(3000)
@@ -38,8 +38,8 @@ export const fetchPermissions = async (): Promise<{data: Permission[]}> => {
             id: '3',
             name: `regions_create`,
             description: `Создание`,
-          }
-        ]
+          },
+        ],
       },
       {
         id: '4',
@@ -55,10 +55,10 @@ export const fetchPermissions = async (): Promise<{data: Permission[]}> => {
             id: '6',
             name: `districts_create`,
             description: `Создание`,
-          }
-        ]
+          },
+        ],
       },
-    ]
+    ],
   }
 }
 
@@ -72,8 +72,9 @@ export const create = async (data: RoleForm) => {
   return {
     id: '1',
     name: `Роль`,
+    data,
     is_static: false,
-    permissions: []
+    permissions: [],
   }
 }
 
@@ -84,6 +85,7 @@ export const getById = async (id: string) => {
   await sleep(3000)
   return {
     id: '1',
+    id1: id,
     name: `Роль`,
     is_static: false,
     permissions: [
@@ -96,8 +98,8 @@ export const getById = async (id: string) => {
         id: '6',
         name: `districts_create`,
         description: `Создание`,
-      }
-    ]
+      },
+    ],
   }
 }
 
@@ -111,9 +113,11 @@ export const edit = async (id: string, data: RoleForm) => {
   await sleep(3000)
   return {
     id: '1',
+    id1: id,
+    data,
     name: `Роль`,
     is_static: false,
-    permissions: []
+    permissions: [],
   }
 }
 
@@ -122,5 +126,5 @@ export const deleteById = async (id: string) => {
   // return json
 
   await sleep(3000)
-  return true
+  return id
 }

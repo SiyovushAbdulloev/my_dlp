@@ -1,12 +1,10 @@
-import { JSX, useCallback, useMemo, useState } from "react"
-import * as React from "react"
-
+import { type JSX, useCallback, useMemo, useState } from 'react'
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog"
+} from '@/components/ui/dialog'
 
 export function useEditorModal(): [
   JSX.Element | null,

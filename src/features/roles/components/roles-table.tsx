@@ -1,23 +1,24 @@
 import { type ReactNode, useEffect, useMemo, useState } from 'react'
-import { Link } from '@tanstack/react-router';
-import { type ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
-import { type Role } from '@/types';
-import { LoaderCircle, PenLine, Trash } from 'lucide-react';
-import { toast } from 'sonner';
-import { deleteById, fetchAll } from '@/api/roles';
-import { Button } from '@/components/ui/button.tsx';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table.tsx';
-
-
-
-
-
-
-
-
-
-
-
+import { Link } from '@tanstack/react-router'
+import {
+  type ColumnDef,
+  flexRender,
+  getCoreRowModel,
+  useReactTable,
+} from '@tanstack/react-table'
+import { type Role } from '@/types'
+import { LoaderCircle, PenLine, Trash } from 'lucide-react'
+import { toast } from 'sonner'
+import { deleteById, fetchAll } from '@/api/roles'
+import { Button } from '@/components/ui/button.tsx'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table.tsx'
 
 const getColumns = (opts: {
   deleting: string | null
@@ -32,15 +33,12 @@ const getColumns = (opts: {
     accessorKey: 'id',
     header: 'Действие',
     cell: (props) => {
-      const id: string = props.getValue()
+      const id: string = props.getValue() as string
       const isDeleting = opts.deleting === id
 
       return (
         <div className='flex items-center gap-2'>
-          <Link
-            params={{ roleId: id }}
-            to='/roles/$roleId/edit'
-          >
+          <Link params={{ roleId: id }} to='/roles/$roleId/edit'>
             <PenLine />
           </Link>
 
@@ -66,8 +64,7 @@ const getColumns = (opts: {
 ]
 
 export const RolesTable = () => {
-  const [roles, setRoles] =
-    useState<Role[] | null>(null)
+  const [roles, setRoles] = useState<Role[] | null>(null)
   const [fetching, setFetching] = useState<boolean>(false)
   const [deleting, setDeleting] = useState<string>('')
 

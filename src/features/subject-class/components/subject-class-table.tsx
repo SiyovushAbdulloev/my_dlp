@@ -7,6 +7,8 @@ import {
   getPaginationRowModel,
   useReactTable,
 } from '@tanstack/react-table'
+import { type SchoolClass } from '@/types/school_class.ts'
+import { type Subject } from '@/types/subject.ts'
 import { type SubjectClass } from '@/types/subject_class.ts'
 import { type LaravelPaginatedResource } from 'laravel-resource-pagination-type'
 import { LoaderCircle, PenLine, Trash } from 'lucide-react'
@@ -30,22 +32,28 @@ const getColumns = (opts: {
   {
     accessorKey: 'subject',
     header: 'Предмет',
-    cell: (props) => <p>{String(props.getValue()?.name_ru ?? '')}</p>,
+    cell: (props) => (
+      <p>{String((props.getValue() as Subject)?.name_ru ?? '')}</p>
+    ),
   },
   {
     accessorKey: 'class',
     header: 'Класс',
-    cell: (props) => (
-      <p>
-        {String(props.getValue()?.number + ' ' + props.getValue()?.letter) ?? ''}
-      </p>
-    ),
+    cell: (props) => {
+      const cls = props.getValue() as SchoolClass
+      return (
+        <p>
+          {/* eslint-disable-next-line no-constant-binary-expression */}
+          {String(cls?.number + ' ' + cls?.letter) ?? ''}
+        </p>
+      )
+    },
   },
   {
     accessorKey: 'id',
     header: 'Действие',
     cell: (props) => {
-      const id: string = props.getValue()
+      const id: string = props.getValue() as string
       const isDeleting = opts.deleting === id
 
       return (

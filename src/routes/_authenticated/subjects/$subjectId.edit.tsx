@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { SubjectsEdit } from '@/features/subjects/edit.tsx'
 import { getById } from '@/api/subjects'
+import { SubjectsEdit } from '@/features/subjects/edit.tsx'
 
 export const Route = createFileRoute(
   '/_authenticated/subjects/$subjectId/edit'

@@ -1,39 +1,28 @@
-import { useState } from 'react';
-import { z } from 'zod';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Link, useNavigate } from '@tanstack/react-router';
-import { DefaultRoles } from '@/types';
-import { Loader2, LogIn } from 'lucide-react';
-import { toast } from 'sonner';
-import { IconFacebook, IconGithub } from '@/assets/brand-icons';
-import { useAuthStore } from '@/stores/auth-store';
-import { sleep, cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+import { useState } from 'react'
+import { z } from 'zod'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useNavigate } from '@tanstack/react-router'
+import { DefaultRoles } from '@/types'
+import { type Gender } from '@/types/user.ts'
+import { Loader2, LogIn } from 'lucide-react'
+import { toast } from 'sonner'
+import { IconFacebook, IconGithub } from '@/assets/brand-icons'
+import { useAuthStore } from '@/stores/auth-store'
+import { sleep, cn } from '@/lib/utils'
+import { Button } from '@/components/ui/button'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label.tsx'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group.tsx'
 import { PasswordInput } from '@/components/password-input'
-import { Label } from '@/components/ui/label.tsx'
-import { Gender } from '@/types/user.ts'
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 const formSchema = z.object({
   email: z.email({
@@ -57,7 +46,9 @@ export function UserAuthForm({
   const [isLoading, setIsLoading] = useState(false)
   const navigate = useNavigate()
   const { auth } = useAuthStore()
-  const [selectedRole, setSelectedRole] = useState<string>(DefaultRoles.SUPER_ADMIN)
+  const [selectedRole, setSelectedRole] = useState<string>(
+    DefaultRoles.SUPER_ADMIN
+  )
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -93,7 +84,7 @@ export function UserAuthForm({
             id: '1',
             name: selectedRole,
             is_static: true,
-          }
+          },
         }
 
         // Set user and access token
@@ -140,26 +131,34 @@ export function UserAuthForm({
                 <PasswordInput placeholder='********' {...field} />
               </FormControl>
               <FormMessage />
-              <Link
-                to='/forgot-password'
-                className='absolute end-0 -top-0.5 text-sm font-medium text-muted-foreground hover:opacity-75'
-              >
-                Forgot password?
-              </Link>
             </FormItem>
           )}
         />
         <RadioGroup
           defaultValue={selectedRole}
-          onChange={(e) => setSelectedRole(e.target.value)}
+          onChange={(e) => {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            //@ts-expect-error
+            setSelectedRole(e.target.value)
+          }}
         >
           {Object.keys(DefaultRoles).map((key) => (
-            <div
-              key={key}
-              className="flex items-center gap-3"
-            >
-              <RadioGroupItem value={DefaultRoles[key]} id={key} />
-              <Label htmlFor={key}>{DefaultRoles[key]}</Label>
+            <div key={key} className='flex items-center gap-3'>
+              <RadioGroupItem
+                value={
+                  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                  //@ts-expect-error
+                  DefaultRoles[key]
+                }
+                id={key}
+              />
+              <Label htmlFor={key}>
+                {
+                  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                  //@ts-expect-error
+                  DefaultRoles[key]
+                }
+              </Label>
             </div>
           ))}
         </RadioGroup>

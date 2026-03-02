@@ -1,17 +1,17 @@
 // import { client } from '@/api/client.ts'
-import { type LaravelPaginatedResource } from 'laravel-resource-pagination-type'
-import { type Region } from '@/types'
-import { sleep } from '@/lib/utils.ts'
-import { type SubjectForm } from '@/features/subjects/create.tsx'
 import { type SubjectClass } from '@/types/subject_class.ts'
-import { SubjectClassForm } from '@/features/subject-class/create.tsx'
+import { type LaravelPaginatedResource } from 'laravel-resource-pagination-type'
+import { sleep } from '@/lib/utils.ts'
+import { type SubjectClassForm } from '@/features/subject-class/create.tsx'
 
-export const fetchIndex = async (page: number): Promise<LaravelPaginatedResource<SubjectClass>> => {
+export const fetchIndex = async (
+  page: number
+): Promise<LaravelPaginatedResource<SubjectClass>> => {
   // const json: LaravelPaginatedResource<SubjectClass> = await client.get(import.meta.env.API_URL + '/api/subject-class').json();
   // return json
   await sleep(3000)
   return {
-    data: Array.from({length: 10}).map((_, index) => ({
+    data: Array.from({ length: 10 }).map((_, index) => ({
       id: index + 1 + '',
       subject_id: index + 1 + '',
       class_id: index + 1 + '',
@@ -25,23 +25,23 @@ export const fetchIndex = async (page: number): Promise<LaravelPaginatedResource
         id: index + 1 + '',
         number: index + 1,
         letter: `a №${index + 1}, page: ${page}`,
-      }
+      },
     })),
     links: {
-        first: '',
-        last: '',
-        prev: null,
-        next: null
+      first: '',
+      last: '',
+      prev: null,
+      next: null,
     },
     meta: {
-        current_page: 1,
-        from: 0,
-        last_page: 6,
-        path: '',
-        per_page: 10,
-        to: 0,
-        total: 60
-    }
+      current_page: 1,
+      from: 0,
+      last_page: 6,
+      path: '',
+      per_page: 10,
+      to: 0,
+      total: 60,
+    },
   }
 }
 
@@ -54,6 +54,7 @@ export const create = async (data: SubjectClassForm) => {
   await sleep(3000)
   return {
     id: 1 + '',
+    data,
     subject_id: 1 + '',
     class_id: 1 + '',
     subject: {
@@ -66,7 +67,7 @@ export const create = async (data: SubjectClassForm) => {
       id: 1 + '',
       number: 1,
       letter: `a №${1}, page: ${1}`,
-    }
+    },
   }
 }
 
@@ -77,6 +78,7 @@ export const getById = async (id: string) => {
   await sleep(3000)
   return {
     id: 1 + '',
+    id1: id,
     subject_id: 1 + '',
     class_id: 1 + '',
     subject: {
@@ -89,7 +91,7 @@ export const getById = async (id: string) => {
       id: 1 + '',
       number: 1,
       letter: `a №${1}, page: ${1}`,
-    }
+    },
   }
 }
 
@@ -103,6 +105,8 @@ export const edit = async (id: string, data: SubjectClassForm) => {
   await sleep(3000)
   return {
     id: 1 + '',
+    id1: id,
+    data,
     subject_id: 1 + '',
     class_id: 1 + '',
     subject: {
@@ -115,7 +119,7 @@ export const edit = async (id: string, data: SubjectClassForm) => {
       id: 1 + '',
       number: 1,
       letter: `a №${1}, page: ${1}`,
-    }
+    },
   }
 }
 
@@ -124,5 +128,5 @@ export const deleteById = async (id: string) => {
   // return json
 
   await sleep(3000)
-  return true
+  return id
 }

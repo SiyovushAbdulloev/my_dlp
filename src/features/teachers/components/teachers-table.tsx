@@ -6,7 +6,7 @@ import {
   getPaginationRowModel,
   useReactTable,
 } from '@tanstack/react-table'
-import { type Teacher } from '@/types/teacher'
+import { type Teacher, type TeacherCategory } from '@/types/teacher'
 import { type LaravelPaginatedResource } from 'laravel-resource-pagination-type'
 import { LoaderCircle } from 'lucide-react'
 import { fetchIndex } from '@/api/teachers'
@@ -37,12 +37,14 @@ const getColumns = (): ColumnDef<Teacher>[] => [
   {
     accessorKey: 'category',
     header: 'Категория',
-    cell: (props) => <p>{String(props.getValue()?.label ?? '')}</p>,
+    cell: (props) => (
+      <p>{String((props.getValue() as TeacherCategory)?.label ?? '')}</p>
+    ),
   },
   {
     accessorKey: 'subject_ids',
     header: 'Предметы',
-    cell: (props) => <p>Математика, Геометрия</p>,
+    cell: () => <p>Математика, Геометрия</p>,
   },
 ]
 

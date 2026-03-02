@@ -1,15 +1,17 @@
 // import { client } from '@/api/client.ts'
+import { type City } from '@/types/city.ts'
 import { type LaravelPaginatedResource } from 'laravel-resource-pagination-type'
 import { sleep } from '@/lib/utils.ts'
-import { type City } from '@/types/city.ts'
 import { type CityForm } from '@/features/dictionaries/cities/create.tsx'
 
-export const fetchIndex = async (page: number): Promise<LaravelPaginatedResource<City>> => {
+export const fetchIndex = async (
+  page: number
+): Promise<LaravelPaginatedResource<City>> => {
   // const json: LaravelPaginatedResource<District> = await client.get(import.meta.env.API_URL + '/api/dictionaries/cities').json();
   // return json
   await sleep(3000)
   return {
-    data: Array.from({length: 10}).map((_, index) => ({
+    data: Array.from({ length: 10 }).map((_, index) => ({
       id: index + 1 + '',
       name_tg: `Шахр №${index + 1}, page: ${page}`,
       name_ru: `Город №${index + 1}, page: ${page}`,
@@ -24,25 +26,25 @@ export const fetchIndex = async (page: number): Promise<LaravelPaginatedResource
           name_tg: `Вилояти №${index + 1}, page: ${page}`,
           name_ru: `Область №${index + 1}, page: ${page}`,
           name_en: `Region №${index + 1}, page: ${page}`,
-        }
+        },
       },
-      type: 'city'
+      type: 'city',
     })),
     links: {
-        first: '',
-        last: '',
-        prev: null,
-        next: null
+      first: '',
+      last: '',
+      prev: null,
+      next: null,
     },
     meta: {
-        current_page: 1,
-        from: 0,
-        last_page: 6,
-        path: '',
-        per_page: 10,
-        to: 0,
-        total: 60
-    }
+      current_page: 1,
+      from: 0,
+      last_page: 6,
+      path: '',
+      per_page: 10,
+      to: 0,
+      total: 60,
+    },
   }
 }
 
@@ -55,22 +57,23 @@ export const create = async (data: CityForm) => {
   await sleep(3000)
   return {
     id: 1,
+    data,
     name_ru: 'Name in russian',
     name_tg: 'Name in tajik',
     name_en: 'Name in english',
     type: 'city',
     district: {
-      id: "1",
+      id: '1',
       name_tg: `Шахр`,
       name_ru: `Район`,
       name_en: `District`,
       region: {
-        id: "1",
+        id: '1',
         name_tg: `Вилояти`,
         name_ru: `Область`,
         name_en: `Region`,
-      }
-    }
+      },
+    },
   }
 }
 
@@ -80,23 +83,24 @@ export const getById = async (id: string) => {
 
   await sleep(3000)
   return {
-    id: "1",
+    id: '1',
+    id1: id,
     name_ru: 'Name in russian',
     name_tg: 'Name in tajik',
     name_en: 'Name in english',
     type: 'city',
     district: {
-      id: "1",
+      id: '1',
       name_tg: `Шахр`,
       name_ru: `Район`,
       name_en: `District`,
       region: {
-        id: "1",
+        id: '1',
         name_tg: `Вилояти`,
         name_ru: `Область`,
         name_en: `Region`,
-      }
-    }
+      },
+    },
   }
 }
 
@@ -110,22 +114,24 @@ export const edit = async (id: string, data: CityForm) => {
   await sleep(3000)
   return {
     id: 1,
+    id1: id,
+    data,
     name_ru: 'Name in russian',
     name_tg: 'Name in tajik',
     name_en: 'Name in english',
     type: 'city',
     district: {
-      id: "1",
+      id: '1',
       name_tg: `Шахр`,
       name_ru: `Район`,
       name_en: `District`,
       region: {
-        id: "1",
+        id: '1',
         name_tg: `Вилояти`,
         name_ru: `Область`,
         name_en: `Region`,
-      }
-    }
+      },
+    },
   }
 }
 
@@ -134,5 +140,5 @@ export const deleteById = async (id: string) => {
   // return json
 
   await sleep(3000)
-  return true
+  return id
 }

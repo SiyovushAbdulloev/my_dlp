@@ -15,7 +15,7 @@ import { TeamSwitcher } from './team-switcher'
 export function AppSidebar() {
   const { collapsible, variant } = useLayout()
   return (
-    <Sidebar className={"!h-fit"} collapsible={collapsible} variant={variant}>
+    <Sidebar className={'!h-fit'} collapsible={collapsible} variant={variant}>
       <SidebarHeader>
         <TeamSwitcher teams={sidebarData.teams} />
 

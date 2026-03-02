@@ -1,17 +1,20 @@
-import { $isListNode, ListNode } from "@lexical/list"
-import { $isHeadingNode } from "@lexical/rich-text"
-import { $findMatchingParent, $getNearestNodeOfType } from "@lexical/utils"
-import { $isRangeSelection, $isRootOrShadowRoot, BaseSelection } from "lexical"
-
-import { useToolbarContext } from "@/components/editor/context/toolbar-context"
-import { useUpdateToolbarHandler } from "@/components/editor/editor-hooks/use-update-toolbar"
-import { blockTypeToBlockName } from "@/components/editor/plugins/toolbar/block-format/block-format-data"
+import { $isListNode, ListNode } from '@lexical/list'
+import { $isHeadingNode } from '@lexical/rich-text'
+import { $findMatchingParent, $getNearestNodeOfType } from '@lexical/utils'
+import {
+  $isRangeSelection,
+  $isRootOrShadowRoot,
+  type BaseSelection,
+} from 'lexical'
 import {
   Select,
   SelectContent,
   SelectGroup,
   SelectTrigger,
-} from "@/components/ui/select"
+} from '@/components/ui/select'
+import { useToolbarContext } from '@/components/editor/context/toolbar-context'
+import { useUpdateToolbarHandler } from '@/components/editor/editor-hooks/use-update-toolbar'
+import { blockTypeToBlockName } from '@/components/editor/plugins/toolbar/block-format/block-format-data'
 
 export function BlockFormatDropDown({
   children,
@@ -24,7 +27,7 @@ export function BlockFormatDropDown({
     if ($isRangeSelection(selection)) {
       const anchorNode = selection.anchor.getNode()
       let element =
-        anchorNode.getKey() === "root"
+        anchorNode.getKey() === 'root'
           ? anchorNode
           : $findMatchingParent(anchorNode, (e) => {
               const parent = e.getParent()
@@ -70,7 +73,7 @@ export function BlockFormatDropDown({
         setBlockType(value as keyof typeof blockTypeToBlockName)
       }}
     >
-      <SelectTrigger className="!h-8 w-min gap-1">
+      <SelectTrigger className='!h-8 w-min gap-1'>
         {blockTypeToBlockName[blockType].icon}
         <span>{blockTypeToBlockName[blockType].label}</span>
       </SelectTrigger>

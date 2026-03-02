@@ -1,30 +1,28 @@
-import { useState } from 'react';
-import { z } from 'zod';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { useState } from 'react'
+import { z } from 'zod'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate } from '@tanstack/react-router'
 import { ArrowLeft, Loader2 } from 'lucide-react'
-import { create } from '@/api/dictionaries/regions';
-import { Button } from '@/components/ui/button.tsx';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form.tsx';
-import { Input } from '@/components/ui/input.tsx';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs.tsx';
-import { Main } from '@/components/layout/main';
 import { toast } from 'sonner'
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+import { create } from '@/api/dictionaries/regions'
+import { Button } from '@/components/ui/button.tsx'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form.tsx'
+import { Input } from '@/components/ui/input.tsx'
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from '@/components/ui/tabs.tsx'
+import { Main } from '@/components/layout/main'
 
 export const regionFormSchema = z.object({
   name: z.object({
@@ -49,7 +47,7 @@ export function RegionsCreate() {
         en: '',
         ru: '',
         tg: '',
-      }
+      },
     },
   })
 
@@ -59,9 +57,10 @@ export function RegionsCreate() {
       await create(data)
       form.reset()
       toast.success('Регион успешно создан')
-      navigate({to: '/dictionaries/regions'})
+      navigate({ to: '/dictionaries/regions' })
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
-      console.log(err)
+      // console.log(err)
     } finally {
       setLoading(false)
     }
@@ -70,34 +69,37 @@ export function RegionsCreate() {
   return (
     <>
       <Main className='flex flex-1 flex-col gap-4 sm:gap-6'>
-        <header className={"flex items-center justify-between"}>
+        <header className={'flex items-center justify-between'}>
           <h1>Создать регион</h1>
-          <Button onClick={() => navigate({to: '/dictionaries/regions'})}>
+          <Button onClick={() => navigate({ to: '/dictionaries/regions' })}>
             <ArrowLeft size={18} />
             Назад
           </Button>
         </header>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 px-4">
-            <Tabs defaultValue={defaultLang} className="w-full">
-              <div className="flex items-center justify-between">
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className='space-y-6 px-4'
+          >
+            <Tabs defaultValue={defaultLang} className='w-full'>
+              <div className='flex items-center justify-between'>
                 <TabsList>
-                  <TabsTrigger value="ru">RU</TabsTrigger>
-                  <TabsTrigger value="en">EN</TabsTrigger>
-                  <TabsTrigger value="tg">TG</TabsTrigger>
+                  <TabsTrigger value='ru'>RU</TabsTrigger>
+                  <TabsTrigger value='en'>EN</TabsTrigger>
+                  <TabsTrigger value='tg'>TG</TabsTrigger>
                 </TabsList>
               </div>
 
-              <TabsContent value="ru" className="mt-4">
+              <TabsContent value='ru' className='mt-4'>
                 <FormField
                   control={form.control}
-                  name="name.ru"
+                  name='name.ru'
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-sm">Наименование</FormLabel>
+                      <FormLabel className='text-sm'>Наименование</FormLabel>
                       <FormControl>
-                        <Input {...field} placeholder="На русском" />
+                        <Input {...field} placeholder='На русском' />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -105,15 +107,15 @@ export function RegionsCreate() {
                 />
               </TabsContent>
 
-              <TabsContent value="en" className="mt-4">
+              <TabsContent value='en' className='mt-4'>
                 <FormField
                   control={form.control}
-                  name="name.en"
+                  name='name.en'
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-sm">Наименование</FormLabel>
+                      <FormLabel className='text-sm'>Наименование</FormLabel>
                       <FormControl>
-                        <Input {...field} placeholder="In English" />
+                        <Input {...field} placeholder='In English' />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -121,15 +123,15 @@ export function RegionsCreate() {
                 />
               </TabsContent>
 
-              <TabsContent value="tg" className="mt-4">
+              <TabsContent value='tg' className='mt-4'>
                 <FormField
                   control={form.control}
-                  name="name.tg"
+                  name='name.tg'
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-sm">Наименование</FormLabel>
+                      <FormLabel className='text-sm'>Наименование</FormLabel>
                       <FormControl>
-                        <Input {...field} placeholder="Ба тоҷикӣ" />
+                        <Input {...field} placeholder='Ба тоҷикӣ' />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -138,13 +140,12 @@ export function RegionsCreate() {
               </TabsContent>
             </Tabs>
 
-            <Button disabled={loading} type="submit">
+            <Button disabled={loading} type='submit'>
               {loading ? <Loader2 className='animate-spin' /> : null}
               Создать
             </Button>
           </form>
         </Form>
-
       </Main>
     </>
   )

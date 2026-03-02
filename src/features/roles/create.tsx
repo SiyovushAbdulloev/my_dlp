@@ -3,14 +3,13 @@ import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate } from '@tanstack/react-router'
+import { Route } from '@/routes/_authenticated/roles/create.tsx'
 import { ArrowLeft, Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
-
-import { Main } from '@/components/layout/main'
+import { create } from '@/api/roles'
+import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import { Checkbox } from '@/components/ui/checkbox'
-import { Separator } from '@/components/ui/separator'
 import {
   Form,
   FormControl,
@@ -19,13 +18,15 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
-import { cn } from '@/lib/utils'
-import { Route } from '@/routes/_authenticated/roles/create.tsx'
-import { create } from '@/api/roles'
+import { Input } from '@/components/ui/input'
+import { Separator } from '@/components/ui/separator'
+import { Main } from '@/components/layout/main'
 
 const roleFormSchema = z.object({
   name: z.string().min(1, 'Название роли обязательно'),
-  permission_ids: z.array(z.string({message: 'Права обязательны'}), {message: 'Права обязательны'}),
+  permission_ids: z.array(z.string({ message: 'Права обязательны' }), {
+    message: 'Права обязательны',
+  }),
 })
 
 export type RoleForm = z.infer<typeof roleFormSchema>
@@ -33,7 +34,7 @@ export type RoleForm = z.infer<typeof roleFormSchema>
 export function RolesCreate() {
   const navigate = useNavigate()
   const [submitting, setSubmitting] = React.useState(false)
-  const {permissions: groups} = Route.useRouteContext()
+  const { permissions: groups } = Route.useRouteContext()
 
   const form = useForm<RoleForm>({
     resolver: zodResolver(roleFormSchema),
@@ -59,14 +60,21 @@ export function RolesCreate() {
   const setSelected = (next: string[]) => {
     const set = new Set(next)
     const ordered = allIds.filter((id) => set.has(id))
-    form.setValue('permission_ids', ordered, { shouldDirty: true, shouldValidate: true })
+    form.setValue('permission_ids', ordered, {
+      shouldDirty: true,
+      shouldValidate: true,
+    })
   }
 
   const tri = (ids: string[]) => {
-    const checkedCount = ids.reduce((acc, id) => acc + (selectedSet.has(id) ? 1 : 0), 0)
+    const checkedCount = ids.reduce(
+      (acc, id) => acc + (selectedSet.has(id) ? 1 : 0),
+      0
+    )
     if (ids.length === 0) return { checked: false, indeterminate: false }
     if (checkedCount === 0) return { checked: false, indeterminate: false }
-    if (checkedCount === ids.length) return { checked: true, indeterminate: false }
+    if (checkedCount === ids.length)
+      return { checked: true, indeterminate: false }
     return { checked: false, indeterminate: true }
   }
 
@@ -96,62 +104,70 @@ export function RolesCreate() {
       await create(data)
       toast.success('Роль успешно создана')
       navigate({ to: '/roles' })
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (e) {
-      console.error(e)
+      // console.error(e)
       toast.error('Не удалось создать роль')
     } finally {
       setSubmitting(false)
     }
   }
 
-
   return (
-    <Main className="flex flex-1 flex-col gap-4 sm:gap-6">
-      <header className="flex items-center justify-between">
-        <h1 className="text-xl font-semibold">Создать роль</h1>
-        <Button type="button" variant="outline" onClick={() => navigate({ to: '/roles' })}>
+    <Main className='flex flex-1 flex-col gap-4 sm:gap-6'>
+      <header className='flex items-center justify-between'>
+        <h1 className='text-xl font-semibold'>Создать роль</h1>
+        <Button
+          type='button'
+          variant='outline'
+          onClick={() => navigate({ to: '/roles' })}
+        >
           <ArrowLeft size={18} />
           Назад
         </Button>
       </header>
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 px-4">
+        <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6 px-4'>
           <FormField
             control={form.control}
-            name="name"
+            name='name'
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Название роли</FormLabel>
                 <FormControl>
-                  <Input {...field} placeholder="Например: content_manager" />
+                  <Input {...field} placeholder='Например: content_manager' />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
 
-          <div className="rounded-md border p-4">
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className='rounded-md border p-4'>
+            <div className='flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between'>
               <div>
-                <div className="text-sm font-medium">Права</div>
-                <div className="text-xs text-muted-foreground">
+                <div className='text-sm font-medium'>Права</div>
+                <div className='text-xs text-muted-foreground'>
                   Выбрано: {selected?.length} из {allIds.length}
                 </div>
               </div>
 
-              <label className="flex cursor-pointer items-center gap-2">
+              <label className='flex cursor-pointer items-center gap-2'>
                 <Checkbox
-                  checked={globalState.indeterminate ? 'indeterminate' : globalState.checked}
+                  checked={
+                    globalState.indeterminate
+                      ? 'indeterminate'
+                      : globalState.checked
+                  }
                   onCheckedChange={() => toggleMany(allIds)}
                 />
-                <span className="text-sm">Выбрать все</span>
+                <span className='text-sm'>Выбрать все</span>
               </label>
             </div>
 
-            <Separator className="my-4" />
+            <Separator className='my-4' />
 
-            <div className="space-y-4">
+            <div className='space-y-4'>
               {groups.data.map((g) => {
                 const children = g.children ?? []
                 const isGroup = children.length > 0
@@ -163,17 +179,25 @@ export function RolesCreate() {
                 const state = tri(groupIds)
 
                 return (
-                  <div key={String(g.id)} className="rounded-md border p-3">
-                    <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                      <div className="flex items-center gap-2">
+                  <div key={String(g.id)} className='rounded-md border p-3'>
+                    <div className='flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between'>
+                      <div className='flex items-center gap-2'>
                         <Checkbox
-                          checked={state.indeterminate ? 'indeterminate' : state.checked}
+                          checked={
+                            state.indeterminate
+                              ? 'indeterminate'
+                              : state.checked
+                          }
                           onCheckedChange={() => toggleMany(groupIds)}
                         />
-                        <div className="flex flex-col">
-                          <span className="text-sm font-semibold">{g.description}</span>
-                          <span className="text-xs text-muted-foreground">
-                            {isGroup ? `Выбрано: ${groupIds.filter((id) => selectedSet.has(id)).length} из ${groupIds.length}` : 'Одиночное право'}
+                        <div className='flex flex-col'>
+                          <span className='text-sm font-semibold'>
+                            {g.description}
+                          </span>
+                          <span className='text-xs text-muted-foreground'>
+                            {isGroup
+                              ? `Выбрано: ${groupIds.filter((id) => selectedSet.has(id)).length} из ${groupIds.length}`
+                              : 'Одиночное право'}
                           </span>
                         </div>
                       </div>
@@ -181,12 +205,11 @@ export function RolesCreate() {
 
                     {isGroup ? (
                       <>
-                        <Separator className="my-3" />
-                        <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                        <Separator className='my-3' />
+                        <div className='grid gap-2 sm:grid-cols-2 lg:grid-cols-3'>
                           {children.map((p) => {
                             const id = String(p.id)
                             const checked = selectedSet.has(id)
-
 
                             return (
                               <label
@@ -196,8 +219,13 @@ export function RolesCreate() {
                                   checked && 'bg-muted'
                                 )}
                               >
-                                <Checkbox checked={checked} onCheckedChange={() => toggleOne(id)} />
-                                <span className="truncate">{p.description}</span>
+                                <Checkbox
+                                  checked={checked}
+                                  onCheckedChange={() => toggleOne(id)}
+                                />
+                                <span className='truncate'>
+                                  {p.description}
+                                </span>
                               </label>
                             )
                           })}
@@ -211,17 +239,23 @@ export function RolesCreate() {
 
             <FormField
               control={form.control}
-              name="permission_ids"
+              name='permission_ids'
               render={() => (
-                <FormItem className="mt-4">
+                <FormItem className='mt-4'>
                   <FormMessage />
                 </FormItem>
               )}
             />
           </div>
 
-          <Button disabled={submitting} type="submit" className="w-full sm:w-auto">
-            {submitting ? <Loader2 className="mr-2 size-4 animate-spin" /> : null}
+          <Button
+            disabled={submitting}
+            type='submit'
+            className='w-full sm:w-auto'
+          >
+            {submitting ? (
+              <Loader2 className='mr-2 size-4 animate-spin' />
+            ) : null}
             Создать
           </Button>
         </form>
