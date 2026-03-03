@@ -4,11 +4,12 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate } from '@tanstack/react-router'
 import { DefaultRoles } from '@/types'
-import { type Gender } from '@/types/user.ts'
 import { Loader2, LogIn } from 'lucide-react'
 import { toast } from 'sonner'
+import { login } from '@/api/auth'
 import { useAuthStore } from '@/stores/auth-store'
-import { sleep, cn } from '@/lib/utils'
+import { applyValidationErrors } from '@/lib/applyValidationErrors.ts'
+import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import {
   Form,
@@ -24,14 +25,14 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group.tsx'
 import { PasswordInput } from '@/components/password-input'
 
 const formSchema = z.object({
-  email: z.email({
-    error: (iss) => (iss.input === '' ? 'Please enter your email' : undefined),
-  }),
+  login: z.string({ message: 'Логин обязателен' }),
   password: z
     .string()
-    .min(1, 'Please enter your password')
-    .min(7, 'Password must be at least 7 characters long'),
+    .min(1, 'Пароль обязателен')
+    .min(7, 'Пароль должен содержать минимум 7 символов'),
 })
+
+export type LoginForm = z.infer<typeof formSchema>
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLFormElement> {
   redirectTo?: string
@@ -52,52 +53,34 @@ export function UserAuthForm({
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: '',
+      login: '',
       password: '',
     },
   })
 
-  function onSubmit(data: z.infer<typeof formSchema>) {
+  async function onSubmit(data: LoginForm) {
     setIsLoading(true)
 
-    toast.promise(sleep(2000), {
-      loading: 'Логинимся...',
-      success: () => {
-        setIsLoading(false)
+    try {
+      const response = await login(data)
+      console.log({ response })
 
-        // Mock successful authentication with expiry computed at success time
-        const mockUser = {
-          id: '1',
-          login: 'siyovush',
-          phone: '+992937555103',
-          email: 'abdulloevsiyovush@yandex.com',
-          first_name: 'Siyovush',
-          last_name: 'Abdulloev',
-          middle_name: 'Zafarovich',
-          birthdate: new Date().toDateString(),
-          gender: 'm' as Gender,
-          school_id: '2',
-          avatar: 'https://picsum.dev/800/600',
-          is_disabled: false,
-          role: {
-            id: '1',
-            name: selectedRole,
-            is_static: true,
-          },
-        }
+      auth.setUser(response.data.user)
+      console.log('After setting auth user')
 
-        // Set user and access token
-        auth.setUser(mockUser)
-        auth.setAccessToken('mock-access-token')
+      const targetPath = redirectTo || '/'
+      navigate({ to: targetPath, replace: true })
+      console.log('After redirect')
 
-        // Redirect to the stored location or default to dashboard
-        const targetPath = redirectTo || '/'
-        navigate({ to: targetPath, replace: true })
-
-        return `Добро пожаловать, ${data.email}!`
-      },
-      error: 'Error',
-    })
+      return `Добро пожаловать, ${data.login}!`
+    } catch (e) {
+      console.log({ e })
+      if (!applyValidationErrors(form, e)) {
+        toast.error('Ошибка запроса')
+      }
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -109,12 +92,12 @@ export function UserAuthForm({
       >
         <FormField
           control={form.control}
-          name='email'
+          name='login'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Почта</FormLabel>
+              <FormLabel>Логин</FormLabel>
               <FormControl>
-                <Input placeholder='name@example.com' {...field} />
+                <Input placeholder='test' {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

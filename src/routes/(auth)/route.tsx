@@ -1,16 +1,23 @@
 import { createFileRoute, Outlet, redirect } from '@tanstack/react-router'
+import { getUser } from '@/api/auth'
 
 export const Route = createFileRoute('/(auth)')({
   component: RouteComponent,
-  beforeLoad: ({ context, location }) => {
-    if (context.auth.auth.user) {
-      throw redirect({
-        to: '/',
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        //@ts-expect-error
-        from: location.pathname,
-      })
+  beforeLoad: async ({ context }) => {
+    const auth = context.auth.auth
+
+    if (auth.user) return
+
+    try {
+      const me = await getUser()
+
+      auth.setUser(me.data)
+    } catch (e) {
+      console.log(e)
+      return
     }
+
+    throw redirect({ to: '/' })
   },
 })
 

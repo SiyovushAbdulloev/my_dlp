@@ -1,24 +1,15 @@
 import { type User } from '@/types/user.ts'
 import { create } from 'zustand'
-import { getCookie, setCookie, removeCookie } from '@/lib/cookies'
-
-const ACCESS_TOKEN = 'thisisjustarandomstring'
 
 export interface AuthState {
   auth: {
     user: User | null
     setUser: (user: User | null) => void
     fullName: () => string
-    accessToken: string
-    setAccessToken: (accessToken: string) => void
-    resetAccessToken: () => void
-    reset: () => void
   }
 }
 
 export const useAuthStore = create<AuthState>()((set, getState) => {
-  const cookieState = getCookie(ACCESS_TOKEN)
-  const initToken = cookieState ? JSON.parse(cookieState) : ''
   return {
     auth: {
       user: null,
@@ -32,25 +23,6 @@ export const useAuthStore = create<AuthState>()((set, getState) => {
 
         return ''
       },
-      accessToken: initToken,
-      setAccessToken: (accessToken) =>
-        set((state) => {
-          setCookie(ACCESS_TOKEN, JSON.stringify(accessToken))
-          return { ...state, auth: { ...state.auth, accessToken } }
-        }),
-      resetAccessToken: () =>
-        set((state) => {
-          removeCookie(ACCESS_TOKEN)
-          return { ...state, auth: { ...state.auth, accessToken: '' } }
-        }),
-      reset: () =>
-        set((state) => {
-          removeCookie(ACCESS_TOKEN)
-          return {
-            ...state,
-            auth: { ...state.auth, user: null, accessToken: '' },
-          }
-        }),
     },
   }
 })

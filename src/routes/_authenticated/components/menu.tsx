@@ -125,7 +125,7 @@ export const NAV: NavItem[] = [
   },
   {
     id: 'teacher-courses',
-    label: 'Курсы повышения кваоификации',
+    label: 'Курсы повышения квалификации',
     to: '/teacher-courses',
     access: [
       DefaultRoles.TEACHER,

@@ -16,9 +16,7 @@ const filterNav = (items: NavItem[], user: User): NavItem[] => {
 }
 
 export const useNav = () => {
-  const {
-    auth: { user },
-  } = useAuthStore()
+  const user = useAuthStore((s) => s.auth.user)
 
   return useMemo(() => {
     if (user) {

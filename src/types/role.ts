@@ -14,12 +14,12 @@ export interface Permission {
 }
 
 export const DefaultRoles = {
-  SUPER_ADMIN: 'Министерство',
-  REGION_ADMIN: 'Регион',
-  DISTRICT_ADMIN: 'Район',
-  CITY_ADMIN: 'Город',
-  SCHOOL_ADMIN: 'Школа',
-  TEACHER: 'Учитель',
-  STUDENT: 'Ученик',
+  SUPER_ADMIN: 'super-admin',
+  REGION_ADMIN: 'regional-admin',
+  DISTRICT_ADMIN: 'district-admin',
+  CITY_ADMIN: 'city-admin',
+  SCHOOL_ADMIN: 'school-admin',
+  TEACHER: 'teacher',
+  STUDENT: 'student',
   CONTENT_EDITOR: 'Методист',
 }
