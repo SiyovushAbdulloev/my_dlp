@@ -145,4 +145,10 @@ export const NAV: NavItem[] = [
     to: '/head-directorates',
     access: [DefaultRoles.SUPER_ADMIN],
   },
+  {
+    id: 'users',
+    label: 'Пользователи',
+    to: '/users',
+    access: [DefaultRoles.SUPER_ADMIN],
+  },
 ]
