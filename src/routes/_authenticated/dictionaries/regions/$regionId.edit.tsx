@@ -13,7 +13,7 @@ export const Route = createFileRoute(
     }
 
     return {
-      region,
+      region: region.data,
     }
   },
   component: RegionsEdit,

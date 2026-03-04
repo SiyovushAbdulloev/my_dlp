@@ -38,11 +38,9 @@ export function RegionsEdit() {
   const form = useForm<RegionForm>({
     resolver: zodResolver(regionFormSchema),
     defaultValues: {
-      name: {
-        en: region.name_en,
-        ru: region.name_ru,
-        tg: region.name_tg,
-      },
+      name_ru: region.name_ru,
+      name_tj: region.name_tj,
+      name_en: region.name_en,
     },
   })
 
@@ -89,7 +87,7 @@ export function RegionsEdit() {
               <TabsContent value='ru' className='mt-4'>
                 <FormField
                   control={form.control}
-                  name='name.ru'
+                  name='name_ru'
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className='text-sm'>Наименование</FormLabel>
@@ -105,7 +103,7 @@ export function RegionsEdit() {
               <TabsContent value='en' className='mt-4'>
                 <FormField
                   control={form.control}
-                  name='name.en'
+                  name='name_en'
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className='text-sm'>Наименование</FormLabel>
@@ -121,7 +119,7 @@ export function RegionsEdit() {
               <TabsContent value='tg' className='mt-4'>
                 <FormField
                   control={form.control}
-                  name='name.tg'
+                  name='name_tj'
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className='text-sm'>Наименование</FormLabel>

@@ -1,92 +1,45 @@
-// import { client } from '@/api/client.ts'
 import { type Region } from '@/types'
+import { type JsonResponse } from '@/types/json-response.ts'
 import { type LaravelPaginatedResource } from 'laravel-resource-pagination-type'
+import { client } from '@/api/client.ts'
 import { sleep } from '@/lib/utils.ts'
 import { type RegionForm } from '@/features/dictionaries/regions/create.tsx'
 
 export const fetchIndex = async (
   page: number
 ): Promise<LaravelPaginatedResource<Region>> => {
-  // const json: LaravelPaginatedResource<Region> = await client.get(import.meta.env.API_URL + '/api/dictionaries/regions').json();
-  // return json
-  await sleep(3000)
-  return {
-    data: Array.from({ length: 10 }).map((_, index) => ({
-      id: index + 1 + '',
-      name_tg: `Вилояти №${index + 1}, page: ${page}`,
-      name_ru: `Область №${index + 1}, page: ${page}`,
-      name_en: `Region №${index + 1}, page: ${page}`,
-    })),
-    links: {
-      first: '',
-      last: '',
-      prev: null,
-      next: null,
-    },
-    meta: {
-      current_page: 1,
-      from: 0,
-      last_page: 6,
-      path: '',
-      per_page: 10,
-      to: 0,
-      total: 60,
-    },
-  }
+  const json: LaravelPaginatedResource<Region> = await client
+    .get(`regions?page=${page}`)
+    .json()
+  return json
 }
 
 export const create = async (data: RegionForm) => {
-  // const json: Region = await client.post(import.meta.env.API_URL + '/api/dictionaries/regions', {
-  //   body: JSON.stringify(data),
-  // }).json();
-  // return json
-
-  await sleep(3000)
-  return {
-    id: 1,
-    data,
-    name_ru: 'Name in russian',
-    name_tg: 'Name in tajik',
-    name_en: 'Name in english',
-  }
+  const json: JsonResponse<Region> = await client
+    .post('regions', {
+      json: data,
+    })
+    .json()
+  return json
 }
 
 export const getById = async (id: string) => {
-  // const json: Region = await client.get(import.meta.env.API_URL + `/api/dictionaries/regions/${id}`).json();
-  // return json
-
-  await sleep(3000)
-  return {
-    id: '1',
-    id1: id,
-    name_ru: 'Name in russian',
-    name_tg: 'Name in tajik',
-    name_en: 'Name in english',
-  }
+  const json: JsonResponse<Region> = await client.get(`regions/${id}`).json()
+  return json
 }
 
 export const edit = async (id: string, data: RegionForm) => {
-  // const json: Region = await client.post(import.meta.env.API_URL + `/api/dictionaries/regions/${id}`, {
-  //   method: 'PUT',
-  //   body: JSON.stringify(data),
-  // }).json();
-  // return json
-
-  await sleep(3000)
-  return {
-    id: id,
-    name_ru: data.name.ru,
-    name_tg: data.name.tg,
-    name_en: data.name.en,
-  }
+  const json: JsonResponse<Region> = await client
+    .put(`regions/${id}`, {
+      json: data,
+    })
+    .json()
+  return json
 }
 
 export const deleteById = async (id: string) => {
-  // const json = await client.delete(import.meta.env.API_URL + `/api/dictionaries/regions/${id}`).json();
-  // return json
-
-  await sleep(3000)
-  return id
+  const json = await client.delete(`regions/${id}`).json()
+  return json
 }
 
 export const fetchAll = async (): Promise<{ data: Region[] }> => {
@@ -96,7 +49,7 @@ export const fetchAll = async (): Promise<{ data: Region[] }> => {
   return {
     data: Array.from({ length: 10 }).map((_, index) => ({
       id: index + 1 + '',
-      name_tg: `Вилояти №${index + 1}`,
+      name_tj: `Вилояти №${index + 1}`,
       name_ru: `Область №${index + 1}`,
       name_en: `Region №${index + 1}`,
     })),

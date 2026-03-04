@@ -6,6 +6,7 @@ import { useNavigate } from '@tanstack/react-router'
 import { ArrowLeft, Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { create } from '@/api/dictionaries/regions'
+import { applyValidationErrors } from '@/lib/applyValidationErrors.ts'
 import { Button } from '@/components/ui/button.tsx'
 import {
   Form,
@@ -25,11 +26,9 @@ import {
 import { Main } from '@/components/layout/main'
 
 export const regionFormSchema = z.object({
-  name: z.object({
-    ru: z.string().min(1, 'Наименование на русском обязательно'),
-    en: z.string().min(1, 'Наименование на английском обязательно'),
-    tg: z.string().min(1, 'Наименование на таджикском обязательно'),
-  }),
+  name_ru: z.string().min(1, 'Наименование на русском обязательно'),
+  name_tj: z.string().min(1, 'Наименование на таджикском обязательно'),
+  name_en: z.string().min(1, 'Наименование на английском обязательно'),
 })
 
 export type RegionForm = z.infer<typeof regionFormSchema>
@@ -42,13 +41,6 @@ export function RegionsCreate() {
 
   const form = useForm<RegionForm>({
     resolver: zodResolver(regionFormSchema),
-    defaultValues: {
-      name: {
-        en: '',
-        ru: '',
-        tg: '',
-      },
-    },
   })
 
   const onSubmit = async (data: RegionForm) => {
@@ -60,7 +52,9 @@ export function RegionsCreate() {
       navigate({ to: '/dictionaries/regions' })
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
-      // console.log(err)
+      if (!applyValidationErrors(form, err)) {
+        toast.error('Ошибка запроса')
+      }
     } finally {
       setLoading(false)
     }
@@ -94,7 +88,7 @@ export function RegionsCreate() {
               <TabsContent value='ru' className='mt-4'>
                 <FormField
                   control={form.control}
-                  name='name.ru'
+                  name='name_ru'
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className='text-sm'>Наименование</FormLabel>
@@ -110,7 +104,7 @@ export function RegionsCreate() {
               <TabsContent value='en' className='mt-4'>
                 <FormField
                   control={form.control}
-                  name='name.en'
+                  name='name_en'
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className='text-sm'>Наименование</FormLabel>
@@ -126,7 +120,7 @@ export function RegionsCreate() {
               <TabsContent value='tg' className='mt-4'>
                 <FormField
                   control={form.control}
-                  name='name.tg'
+                  name='name_tj'
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className='text-sm'>Наименование</FormLabel>
