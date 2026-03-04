@@ -15,6 +15,13 @@ export const login = async (data: LoginForm) => {
   return json
 }
 
+export const logout = async () => {
+  const response: {
+    message: string
+  } = await client.post('logout').json()
+  return response
+}
+
 export const getUser = async () => {
   const json: JsonResponse<User> = await client.get('user').json()
   return json
