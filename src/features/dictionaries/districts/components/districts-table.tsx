@@ -33,7 +33,7 @@ const getColumns = (opts: {
     cell: (props) => <p>{String(props.getValue() ?? '')}</p>,
   },
   {
-    accessorKey: 'name_tg',
+    accessorKey: 'name_tj',
     header: 'Ном',
   },
   {

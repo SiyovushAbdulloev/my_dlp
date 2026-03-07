@@ -15,8 +15,8 @@ export const Route = createFileRoute(
     const regions = await fetchAll()
 
     return {
-      district,
-      regions,
+      district: district.data,
+      regions: regions.data,
     }
   },
   component: DistrictsEdit,

@@ -8,7 +8,7 @@ export const Route = createFileRoute(
   beforeLoad: async () => {
     const regions = await fetchAll()
     return {
-      regions,
+      regions: regions.data,
     }
   },
   component: DistrictsCreate,

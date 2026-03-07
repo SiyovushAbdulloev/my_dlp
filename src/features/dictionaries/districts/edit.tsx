@@ -6,6 +6,7 @@ import { Route } from '@/routes/_authenticated/dictionaries/districts/$districtI
 import { ArrowLeft, Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { edit } from '@/api/dictionaries/districts'
+import { applyValidationErrors } from '@/lib/applyValidationErrors.ts'
 import { Button } from '@/components/ui/button.tsx'
 import {
   Form,
@@ -39,12 +40,10 @@ export function DistrictsEdit() {
   const form = useForm<DistrictForm>({
     resolver: zodResolver(districtFormSchema),
     defaultValues: {
-      name: {
-        en: district.name_en,
-        ru: district.name_ru,
-        tg: district.name_tg,
-      },
-      region_id: district.region.id,
+      name_ru: district.name_ru,
+      name_en: district.name_en,
+      name_tj: district.name_tj,
+      region_id: district.region?.id,
     },
   })
 
@@ -54,10 +53,11 @@ export function DistrictsEdit() {
       await edit(district.id, data)
       form.reset()
       toast.success('Район успешно изменен')
-      navigate({ to: '/dictionaries/regions' })
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      navigate({ to: '/dictionaries/districts' })
     } catch (err) {
-      // console.log(err)
+      if (!applyValidationErrors(form, err)) {
+        toast.error('Невалидные данные')
+      }
     } finally {
       setLoading(false)
     }
@@ -91,7 +91,7 @@ export function DistrictsEdit() {
               <TabsContent value='ru' className='mt-4'>
                 <FormField
                   control={form.control}
-                  name='name.ru'
+                  name='name_ru'
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className='text-sm'>Наименование</FormLabel>
@@ -107,7 +107,7 @@ export function DistrictsEdit() {
               <TabsContent value='en' className='mt-4'>
                 <FormField
                   control={form.control}
-                  name='name.en'
+                  name='name_en'
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className='text-sm'>Наименование</FormLabel>
@@ -123,7 +123,7 @@ export function DistrictsEdit() {
               <TabsContent value='tg' className='mt-4'>
                 <FormField
                   control={form.control}
-                  name='name.tg'
+                  name='name_tj'
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className='text-sm'>Наименование</FormLabel>
@@ -147,7 +147,7 @@ export function DistrictsEdit() {
                     defaultValue={field.value}
                     onValueChange={field.onChange}
                     placeholder='Выберите регион'
-                    items={regions.data.map((region) => ({
+                    items={regions.map((region) => ({
                       label: region.name_ru,
                       value: region.id,
                     }))}
