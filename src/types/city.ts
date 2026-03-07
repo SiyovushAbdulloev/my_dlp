@@ -3,16 +3,16 @@ import { type District } from '@/types/district.ts'
 export interface City {
   id: string
   name_ru: string
-  name_tg: string
+  name_tj: string
   name_en: string
   district: District
-  type: CityType
+  type: string
 }
 
-export type CityType = 'city' | 'town' | 'village'
+export type CityType = 0 | 1 | 2
 
 export const CityTypeLabel = {
-  city: 'Город',
-  town: 'Городок',
-  village: 'Село',
+  0: 'Город',
+  1: 'Поселок городского типа',
+  2: 'Село',
 }

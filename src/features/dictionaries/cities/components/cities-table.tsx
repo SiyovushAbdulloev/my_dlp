@@ -7,7 +7,7 @@ import {
   getPaginationRowModel,
   useReactTable,
 } from '@tanstack/react-table'
-import { type City, CityTypeLabel } from '@/types/city.ts'
+import { type City } from '@/types/city.ts'
 import { type LaravelPaginatedResource } from 'laravel-resource-pagination-type'
 import { LoaderCircle, PenLine, Trash } from 'lucide-react'
 import { toast } from 'sonner'
@@ -33,7 +33,7 @@ const getColumns = (opts: {
     cell: (props) => <p>{String(props.getValue() ?? '')}</p>,
   },
   {
-    accessorKey: 'name_tg',
+    accessorKey: 'name_tj',
     header: 'Ном',
   },
   {
@@ -43,15 +43,7 @@ const getColumns = (opts: {
   {
     accessorKey: 'type',
     header: 'Тип',
-    cell: (props) => (
-      <p>
-        {
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          //@ts-expect-error
-          CityTypeLabel[props.getValue() as string]
-        }
-      </p>
-    ),
+    cell: (props) => <p>{props.getValue() as string}</p>,
   },
   {
     accessorKey: 'district.name_ru',

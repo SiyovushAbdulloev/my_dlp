@@ -8,6 +8,7 @@ import { ArrowLeft, Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { create } from '@/api/dictionaries/cities'
 import { fetchIndex } from '@/api/dictionaries/districts'
+import { applyValidationErrors } from '@/lib/applyValidationErrors.ts'
 import { Button } from '@/components/ui/button.tsx'
 import {
   Form,
@@ -29,17 +30,15 @@ import { Main } from '@/components/layout/main'
 import { SelectDropdown } from '@/components/select-dropdown.tsx'
 
 export const cityFormSchema = z.object({
-  name: z.object({
-    ru: z
-      .string({ message: 'Наименование на русском обязательно' })
-      .min(1, 'Минимум 1 буква'),
-    en: z
-      .string({ message: 'Наименование на русском обязательно' })
-      .min(1, 'Минимум 1 буква'),
-    tg: z
-      .string({ message: 'Наименование на русском обязательно' })
-      .min(1, 'Минимум 1 буква'),
-  }),
+  name_ru: z
+    .string({ message: 'Наименование на русском обязательно' })
+    .min(1, 'Минимум 1 буква'),
+  name_en: z
+    .string({ message: 'Наименование на английском обязательно' })
+    .min(1, 'Минимум 1 буква'),
+  name_tj: z
+    .string({ message: 'Наименование на таджикском обязательно' })
+    .min(1, 'Минимум 1 буква'),
   district_id: z
     .string({ message: 'Район обязателен' })
     .min(1, 'Район обязателен'),
@@ -56,13 +55,6 @@ export function CitiesCreate() {
 
   const form = useForm<CityForm>({
     resolver: zodResolver(cityFormSchema),
-    defaultValues: {
-      name: {
-        en: '',
-        ru: '',
-        tg: '',
-      },
-    },
   })
 
   const onSubmit = async (data: CityForm) => {
@@ -72,9 +64,10 @@ export function CitiesCreate() {
       form.reset()
       toast.success('Город успешно создан')
       navigate({ to: '/dictionaries/cities' })
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
-      // console.log(err)
+      if (!applyValidationErrors(form, err)) {
+        toast.error('Неверные данные')
+      }
     } finally {
       setLoading(false)
     }
@@ -108,7 +101,7 @@ export function CitiesCreate() {
               <TabsContent value='ru' className='mt-4'>
                 <FormField
                   control={form.control}
-                  name='name.ru'
+                  name='name_ru'
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className='text-sm'>Наименование</FormLabel>
@@ -124,7 +117,7 @@ export function CitiesCreate() {
               <TabsContent value='en' className='mt-4'>
                 <FormField
                   control={form.control}
-                  name='name.en'
+                  name='name_en'
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className='text-sm'>Наименование</FormLabel>
@@ -140,7 +133,7 @@ export function CitiesCreate() {
               <TabsContent value='tg' className='mt-4'>
                 <FormField
                   control={form.control}
-                  name='name.tg'
+                  name='name_tj'
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className='text-sm'>Наименование</FormLabel>
@@ -188,8 +181,8 @@ export function CitiesCreate() {
                       onChange={field.onChange}
                       placeholder='Выберите район'
                       searchPlaceholder='Поиск по районам...'
-                      load={async ({ page }) => {
-                        const res = await fetchIndex(page)
+                      load={async ({ page, q }) => {
+                        const res = await fetchIndex(page, q)
                         return res
                       }}
                       getValue={(r) => String(r.id)}

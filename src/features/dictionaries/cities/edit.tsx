@@ -8,6 +8,7 @@ import { ArrowLeft, Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { edit } from '@/api/dictionaries/cities'
 import { fetchIndex } from '@/api/dictionaries/districts'
+import { applyValidationErrors } from '@/lib/applyValidationErrors.ts'
 import { Button } from '@/components/ui/button.tsx'
 import {
   Form,
@@ -42,12 +43,12 @@ export function CitiesEdit() {
   const form = useForm<CityForm>({
     resolver: zodResolver(cityFormSchema),
     defaultValues: {
-      name: {
-        en: city.name_en,
-        ru: city.name_ru,
-        tg: city.name_tg,
-      },
-      type: city.type,
+      name_ru: city.name_ru,
+      name_en: city.name_en,
+      name_tj: city.name_tj,
+      type: Object.keys(CityTypeLabel).find(
+        (k) => CityTypeLabel[k] === city.type
+      ),
       district_id: city.district.id,
     },
   })
@@ -59,9 +60,10 @@ export function CitiesEdit() {
       form.reset()
       toast.success('Город успешно изменен')
       navigate({ to: '/dictionaries/cities' })
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
-      // console.log(err)
+      if (!applyValidationErrors(form, err)) {
+        toast.error('Не валидные данные')
+      }
     } finally {
       setLoading(false)
     }
@@ -95,7 +97,7 @@ export function CitiesEdit() {
               <TabsContent value='ru' className='mt-4'>
                 <FormField
                   control={form.control}
-                  name='name.ru'
+                  name='name_ru'
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className='text-sm'>Наименование</FormLabel>
@@ -111,7 +113,7 @@ export function CitiesEdit() {
               <TabsContent value='en' className='mt-4'>
                 <FormField
                   control={form.control}
-                  name='name.en'
+                  name='name_en'
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className='text-sm'>Наименование</FormLabel>
@@ -127,7 +129,7 @@ export function CitiesEdit() {
               <TabsContent value='tg' className='mt-4'>
                 <FormField
                   control={form.control}
-                  name='name.tg'
+                  name='name_tj'
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className='text-sm'>Наименование</FormLabel>
@@ -175,7 +177,7 @@ export function CitiesEdit() {
                       onChange={field.onChange}
                       placeholder='Выберите район'
                       searchPlaceholder='Поиск по районам...'
-                      load={({ page }) => fetchIndex(page)} // позже добавишь q в API
+                      load={({ page, q }) => fetchIndex(page, q)} // позже добавишь q в API
                       getValue={(d) => String(d.id)}
                       getLabel={(d) => d.name_ru}
                       initialSelected={city.district} // ✅ объект выбранного района

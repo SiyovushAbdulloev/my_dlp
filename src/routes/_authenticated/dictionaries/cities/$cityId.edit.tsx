@@ -13,7 +13,7 @@ export const Route = createFileRoute(
     }
 
     return {
-      city,
+      city: city.data,
     }
   },
   component: CitiesEdit,

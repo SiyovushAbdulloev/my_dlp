@@ -98,6 +98,7 @@ export function Combobox<T>({
   const fetchPage = React.useCallback(
     async (args: { q: string; page: number; append: boolean }) => {
       const { q, page, append } = args
+      console.log({ q, page, append })
       try {
         // eslint-disable-next-line @typescript-eslint/no-unused-expressions
         append ? setLoadingMore(true) : setLoading(true)

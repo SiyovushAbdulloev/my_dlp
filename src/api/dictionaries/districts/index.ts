@@ -5,10 +5,11 @@ import { client } from '@/api/client.ts'
 import { type DistrictForm } from '@/features/dictionaries/districts/create.tsx'
 
 export const fetchIndex = async (
-  page: number
+  page: number,
+  q?: string
 ): Promise<LaravelPaginatedResource<District>> => {
   const json: LaravelPaginatedResource<District> = await client
-    .get(`districts?page=${page}`)
+    .get(`districts?page=${page}&q=${q ?? ''}`)
     .json()
   return json
 }
