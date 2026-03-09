@@ -13,7 +13,7 @@ export const Route = createFileRoute('/_authenticated/roles/$roleId/edit')({
     const permissions = await fetchPermissions()
     return {
       permissions,
-      role,
+      role: role.data,
     }
   },
   component: RolesEdit,

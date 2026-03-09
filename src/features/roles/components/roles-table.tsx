@@ -25,9 +25,14 @@ const getColumns = (opts: {
   onDelete: (id: string) => void
 }): ColumnDef<Role>[] => [
   {
-    accessorKey: 'name',
+    accessorKey: 'description',
     header: 'Наименование',
     cell: (props) => <p>{String(props.getValue() ?? '')}</p>,
+  },
+  {
+    accessorKey: 'is_systemic',
+    header: 'Системная',
+    cell: (props) => <p>{props.getValue() ? 'Да' : 'Нет'}</p>,
   },
   {
     accessorKey: 'id',
@@ -38,24 +43,26 @@ const getColumns = (opts: {
 
       return (
         <div className='flex items-center gap-2'>
-          <Link params={{ roleId: id }} to='/roles/$roleId/edit'>
-            <PenLine className={'size-5'} />
-          </Link>
+          {!props.row.original.is_systemic ? (
+            <>
+              <Link params={{ roleId: id }} to='/roles/$roleId/edit'>
+                <PenLine className={'size-5'} />
+              </Link>
 
-          {!props.row.original.is_static ? (
-            <Button
-              type='button'
-              variant='ghost'
-              disabled={isDeleting}
-              onClick={() => opts.onDelete(id)}
-              className='px-2'
-            >
-              {isDeleting ? (
-                <LoaderCircle className='size-5 animate-spin' />
-              ) : (
-                <Trash />
-              )}
-            </Button>
+              <Button
+                type='button'
+                variant='ghost'
+                disabled={isDeleting}
+                onClick={() => opts.onDelete(id)}
+                className='px-2'
+              >
+                {isDeleting ? (
+                  <LoaderCircle className='size-5 animate-spin' />
+                ) : (
+                  <Trash />
+                )}
+              </Button>
+            </>
           ) : null}
         </div>
       )

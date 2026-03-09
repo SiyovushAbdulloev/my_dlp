@@ -1,7 +1,8 @@
 export interface Role {
   id: string
   name: string
-  is_static: boolean
+  description: string
+  is_systemic: boolean
   permissions?: Permission[]
 }
 
@@ -10,6 +11,7 @@ export interface Permission {
   name: string
   description: string
   parent?: Permission
+  parent_id?: string
   children?: Permission[]
 }
 

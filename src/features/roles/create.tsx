@@ -7,6 +7,7 @@ import { Route } from '@/routes/_authenticated/roles/create.tsx'
 import { ArrowLeft, Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { create } from '@/api/roles'
+import { applyValidationErrors } from '@/lib/applyValidationErrors.ts'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -22,9 +23,9 @@ import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
 import { Main } from '@/components/layout/main'
 
-const roleFormSchema = z.object({
-  name: z.string().min(1, 'Название роли обязательно'),
-  permission_ids: z.array(z.string({ message: 'Права обязательны' }), {
+export const roleFormSchema = z.object({
+  description: z.string().min(1, 'Название роли обязательно'),
+  permissions: z.array(z.string({ message: 'Права обязательны' }), {
     message: 'Права обязательны',
   }),
 })
@@ -38,29 +39,54 @@ export function RolesCreate() {
 
   const form = useForm<RoleForm>({
     resolver: zodResolver(roleFormSchema),
-    defaultValues: { name: '' },
+    defaultValues: {
+      description: '',
+      permissions: [],
+    },
   })
 
-  const selected = form.watch('permission_ids')
+  const selected = form.watch('permissions')
   const selectedSet = React.useMemo(() => new Set(selected ?? []), [selected])
 
-  const allIds = React.useMemo(() => {
-    const out: string[] = []
-    for (const g of groups.data) {
+  // Flatten only real selectable permissions:
+  // - children if parent has children
+  // - parent itself if no children
+  const normalizedGroups = React.useMemo(() => {
+    return groups.data.map((g) => {
       const children = g.children ?? []
+
       if (children.length > 0) {
-        for (const p of children) out.push(String(p.id))
-      } else {
-        out.push(String(g.id))
+        return {
+          id: String(g.name),
+          title: g.description,
+          items: children.map((p) => ({
+            id: String(p.name),
+            description: p.description,
+          })),
+        }
       }
-    }
-    return out
+
+      return {
+        id: String(g.name),
+        title: g.description,
+        items: [
+          {
+            id: String(g.name),
+            description: g.description,
+          },
+        ],
+      }
+    })
   }, [groups])
+
+  const allIds = React.useMemo(() => {
+    return normalizedGroups.flatMap((g) => g.items.map((i) => i.id))
+  }, [normalizedGroups])
 
   const setSelected = (next: string[]) => {
     const set = new Set(next)
     const ordered = allIds.filter((id) => set.has(id))
-    form.setValue('permission_ids', ordered, {
+    form.setValue('permissions', ordered, {
       shouldDirty: true,
       shouldValidate: true,
     })
@@ -71,27 +97,33 @@ export function RolesCreate() {
       (acc, id) => acc + (selectedSet.has(id) ? 1 : 0),
       0
     )
+
     if (ids.length === 0) return { checked: false, indeterminate: false }
     if (checkedCount === 0) return { checked: false, indeterminate: false }
     if (checkedCount === ids.length)
       return { checked: true, indeterminate: false }
+
     return { checked: false, indeterminate: true }
   }
 
   const toggleOne = (id: string) => {
-    if (selectedSet.has(id)) setSelected(selected?.filter((x) => x !== id))
-    else setSelected([...(selected ?? []), id])
+    if (selectedSet.has(id)) {
+      setSelected((selected ?? []).filter((x) => x !== id))
+    } else {
+      setSelected([...(selected ?? []), id])
+    }
   }
 
   const toggleMany = (ids: string[]) => {
     const s = tri(ids)
+
     if (s.checked) {
-      // uncheck all
-      setSelected(selected?.filter((x) => !ids.includes(x)))
+      setSelected((selected ?? []).filter((x) => !ids.includes(x)))
     } else {
-      // check missing
       const next = [...(selected ?? [])]
-      for (const id of ids) if (!selectedSet.has(id)) next.push(id)
+      for (const id of ids) {
+        if (!selectedSet.has(id)) next.push(id)
+      }
       setSelected(next)
     }
   }
@@ -104,10 +136,10 @@ export function RolesCreate() {
       await create(data)
       toast.success('Роль успешно создана')
       navigate({ to: '/roles' })
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (e) {
-      // console.error(e)
-      toast.error('Не удалось создать роль')
+      if (!applyValidationErrors(form, e)) {
+        toast.error('Не валидные данные')
+      }
     } finally {
       setSubmitting(false)
     }
@@ -131,12 +163,12 @@ export function RolesCreate() {
         <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6 px-4'>
           <FormField
             control={form.control}
-            name='name'
+            name='description'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Название роли</FormLabel>
+                <FormLabel>Описание роли</FormLabel>
                 <FormControl>
-                  <Input {...field} placeholder='Например: content_manager' />
+                  <Input {...field} placeholder='Например: Контент менеджер' />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -168,18 +200,15 @@ export function RolesCreate() {
             <Separator className='my-4' />
 
             <div className='space-y-4'>
-              {groups.data.map((g) => {
-                const children = g.children ?? []
-                const isGroup = children.length > 0
-
-                const groupIds = isGroup
-                  ? children.map((p) => String(p.id))
-                  : [String(g.id)]
-
+              {normalizedGroups.map((group) => {
+                const groupIds = group.items.map((i) => i.id)
                 const state = tri(groupIds)
+                const selectedCount = groupIds.filter((id) =>
+                  selectedSet.has(id)
+                ).length
 
                 return (
-                  <div key={String(g.id)} className='rounded-md border p-3'>
+                  <div key={group.id} className='rounded-md border p-3'>
                     <div className='flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between'>
                       <div className='flex items-center gap-2'>
                         <Checkbox
@@ -192,46 +221,38 @@ export function RolesCreate() {
                         />
                         <div className='flex flex-col'>
                           <span className='text-sm font-semibold'>
-                            {g.description}
+                            {group.title}
                           </span>
                           <span className='text-xs text-muted-foreground'>
-                            {isGroup
-                              ? `Выбрано: ${groupIds.filter((id) => selectedSet.has(id)).length} из ${groupIds.length}`
-                              : 'Одиночное право'}
+                            Выбрано: {selectedCount} из {groupIds.length}
                           </span>
                         </div>
                       </div>
                     </div>
 
-                    {isGroup ? (
-                      <>
-                        <Separator className='my-3' />
-                        <div className='grid gap-2 sm:grid-cols-2 lg:grid-cols-3'>
-                          {children.map((p) => {
-                            const id = String(p.id)
-                            const checked = selectedSet.has(id)
+                    <Separator className='my-3' />
 
-                            return (
-                              <label
-                                key={id}
-                                className={cn(
-                                  'flex cursor-pointer items-center gap-2 rounded-md border px-3 py-2 text-sm transition-colors hover:bg-muted/50',
-                                  checked && 'bg-muted'
-                                )}
-                              >
-                                <Checkbox
-                                  checked={checked}
-                                  onCheckedChange={() => toggleOne(id)}
-                                />
-                                <span className='truncate'>
-                                  {p.description}
-                                </span>
-                              </label>
-                            )
-                          })}
-                        </div>
-                      </>
-                    ) : null}
+                    <div className='grid gap-2 sm:grid-cols-2 lg:grid-cols-3'>
+                      {group.items.map((item) => {
+                        const checked = selectedSet.has(item.id)
+
+                        return (
+                          <label
+                            key={item.id}
+                            className={cn(
+                              'flex cursor-pointer items-center gap-2 rounded-md border px-3 py-2 text-sm transition-colors hover:bg-muted/50',
+                              checked && 'bg-muted'
+                            )}
+                          >
+                            <Checkbox
+                              checked={checked}
+                              onCheckedChange={() => toggleOne(item.id)}
+                            />
+                            <span className='truncate'>{item.description}</span>
+                          </label>
+                        )
+                      })}
+                    </div>
                   </div>
                 )
               })}
@@ -239,7 +260,7 @@ export function RolesCreate() {
 
             <FormField
               control={form.control}
-              name='permission_ids'
+              name='permissions'
               render={() => (
                 <FormItem className='mt-4'>
                   <FormMessage />
