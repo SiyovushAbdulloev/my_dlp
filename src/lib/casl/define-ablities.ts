@@ -77,5 +77,22 @@ export function defineAbilitiesFor(user: User | null) {
     can('delete', 'cities')
   }
 
+  //Cities
+  if (permissions.find((p) => p.name === 'education_departments_list')) {
+    can('list', 'education_departments')
+  }
+  if (permissions.find((p) => p.name === 'education_departments_create')) {
+    can('create', 'education_departments')
+  }
+  if (permissions.find((p) => p.name === 'education_departments_view')) {
+    can('view', 'education_departments')
+  }
+  if (permissions.find((p) => p.name === 'education_departments_edit')) {
+    can('edit', 'education_departments')
+  }
+  if (permissions.find((p) => p.name === 'education_departments_delete')) {
+    can('delete', 'education_departments')
+  }
+
   return build()
 }

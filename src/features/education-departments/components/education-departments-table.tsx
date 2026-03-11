@@ -22,6 +22,7 @@ import {
   TableRow,
 } from '@/components/ui/table.tsx'
 import { DataTablePagination } from '@/components/data-table'
+import { ability } from '@/lib/casl/ability.ts'
 
 const getColumns = (opts: {
   deleting: string | null
@@ -33,7 +34,7 @@ const getColumns = (opts: {
     cell: (props) => <p>{String(props.getValue() ?? '')}</p>,
   },
   {
-    accessorKey: 'name_tg',
+    accessorKey: 'name_tj',
     header: 'Ном',
   },
   {
@@ -49,26 +50,30 @@ const getColumns = (opts: {
 
       return (
         <div className='flex items-center gap-2'>
-          <Link
-            params={{ departmentId: id }}
-            to='/education-departments/$departmentId/edit'
-          >
-            <PenLine className={'size-5'} />
-          </Link>
+          {ability.can('edit', 'education_departments') ? (
+            <Link
+              params={{ departmentId: id }}
+              to='/education-departments/$departmentId/edit'
+            >
+              <PenLine className={'size-5'} />
+            </Link>
+          ) : null}
 
-          <Button
-            type='button'
-            variant='ghost'
-            disabled={isDeleting}
-            onClick={() => opts.onDelete(id)}
-            className='px-2'
-          >
-            {isDeleting ? (
-              <LoaderCircle className='size-5 animate-spin' />
-            ) : (
-              <Trash />
-            )}
-          </Button>
+          {ability.can('delete', 'education_departments') ? (
+            <Button
+              type='button'
+              variant='ghost'
+              disabled={isDeleting}
+              onClick={() => opts.onDelete(id)}
+              className='px-2'
+            >
+              {isDeleting ? (
+                <LoaderCircle className='size-5 animate-spin' />
+              ) : (
+                <Trash />
+              )}
+            </Button>
+          ) : null}
         </div>
       )
     },

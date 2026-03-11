@@ -27,6 +27,7 @@ import {
   type EducationDepartmentForm,
   educationDepartmentFormSchema,
 } from '@/features/education-departments/create.tsx'
+import { applyValidationErrors } from '@/lib/applyValidationErrors.ts'
 
 const defaultLang = 'en'
 
@@ -38,11 +39,9 @@ export function EducationDepartmentsEdit() {
   const form = useForm<EducationDepartmentForm>({
     resolver: zodResolver(educationDepartmentFormSchema),
     defaultValues: {
-      name: {
-        en: department.name_en,
-        ru: department.name_ru,
-        tg: department.name_tg,
-      },
+      name_ru: department.name_ru,
+      name_en: department.name_en,
+      name_tj: department.name_tj
     },
   })
 
@@ -52,10 +51,11 @@ export function EducationDepartmentsEdit() {
       await edit(department.id, data)
       form.reset()
       toast.success('Регион успешно изменен')
-      navigate({ to: '/dictionaries/regions' })
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      navigate({ to: '/education-departments' })
     } catch (err) {
-      // console.log(err)
+      if (!applyValidationErrors(form, err)) {
+        toast.error('Не валидные данные')
+      }
     } finally {
       setLoading(false)
     }
@@ -89,7 +89,7 @@ export function EducationDepartmentsEdit() {
               <TabsContent value='ru' className='mt-4'>
                 <FormField
                   control={form.control}
-                  name='name.ru'
+                  name='name_ru'
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className='text-sm'>Наименование</FormLabel>
@@ -105,7 +105,7 @@ export function EducationDepartmentsEdit() {
               <TabsContent value='en' className='mt-4'>
                 <FormField
                   control={form.control}
-                  name='name.en'
+                  name='name_en'
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className='text-sm'>Наименование</FormLabel>
@@ -121,7 +121,7 @@ export function EducationDepartmentsEdit() {
               <TabsContent value='tg' className='mt-4'>
                 <FormField
                   control={form.control}
-                  name='name.tg'
+                  name='name_tj'
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className='text-sm'>Наименование</FormLabel>

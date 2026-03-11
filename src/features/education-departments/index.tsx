@@ -3,6 +3,7 @@ import { Plus } from 'lucide-react'
 import { Button } from '@/components/ui/button.tsx'
 import { Main } from '@/components/layout/main'
 import { EducationDepartmentsTable } from './components/education-departments-table.tsx'
+import { ability } from '@/lib/casl/ability.ts'
 
 export function EducationDepartments() {
   const navigate = useNavigate()
@@ -16,12 +17,14 @@ export function EducationDepartments() {
               Шуъбахои маориф
             </h2>
           </div>
-          <Button
-            className='space-x-1'
-            onClick={() => navigate({ to: '/education-departments/create' })}
-          >
-            <span>Создать шуъба</span> <Plus size={18} />
-          </Button>
+          {ability.can('create', 'education_departments') ? (
+            <Button
+              className='space-x-1'
+              onClick={() => navigate({ to: '/education-departments/create' })}
+            >
+              <span>Создать шуъба</span> <Plus size={18} />
+            </Button>
+          ) : null}
         </div>
         <EducationDepartmentsTable />
       </Main>

@@ -23,13 +23,12 @@ import {
   TabsTrigger,
 } from '@/components/ui/tabs.tsx'
 import { Main } from '@/components/layout/main'
+import { applyValidationErrors } from '@/lib/applyValidationErrors.ts'
 
 export const educationDepartmentFormSchema = z.object({
-  name: z.object({
-    ru: z.string().min(1, 'Наименование на русском обязательно'),
-    en: z.string().min(1, 'Наименование на английском обязательно'),
-    tg: z.string().min(1, 'Наименование на таджикском обязательно'),
-  }),
+  name_ru: z.string().min(1, 'Наименование на русском обязательно'),
+  name_en: z.string().min(1, 'Наименование на английском обязательно'),
+  name_tj: z.string().min(1, 'Наименование на таджикском обязательно'),
 })
 
 export type EducationDepartmentForm = z.infer<
@@ -44,13 +43,6 @@ export function EducationDepartmentCreate() {
 
   const form = useForm<EducationDepartmentForm>({
     resolver: zodResolver(educationDepartmentFormSchema),
-    defaultValues: {
-      name: {
-        en: '',
-        ru: '',
-        tg: '',
-      },
-    },
   })
 
   const onSubmit = async (data: EducationDepartmentForm) => {
@@ -60,9 +52,10 @@ export function EducationDepartmentCreate() {
       form.reset()
       toast.success('Маориф успешно создан')
       navigate({ to: '/education-departments' })
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
-      // console.log(err)
+      if (!applyValidationErrors(form, err)) {
+        toast.error('Не валидные данные')
+      }
     } finally {
       setLoading(false)
     }
@@ -96,7 +89,7 @@ export function EducationDepartmentCreate() {
               <TabsContent value='ru' className='mt-4'>
                 <FormField
                   control={form.control}
-                  name='name.ru'
+                  name='name_ru'
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className='text-sm'>Наименование</FormLabel>
@@ -112,7 +105,7 @@ export function EducationDepartmentCreate() {
               <TabsContent value='en' className='mt-4'>
                 <FormField
                   control={form.control}
-                  name='name.en'
+                  name='name_en'
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className='text-sm'>Наименование</FormLabel>
@@ -128,7 +121,7 @@ export function EducationDepartmentCreate() {
               <TabsContent value='tg' className='mt-4'>
                 <FormField
                   control={form.control}
-                  name='name.tg'
+                  name='name_tj'
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className='text-sm'>Наименование</FormLabel>

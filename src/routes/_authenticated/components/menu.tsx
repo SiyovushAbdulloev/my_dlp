@@ -192,7 +192,7 @@ export const NAV: NavItem[] = [
     access: [
       {
         action: 'list',
-        subject: 'education-departments',
+        subject: 'education_departments',
       },
     ],
   },
@@ -203,7 +203,7 @@ export const NAV: NavItem[] = [
     access: [
       {
         action: 'list',
-        subject: 'head-directorates',
+        subject: 'head_directorates',
       },
     ],
   },
