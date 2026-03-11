@@ -5,7 +5,8 @@ import { useNavigate } from '@tanstack/react-router'
 import { Route } from '@/routes/_authenticated/head-directorates/$directorateId.edit'
 import { ArrowLeft, Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
-import { edit } from '@/api/education-departments'
+import { edit } from '@/api/head-directorates'
+import { applyValidationErrors } from '@/lib/applyValidationErrors.ts'
 import { Button } from '@/components/ui/button.tsx'
 import {
   Form,
@@ -38,11 +39,9 @@ export function HeadDirectoratesEdit() {
   const form = useForm<HeadDirectorateForm>({
     resolver: zodResolver(headDirectorateFormSchema),
     defaultValues: {
-      name: {
-        en: directorate.name_en,
-        ru: directorate.name_ru,
-        tg: directorate.name_tg,
-      },
+      name_ru: directorate.name_ru,
+      name_en: directorate.name_en,
+      name_tj: directorate.name_tj,
     },
   })
 
@@ -53,9 +52,10 @@ export function HeadDirectoratesEdit() {
       form.reset()
       toast.success('Сарраёсат успешно изменен')
       navigate({ to: '/head-directorates' })
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
-      // console.log(err)
+      if (!applyValidationErrors(form, err)) {
+        toast.error('Не валидные даные')
+      }
     } finally {
       setLoading(false)
     }
@@ -89,7 +89,7 @@ export function HeadDirectoratesEdit() {
               <TabsContent value='ru' className='mt-4'>
                 <FormField
                   control={form.control}
-                  name='name.ru'
+                  name='name_ru'
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className='text-sm'>Наименование</FormLabel>
@@ -105,7 +105,7 @@ export function HeadDirectoratesEdit() {
               <TabsContent value='en' className='mt-4'>
                 <FormField
                   control={form.control}
-                  name='name.en'
+                  name='name_en'
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className='text-sm'>Наименование</FormLabel>
@@ -121,7 +121,7 @@ export function HeadDirectoratesEdit() {
               <TabsContent value='tg' className='mt-4'>
                 <FormField
                   control={form.control}
-                  name='name.tg'
+                  name='name_tj'
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className='text-sm'>Наименование</FormLabel>

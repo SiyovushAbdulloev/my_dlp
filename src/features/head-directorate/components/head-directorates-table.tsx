@@ -12,6 +12,7 @@ import { type LaravelPaginatedResource } from 'laravel-resource-pagination-type'
 import { LoaderCircle, PenLine, Trash } from 'lucide-react'
 import { toast } from 'sonner'
 import { deleteById, fetchIndex } from '@/api/head-directorates'
+import { ability } from '@/lib/casl/ability.ts'
 import { Button } from '@/components/ui/button.tsx'
 import {
   Table,
@@ -33,7 +34,7 @@ const getColumns = (opts: {
     cell: (props) => <p>{String(props.getValue() ?? '')}</p>,
   },
   {
-    accessorKey: 'name_tg',
+    accessorKey: 'name_tj',
     header: 'Ном',
   },
   {
@@ -49,26 +50,30 @@ const getColumns = (opts: {
 
       return (
         <div className='flex items-center gap-2'>
-          <Link
-            params={{ directorateId: id }}
-            to='/head-directorates/$directorateId/edit'
-          >
-            <PenLine className={'size-5'} />
-          </Link>
+          {ability.can('edit', 'head_directorates') ? (
+            <Link
+              params={{ directorateId: id }}
+              to='/head-directorates/$directorateId/edit'
+            >
+              <PenLine className={'size-5'} />
+            </Link>
+          ) : null}
 
-          <Button
-            type='button'
-            variant='ghost'
-            disabled={isDeleting}
-            onClick={() => opts.onDelete(id)}
-            className='px-2'
-          >
-            {isDeleting ? (
-              <LoaderCircle className='size-5 animate-spin' />
-            ) : (
-              <Trash />
-            )}
-          </Button>
+          {ability.can('delete', 'head_directorates') ? (
+            <Button
+              type='button'
+              variant='ghost'
+              disabled={isDeleting}
+              onClick={() => opts.onDelete(id)}
+              className='px-2'
+            >
+              {isDeleting ? (
+                <LoaderCircle className='size-5 animate-spin' />
+              ) : (
+                <Trash />
+              )}
+            </Button>
+          ) : null}
         </div>
       )
     },

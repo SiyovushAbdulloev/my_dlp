@@ -6,6 +6,7 @@ import { useNavigate } from '@tanstack/react-router'
 import { ArrowLeft, Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { create } from '@/api/head-directorates'
+import { applyValidationErrors } from '@/lib/applyValidationErrors.ts'
 import { Button } from '@/components/ui/button.tsx'
 import {
   Form,
@@ -25,11 +26,9 @@ import {
 import { Main } from '@/components/layout/main'
 
 export const headDirectorateFormSchema = z.object({
-  name: z.object({
-    ru: z.string().min(1, 'Наименование на русском обязательно'),
-    en: z.string().min(1, 'Наименование на английском обязательно'),
-    tg: z.string().min(1, 'Наименование на таджикском обязательно'),
-  }),
+  name_ru: z.string().min(1, 'Наименование на русском обязательно'),
+  name_en: z.string().min(1, 'Наименование на английском обязательно'),
+  name_tj: z.string().min(1, 'Наименование на таджикском обязательно'),
 })
 
 export type HeadDirectorateForm = z.infer<typeof headDirectorateFormSchema>
@@ -42,13 +41,6 @@ export function HeadDirectoratesCreate() {
 
   const form = useForm<HeadDirectorateForm>({
     resolver: zodResolver(headDirectorateFormSchema),
-    defaultValues: {
-      name: {
-        en: '',
-        ru: '',
-        tg: '',
-      },
-    },
   })
 
   const onSubmit = async (data: HeadDirectorateForm) => {
@@ -58,9 +50,10 @@ export function HeadDirectoratesCreate() {
       form.reset()
       toast.success('Сарраёсат успешно создан')
       navigate({ to: '/head-directorates' })
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
-      // console.log(err)
+      if (applyValidationErrors(form, err)) {
+        toast.error('Не валидные данные')
+      }
     } finally {
       setLoading(false)
     }
@@ -94,7 +87,7 @@ export function HeadDirectoratesCreate() {
               <TabsContent value='ru' className='mt-4'>
                 <FormField
                   control={form.control}
-                  name='name.ru'
+                  name='name_ru'
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className='text-sm'>Наименование</FormLabel>
@@ -110,7 +103,7 @@ export function HeadDirectoratesCreate() {
               <TabsContent value='en' className='mt-4'>
                 <FormField
                   control={form.control}
-                  name='name.en'
+                  name='name_en'
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className='text-sm'>Наименование</FormLabel>
@@ -126,7 +119,7 @@ export function HeadDirectoratesCreate() {
               <TabsContent value='tg' className='mt-4'>
                 <FormField
                   control={form.control}
-                  name='name.tg'
+                  name='name_tj'
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className='text-sm'>Наименование</FormLabel>

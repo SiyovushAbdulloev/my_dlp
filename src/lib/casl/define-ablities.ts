@@ -77,7 +77,7 @@ export function defineAbilitiesFor(user: User | null) {
     can('delete', 'cities')
   }
 
-  //Cities
+  //Education departments
   if (permissions.find((p) => p.name === 'education_departments_list')) {
     can('list', 'education_departments')
   }
@@ -92,6 +92,23 @@ export function defineAbilitiesFor(user: User | null) {
   }
   if (permissions.find((p) => p.name === 'education_departments_delete')) {
     can('delete', 'education_departments')
+  }
+
+  //Head directorates
+  if (permissions.find((p) => p.name === 'head_directorates_list')) {
+    can('list', 'head_directorates')
+  }
+  if (permissions.find((p) => p.name === 'head_directorates_create')) {
+    can('create', 'head_directorates')
+  }
+  if (permissions.find((p) => p.name === 'head_directorates_view')) {
+    can('view', 'head_directorates')
+  }
+  if (permissions.find((p) => p.name === 'head_directorates_edit')) {
+    can('edit', 'head_directorates')
+  }
+  if (permissions.find((p) => p.name === 'head_directorates_delete')) {
+    can('delete', 'head_directorates')
   }
 
   return build()

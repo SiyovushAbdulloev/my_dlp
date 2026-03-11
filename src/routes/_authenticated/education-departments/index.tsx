@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { EducationDepartments } from '@/features/education-departments'
 import { beforeLoadRoute } from '@/lib/casl/routes/check.ts'
+import { EducationDepartments } from '@/features/education-departments'
 
 export const Route = createFileRoute('/_authenticated/education-departments/')({
   component: EducationDepartments,

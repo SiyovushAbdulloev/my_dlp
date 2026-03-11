@@ -12,6 +12,7 @@ import { type LaravelPaginatedResource } from 'laravel-resource-pagination-type'
 import { LoaderCircle, PenLine, Trash } from 'lucide-react'
 import { toast } from 'sonner'
 import { deleteById, fetchIndex } from '@/api/education-departments'
+import { ability } from '@/lib/casl/ability.ts'
 import { Button } from '@/components/ui/button.tsx'
 import {
   Table,
@@ -22,7 +23,6 @@ import {
   TableRow,
 } from '@/components/ui/table.tsx'
 import { DataTablePagination } from '@/components/data-table'
-import { ability } from '@/lib/casl/ability.ts'
 
 const getColumns = (opts: {
   deleting: string | null

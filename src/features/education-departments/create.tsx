@@ -6,6 +6,7 @@ import { useNavigate } from '@tanstack/react-router'
 import { ArrowLeft, Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { create } from '@/api/education-departments'
+import { applyValidationErrors } from '@/lib/applyValidationErrors.ts'
 import { Button } from '@/components/ui/button.tsx'
 import {
   Form,
@@ -23,7 +24,6 @@ import {
   TabsTrigger,
 } from '@/components/ui/tabs.tsx'
 import { Main } from '@/components/layout/main'
-import { applyValidationErrors } from '@/lib/applyValidationErrors.ts'
 
 export const educationDepartmentFormSchema = z.object({
   name_ru: z.string().min(1, 'Наименование на русском обязательно'),

@@ -39,6 +39,8 @@ export const edit = async (id: string, data: EducationDepartmentForm) => {
 }
 
 export const deleteById = async (id: string) => {
-  const json: JsonResponse<{ message: string }> = await client.delete(`education-departments/${id}`).json();
+  const json: JsonResponse<{ message: string }> = await client
+    .delete(`education-departments/${id}`)
+    .json()
   return json
 }

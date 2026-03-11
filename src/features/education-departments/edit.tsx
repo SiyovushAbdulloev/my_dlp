@@ -6,6 +6,7 @@ import { Route } from '@/routes/_authenticated/education-departments/$department
 import { ArrowLeft, Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { edit } from '@/api/education-departments'
+import { applyValidationErrors } from '@/lib/applyValidationErrors.ts'
 import { Button } from '@/components/ui/button.tsx'
 import {
   Form,
@@ -27,7 +28,6 @@ import {
   type EducationDepartmentForm,
   educationDepartmentFormSchema,
 } from '@/features/education-departments/create.tsx'
-import { applyValidationErrors } from '@/lib/applyValidationErrors.ts'
 
 const defaultLang = 'en'
 
@@ -41,7 +41,7 @@ export function EducationDepartmentsEdit() {
     defaultValues: {
       name_ru: department.name_ru,
       name_en: department.name_en,
-      name_tj: department.name_tj
+      name_tj: department.name_tj,
     },
   })
 

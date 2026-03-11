@@ -1,9 +1,9 @@
 import { useNavigate } from '@tanstack/react-router'
 import { Plus } from 'lucide-react'
+import { ability } from '@/lib/casl/ability.ts'
 import { Button } from '@/components/ui/button.tsx'
 import { Main } from '@/components/layout/main'
 import { EducationDepartmentsTable } from './components/education-departments-table.tsx'
-import { ability } from '@/lib/casl/ability.ts'
 
 export function EducationDepartments() {
   const navigate = useNavigate()
