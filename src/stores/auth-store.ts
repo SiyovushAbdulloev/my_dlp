@@ -1,5 +1,7 @@
 import { type User } from '@/types/user.ts'
 import { create } from 'zustand'
+import { ability } from '@/lib/casl/ability.ts'
+import { defineAbilitiesFor } from '@/lib/casl/define-ablities.ts'
 
 export interface AuthState {
   auth: {
@@ -13,8 +15,10 @@ export const useAuthStore = create<AuthState>()((set, getState) => {
   return {
     auth: {
       user: null,
-      setUser: (user) =>
-        set((state) => ({ ...state, auth: { ...state.auth, user } })),
+      setUser: (user) => {
+        set((state) => ({ ...state, auth: { ...state.auth, user } }))
+        ability.update(defineAbilitiesFor(user).rules)
+      },
       fullName: () => {
         const user = getState().auth.user
         if (user) {

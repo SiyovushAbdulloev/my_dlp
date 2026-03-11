@@ -1,10 +1,11 @@
-import { DefaultRoles } from '@/types'
-
 export type NavItem = {
   id: string
   label: string
   to?: string
-  access?: string[]
+  access?: {
+    subject: string
+    action: string
+  }[]
   children?: NavItem[]
 }
 
@@ -15,25 +16,39 @@ export const NAV: NavItem[] = [
     id: 'dictionaries',
     label: 'Справочники',
     to: undefined,
-    access: [DefaultRoles.SUPER_ADMIN],
     children: [
       {
         id: 'regions',
         label: 'Регионы',
         to: '/dictionaries/regions',
-        access: [DefaultRoles.SUPER_ADMIN],
+        access: [
+          {
+            action: 'list',
+            subject: 'regions',
+          },
+        ],
       },
       {
         id: 'districts',
         label: 'Районы',
         to: '/dictionaries/districts',
-        access: [DefaultRoles.SUPER_ADMIN],
+        access: [
+          {
+            action: 'list',
+            subject: 'districts',
+          },
+        ],
       },
       {
         id: 'cities',
         label: 'Города',
         to: '/dictionaries/cities',
-        access: [DefaultRoles.SUPER_ADMIN],
+        access: [
+          {
+            action: 'list',
+            subject: 'cities',
+          },
+        ],
       },
     ],
   },
@@ -42,42 +57,66 @@ export const NAV: NavItem[] = [
     id: 'roles_permissions',
     label: 'Роли и права',
     to: '/roles',
-    access: [DefaultRoles.SUPER_ADMIN],
+    access: [
+      {
+        action: 'list',
+        subject: 'roles',
+      },
+    ],
   },
   {
     id: 'schools',
     label: 'Школы',
     to: '/schools',
-    access: [DefaultRoles.DISTRICT_ADMIN],
+    access: [
+      {
+        action: 'list',
+        subject: 'schools',
+      },
+    ],
   },
   {
     id: 'classes',
     label: 'Классы',
     to: '/classes',
-    access: [DefaultRoles.SCHOOL_ADMIN, DefaultRoles.DISTRICT_ADMIN],
+    access: [
+      {
+        action: 'list',
+        subject: 'classes',
+      },
+    ],
   },
   {
     id: 'subjects',
     label: 'Предметы',
     to: '/subjects',
-    access: [DefaultRoles.SCHOOL_ADMIN, DefaultRoles.DISTRICT_ADMIN],
+    access: [
+      {
+        action: 'list',
+        subject: 'subjects',
+      },
+    ],
   },
   {
     id: 'subject-class',
     label: 'Предметы-Классы',
     to: '/subject-class',
-    access: [DefaultRoles.DISTRICT_ADMIN],
+    access: [
+      {
+        action: 'list',
+        subject: 'subject-class',
+      },
+    ],
   },
   {
     id: 'webinars',
     label: 'Вебинары',
     to: '/webinars',
     access: [
-      DefaultRoles.STUDENT,
-      DefaultRoles.TEACHER,
-      DefaultRoles.SCHOOL_ADMIN,
-      DefaultRoles.DISTRICT_ADMIN,
-      DefaultRoles.REGION_ADMIN,
+      {
+        action: 'list',
+        subject: 'webinars',
+      },
     ],
   },
   {
@@ -85,42 +124,54 @@ export const NAV: NavItem[] = [
     label: 'Видео-уроки',
     to: '/video-lessons',
     access: [
-      DefaultRoles.STUDENT,
-      DefaultRoles.TEACHER,
-      DefaultRoles.SCHOOL_ADMIN,
-      DefaultRoles.DISTRICT_ADMIN,
-      DefaultRoles.REGION_ADMIN,
+      {
+        action: 'list',
+        subject: 'video-lessons',
+      },
     ],
   },
   {
     id: 'teachers',
     label: 'Учителя',
     to: '/teachers',
-    access: [DefaultRoles.SCHOOL_ADMIN],
+    access: [
+      {
+        action: 'list',
+        subject: 'teachers',
+      },
+    ],
   },
   {
     id: 'students',
     label: 'Ученики',
     to: '/students',
-    access: [DefaultRoles.SCHOOL_ADMIN],
+    access: [
+      {
+        action: 'list',
+        subject: 'students',
+      },
+    ],
   },
   {
     id: 'lesson-topics',
     label: 'Темы уроков',
     to: '/lesson-topics',
-    access: [DefaultRoles.TEACHER, DefaultRoles.SCHOOL_ADMIN],
+    access: [
+      {
+        action: 'list',
+        subject: 'lesson-topics',
+      },
+    ],
   },
   {
     id: 'books',
     label: 'Электронные и аудио книги',
     to: '/books',
     access: [
-      DefaultRoles.STUDENT,
-      DefaultRoles.TEACHER,
-      DefaultRoles.SCHOOL_ADMIN,
-      DefaultRoles.DISTRICT_ADMIN,
-      DefaultRoles.REGION_ADMIN,
-      DefaultRoles.SUPER_ADMIN,
+      {
+        action: 'list',
+        subject: 'books',
+      },
     ],
   },
   {
@@ -128,27 +179,43 @@ export const NAV: NavItem[] = [
     label: 'Курсы повышения квалификации',
     to: '/teacher-courses',
     access: [
-      DefaultRoles.TEACHER,
-      DefaultRoles.SCHOOL_ADMIN,
-      DefaultRoles.DISTRICT_ADMIN,
+      {
+        action: 'list',
+        subject: 'teacher-courses',
+      },
     ],
   },
   {
     id: 'education-departments',
     label: 'Шуъбахои маориф',
     to: '/education-departments',
-    access: [DefaultRoles.REGION_ADMIN],
+    access: [
+      {
+        action: 'list',
+        subject: 'education-departments',
+      },
+    ],
   },
   {
     id: 'head-directorates',
     label: 'Сарраёсатхо',
     to: '/head-directorates',
-    access: [DefaultRoles.SUPER_ADMIN],
+    access: [
+      {
+        action: 'list',
+        subject: 'head-directorates',
+      },
+    ],
   },
   {
     id: 'users',
     label: 'Пользователи',
     to: '/users',
-    access: [DefaultRoles.SUPER_ADMIN],
+    access: [
+      {
+        action: 'list',
+        subject: 'users',
+      },
+    ],
   },
 ]

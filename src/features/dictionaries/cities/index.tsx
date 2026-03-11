@@ -1,5 +1,6 @@
 import { useNavigate } from '@tanstack/react-router'
 import { Plus } from 'lucide-react'
+import { ability } from '@/lib/casl/ability.ts'
 import { Button } from '@/components/ui/button.tsx'
 import { Main } from '@/components/layout/main'
 import { CitiesTable } from './components/cities-table.tsx'
@@ -14,12 +15,14 @@ export function Cities() {
           <div>
             <h2 className='text-2xl font-bold tracking-tight'>Города</h2>
           </div>
-          <Button
-            className='space-x-1'
-            onClick={() => navigate({ to: '/dictionaries/cities/create' })}
-          >
-            <span>Создать город</span> <Plus size={18} />
-          </Button>
+          {ability.can('create', 'cities') ? (
+            <Button
+              className='space-x-1'
+              onClick={() => navigate({ to: '/dictionaries/cities/create' })}
+            >
+              <span>Создать город</span> <Plus size={18} />
+            </Button>
+          ) : null}
         </div>
         <CitiesTable />
       </Main>

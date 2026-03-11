@@ -1,0 +1,81 @@
+import type { User } from '@/types/user'
+import { AbilityBuilder, createMongoAbility } from '@casl/ability'
+
+export function defineAbilitiesFor(user: User | null) {
+  const { can, build } = new AbilityBuilder(createMongoAbility)
+  const permissions = user?.role?.permissions
+
+  if (!permissions || permissions.length === 0) {
+    return build()
+  }
+
+  //Roles
+  if (permissions.find((p) => p.name === 'roles_and_permissions_list')) {
+    can('list', 'roles')
+  }
+  if (permissions.find((p) => p.name === 'roles_and_permissions_create')) {
+    can('create', 'roles')
+  }
+  if (permissions.find((p) => p.name === 'roles_and_permissions_view')) {
+    can('view', 'roles')
+  }
+  if (permissions.find((p) => p.name === 'roles_and_permissions_edit')) {
+    can('edit', 'roles')
+  }
+  if (permissions.find((p) => p.name === 'roles_and_permissions_delete')) {
+    can('delete', 'roles')
+  }
+
+  //Regions
+  if (permissions.find((p) => p.name === 'regions_list')) {
+    can('list', 'regions')
+  }
+  if (permissions.find((p) => p.name === 'regions_create')) {
+    can('create', 'regions')
+  }
+  if (permissions.find((p) => p.name === 'regions_view')) {
+    can('view', 'regions')
+  }
+  if (permissions.find((p) => p.name === 'regions_edit')) {
+    can('edit', 'regions')
+  }
+  if (permissions.find((p) => p.name === 'regions_delete')) {
+    can('delete', 'regions')
+  }
+
+  //Districts
+  if (permissions.find((p) => p.name === 'districts_list')) {
+    can('list', 'districts')
+  }
+  if (permissions.find((p) => p.name === 'districts_create')) {
+    can('create', 'districts')
+  }
+  if (permissions.find((p) => p.name === 'districts_view')) {
+    can('view', 'districts')
+  }
+  if (permissions.find((p) => p.name === 'districts_edit')) {
+    can('edit', 'districts')
+  }
+  if (permissions.find((p) => p.name === 'districts_delete')) {
+    can('delete', 'districts')
+  }
+
+  //Cities
+  if (permissions.find((p) => p.name === 'cities_list')) {
+    can('list', 'cities')
+  }
+  if (permissions.find((p) => p.name === 'cities_create')) {
+    can('create', 'cities')
+  }
+  if (permissions.find((p) => p.name === 'cities_view')) {
+    can('view', 'cities')
+  }
+  if (permissions.find((p) => p.name === 'cities_edit')) {
+    can('edit', 'cities')
+  }
+  if (permissions.find((p) => p.name === 'cities_delete')) {
+    can('delete', 'cities')
+  }
+
+  return build()
+}

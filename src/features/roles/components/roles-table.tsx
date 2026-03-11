@@ -10,6 +10,7 @@ import { type Role } from '@/types'
 import { LoaderCircle, PenLine, Trash } from 'lucide-react'
 import { toast } from 'sonner'
 import { deleteById, fetchAll } from '@/api/roles'
+import { ability } from '@/lib/casl/ability.ts'
 import { Button } from '@/components/ui/button.tsx'
 import {
   Table,
@@ -45,23 +46,27 @@ const getColumns = (opts: {
         <div className='flex items-center gap-2'>
           {!props.row.original.is_systemic ? (
             <>
-              <Link params={{ roleId: id }} to='/roles/$roleId/edit'>
-                <PenLine className={'size-5'} />
-              </Link>
+              {ability.can('edit', 'roles') ? (
+                <Link params={{ roleId: id }} to='/roles/$roleId/edit'>
+                  <PenLine className={'size-5'} />
+                </Link>
+              ) : null}
 
-              <Button
-                type='button'
-                variant='ghost'
-                disabled={isDeleting}
-                onClick={() => opts.onDelete(id)}
-                className='px-2'
-              >
-                {isDeleting ? (
-                  <LoaderCircle className='size-5 animate-spin' />
-                ) : (
-                  <Trash />
-                )}
-              </Button>
+              {ability.can('delete', 'roles') ? (
+                <Button
+                  type='button'
+                  variant='ghost'
+                  disabled={isDeleting}
+                  onClick={() => opts.onDelete(id)}
+                  className='px-2'
+                >
+                  {isDeleting ? (
+                    <LoaderCircle className='size-5 animate-spin' />
+                  ) : (
+                    <Trash />
+                  )}
+                </Button>
+              ) : null}
             </>
           ) : null}
         </div>

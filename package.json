@@ -13,6 +13,8 @@
     "knip": "knip"
   },
   "dependencies": {
+    "@casl/ability": "^6.8.0",
+    "@casl/react": "^5.0.1",
     "@clerk/clerk-react": "^5.58.1",
     "@hookform/resolvers": "^5.2.2",
     "@lexical/code": "^0.41.0",

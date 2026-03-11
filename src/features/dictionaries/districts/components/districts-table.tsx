@@ -12,6 +12,7 @@ import { type LaravelPaginatedResource } from 'laravel-resource-pagination-type'
 import { LoaderCircle, PenLine, Trash } from 'lucide-react'
 import { toast } from 'sonner'
 import { deleteById, fetchIndex } from '@/api/dictionaries/districts'
+import { ability } from '@/lib/casl/ability.ts'
 import { Button } from '@/components/ui/button.tsx'
 import {
   Table,
@@ -53,26 +54,30 @@ const getColumns = (opts: {
 
       return (
         <div className='flex items-center gap-2'>
-          <Link
-            params={{ districtId: id }}
-            to='/dictionaries/districts/$districtId/edit'
-          >
-            <PenLine className={'size-5'} />
-          </Link>
+          {ability.can('edit', 'districts') ? (
+            <Link
+              params={{ districtId: id }}
+              to='/dictionaries/districts/$districtId/edit'
+            >
+              <PenLine className={'size-5'} />
+            </Link>
+          ) : null}
 
-          <Button
-            type='button'
-            variant='ghost'
-            disabled={isDeleting}
-            onClick={() => opts.onDelete(id)}
-            className='px-2'
-          >
-            {isDeleting ? (
-              <LoaderCircle className='size-5 animate-spin' />
-            ) : (
-              <Trash />
-            )}
-          </Button>
+          {ability.can('delete', 'districts') ? (
+            <Button
+              type='button'
+              variant='ghost'
+              disabled={isDeleting}
+              onClick={() => opts.onDelete(id)}
+              className='px-2'
+            >
+              {isDeleting ? (
+                <LoaderCircle className='size-5 animate-spin' />
+              ) : (
+                <Trash />
+              )}
+            </Button>
+          ) : null}
         </div>
       )
     },
