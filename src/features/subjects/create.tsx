@@ -6,6 +6,7 @@ import { useNavigate } from '@tanstack/react-router'
 import { ArrowLeft, Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { create } from '@/api/subjects'
+import { applyValidationErrors } from '@/lib/applyValidationErrors.ts'
 import { Button } from '@/components/ui/button.tsx'
 import {
   Form,
@@ -25,7 +26,7 @@ import {
 import { Main } from '@/components/layout/main'
 
 export const subjectFormSchema = z.object({
-  name: z.object({
+  title: z.object({
     ru: z.string().min(1, 'Наименование на русском обязательно'),
     en: z.string().min(1, 'Наименование на английском обязательно'),
     tg: z.string().min(1, 'Наименование на таджикском обязательно'),
@@ -43,7 +44,7 @@ export function SubjectsCreate() {
   const form = useForm<SubjectForm>({
     resolver: zodResolver(subjectFormSchema),
     defaultValues: {
-      name: {
+      title: {
         en: '',
         ru: '',
         tg: '',
@@ -56,11 +57,12 @@ export function SubjectsCreate() {
     try {
       await create(data)
       form.reset()
-      toast.success('Регион успешно создан')
+      toast.success('Предмет успешно создан')
       navigate({ to: '/subjects' })
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
-      // console.log(err)
+      if (!applyValidationErrors(form, err)) {
+        toast.error('Не валидные данные')
+      }
     } finally {
       setLoading(false)
     }
@@ -94,7 +96,7 @@ export function SubjectsCreate() {
               <TabsContent value='ru' className='mt-4'>
                 <FormField
                   control={form.control}
-                  name='name.ru'
+                  name='title.ru'
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className='text-sm'>Наименование</FormLabel>
@@ -110,7 +112,7 @@ export function SubjectsCreate() {
               <TabsContent value='en' className='mt-4'>
                 <FormField
                   control={form.control}
-                  name='name.en'
+                  name='title.en'
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className='text-sm'>Наименование</FormLabel>
@@ -126,7 +128,7 @@ export function SubjectsCreate() {
               <TabsContent value='tg' className='mt-4'>
                 <FormField
                   control={form.control}
-                  name='name.tg'
+                  name='title.tg'
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className='text-sm'>Наименование</FormLabel>

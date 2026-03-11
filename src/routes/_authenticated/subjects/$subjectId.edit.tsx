@@ -1,11 +1,15 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { getById } from '@/api/subjects'
+import { beforeLoadRoute } from '@/lib/casl/routes/check.ts'
 import { SubjectsEdit } from '@/features/subjects/edit.tsx'
 
 export const Route = createFileRoute(
   '/_authenticated/subjects/$subjectId/edit'
 )({
-  beforeLoad: async ({ params }) => {
+  beforeLoad: async ({ context, params }) => {
+    if (context.auth.auth.user) {
+      beforeLoadRoute('edit', 'subjects')
+    }
     const { subjectId } = params
     const subject = await getById(subjectId)
     if (!subject) {
@@ -13,7 +17,7 @@ export const Route = createFileRoute(
     }
 
     return {
-      subject,
+      subject: subject.data,
     }
   },
   component: SubjectsEdit,

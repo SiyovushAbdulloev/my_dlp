@@ -6,6 +6,7 @@ import { Route } from '@/routes/_authenticated/subjects/$subjectId.edit.tsx'
 import { ArrowLeft, Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { edit } from '@/api/subjects'
+import { applyValidationErrors } from '@/lib/applyValidationErrors.ts'
 import { Button } from '@/components/ui/button.tsx'
 import {
   Form,
@@ -38,10 +39,10 @@ export function SubjectsEdit() {
   const form = useForm<SubjectForm>({
     resolver: zodResolver(subjectFormSchema),
     defaultValues: {
-      name: {
-        en: subject.name_en,
-        ru: subject.name_ru,
-        tg: subject.name_tg,
+      title: {
+        en: subject.title.en,
+        ru: subject.title.ru,
+        tg: subject.title.tg,
       },
     },
   })
@@ -53,9 +54,10 @@ export function SubjectsEdit() {
       form.reset()
       toast.success('Предмет успешно изменен')
       navigate({ to: '/subjects' })
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
-      // console.log(err)
+      if (!applyValidationErrors(form, err)) {
+        toast.error('Не валидные данные')
+      }
     } finally {
       setLoading(false)
     }
@@ -89,7 +91,7 @@ export function SubjectsEdit() {
               <TabsContent value='ru' className='mt-4'>
                 <FormField
                   control={form.control}
-                  name='name.ru'
+                  name='title.ru'
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className='text-sm'>Наименование</FormLabel>
@@ -105,7 +107,7 @@ export function SubjectsEdit() {
               <TabsContent value='en' className='mt-4'>
                 <FormField
                   control={form.control}
-                  name='name.en'
+                  name='title.en'
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className='text-sm'>Наименование</FormLabel>
@@ -121,7 +123,7 @@ export function SubjectsEdit() {
               <TabsContent value='tg' className='mt-4'>
                 <FormField
                   control={form.control}
-                  name='name.tg'
+                  name='title.tg'
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className='text-sm'>Наименование</FormLabel>

@@ -1,6 +1,8 @@
 export interface Subject {
   id: string
-  name_ru: string
-  name_tg: string
-  name_en: string
+  title: {
+    en: string
+    ru: string
+    tg: string
+  }
 }
