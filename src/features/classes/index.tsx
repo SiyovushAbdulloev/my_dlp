@@ -1,5 +1,6 @@
 import { useNavigate } from '@tanstack/react-router'
 import { Plus } from 'lucide-react'
+import { ability } from '@/lib/casl/ability.ts'
 import { Button } from '@/components/ui/button.tsx'
 import { Main } from '@/components/layout/main'
 import { ClassesTable } from './components/classes-table.tsx'
@@ -14,12 +15,14 @@ export function Classes() {
           <div>
             <h2 className='text-2xl font-bold tracking-tight'>Классы</h2>
           </div>
-          <Button
-            className='space-x-1'
-            onClick={() => navigate({ to: '/classes/create' })}
-          >
-            <span>Создать класс</span> <Plus size={18} />
-          </Button>
+          {ability.can('list', 'school_classes') ? (
+            <Button
+              className='space-x-1'
+              onClick={() => navigate({ to: '/classes/create' })}
+            >
+              <span>Создать класс</span> <Plus size={18} />
+            </Button>
+          ) : null}
         </div>
         <ClassesTable />
       </Main>

@@ -1,9 +1,13 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { getById } from '@/api/classes'
+import { beforeLoadRoute } from '@/lib/casl/routes/check.ts'
 import { ClassesEdit } from '@/features/classes/edit.tsx'
 
 export const Route = createFileRoute('/_authenticated/classes/$classId/edit')({
-  beforeLoad: async ({ params }) => {
+  beforeLoad: async ({ context, params }) => {
+    if (context.auth.auth.user) {
+      beforeLoadRoute('edit', 'school_classes')
+    }
     const { classId } = params
     const classObj = await getById(classId)
     if (!classObj) {
@@ -11,7 +15,7 @@ export const Route = createFileRoute('/_authenticated/classes/$classId/edit')({
     }
 
     return {
-      classObj,
+      classObj: classObj.data,
     }
   },
   component: ClassesEdit,

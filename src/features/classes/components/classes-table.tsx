@@ -12,6 +12,7 @@ import { type LaravelPaginatedResource } from 'laravel-resource-pagination-type'
 import { LoaderCircle, PenLine, Trash } from 'lucide-react'
 import { toast } from 'sonner'
 import { deleteById, fetchIndex } from '@/api/classes'
+import { ability } from '@/lib/casl/ability.ts'
 import { Button } from '@/components/ui/button.tsx'
 import {
   Table,
@@ -44,23 +45,27 @@ const getColumns = (opts: {
 
       return (
         <div className='flex items-center gap-2'>
-          <Link params={{ classId: id }} to='/classes/$classId/edit'>
-            <PenLine />
-          </Link>
+          {ability.can('edit', 'school_classes') ? (
+            <Link params={{ classId: id }} to='/classes/$classId/edit'>
+              <PenLine />
+            </Link>
+          ) : null}
 
-          <Button
-            type='button'
-            variant='ghost'
-            disabled={isDeleting}
-            onClick={() => opts.onDelete(id)}
-            className='px-2'
-          >
-            {isDeleting ? (
-              <LoaderCircle className='size-5 animate-spin' />
-            ) : (
-              <Trash />
-            )}
-          </Button>
+          {ability.can('delete', 'school_classes') ? (
+            <Button
+              type='button'
+              variant='ghost'
+              disabled={isDeleting}
+              onClick={() => opts.onDelete(id)}
+              className='px-2'
+            >
+              {isDeleting ? (
+                <LoaderCircle className='size-5 animate-spin' />
+              ) : (
+                <Trash />
+              )}
+            </Button>
+          ) : null}
         </div>
       )
     },

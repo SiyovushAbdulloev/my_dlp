@@ -111,5 +111,22 @@ export function defineAbilitiesFor(user: User | null) {
     can('delete', 'head_directorates')
   }
 
+  //School classes
+  if (permissions.find((p) => p.name === 'school_classes_list')) {
+    can('list', 'school_classes')
+  }
+  if (permissions.find((p) => p.name === 'school_classes_create')) {
+    can('create', 'school_classes')
+  }
+  if (permissions.find((p) => p.name === 'school_classes_view')) {
+    can('view', 'school_classes')
+  }
+  if (permissions.find((p) => p.name === 'school_classes_edit')) {
+    can('edit', 'school_classes')
+  }
+  if (permissions.find((p) => p.name === 'school_classes_delete')) {
+    can('delete', 'school_classes')
+  }
+
   return build()
 }
