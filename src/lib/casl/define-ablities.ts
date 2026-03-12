@@ -145,5 +145,22 @@ export function defineAbilitiesFor(user: User | null) {
     can('delete', 'subjects')
   }
 
+  //Subject class
+  if (permissions.find((p) => p.name === 'subject_class_list')) {
+    can('list', 'subject_class')
+  }
+  if (permissions.find((p) => p.name === 'subject_class_create')) {
+    can('create', 'subject_class')
+  }
+  if (permissions.find((p) => p.name === 'subject_class_view')) {
+    can('view', 'subject_class')
+  }
+  if (permissions.find((p) => p.name === 'subject_class_edit')) {
+    can('edit', 'subject_class')
+  }
+  if (permissions.find((p) => p.name === 'subject_class_delete')) {
+    can('delete', 'subject_class')
+  }
+
   return build()
 }

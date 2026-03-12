@@ -1,11 +1,13 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate } from '@tanstack/react-router'
 import { Route } from '@/routes/_authenticated/subject-class/$subjectClassId.edit'
+import { type Item } from '@/types/subject_class.ts'
 import { ArrowLeft, Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { edit } from '@/api/subject-class'
+import { applyValidationErrors } from '@/lib/applyValidationErrors.ts'
 import { Button } from '@/components/ui/button.tsx'
 import {
   Form,
@@ -26,25 +28,29 @@ export function SubjectClassEdit() {
   const navigate = useNavigate()
   const [loading, setLoading] = useState<boolean>(false)
   const { subjects, classes, subject } = Route.useRouteContext()
+  const row = useMemo(() => {
+    return Object.keys(subject).map((key) => subject[key])
+  }, [subject])
 
   const form = useForm<SubjectClassForm>({
     resolver: zodResolver(subjectClassFormSchema),
     defaultValues: {
-      class_id: subject.class_id,
-      subject_ids: [],
+      class_id: row[0].items[0].class.id,
+      subject_ids: row[0].items.map((item: Item) => item.subject.id),
     },
   })
 
   const onSubmit = async (data: SubjectClassForm) => {
     setLoading(true)
     try {
-      await edit(subject.id, data)
+      await edit(data)
       form.reset()
       toast.success('Предмет-класс успешно редактирован')
       navigate({ to: '/subject-class' })
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
-      // console.log(err)
+      if (!applyValidationErrors(form, err)) {
+        toast.error('Не валидные данные')
+      }
     } finally {
       setLoading(false)
     }
@@ -98,7 +104,7 @@ export function SubjectClassEdit() {
                       placeholder={'Выберите предметы'}
                       options={subjects.data.map((s) => ({
                         value: s.id,
-                        label: s.name_ru,
+                        label: s.title.ru,
                       }))}
                       onValueChange={field.onChange}
                       defaultValue={field.value}
@@ -111,7 +117,7 @@ export function SubjectClassEdit() {
 
             <Button disabled={loading} type='submit'>
               {loading ? <Loader2 className='animate-spin' /> : null}
-              Создать
+              Редактировать
             </Button>
           </form>
         </Form>

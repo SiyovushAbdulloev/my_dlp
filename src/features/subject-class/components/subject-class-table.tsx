@@ -7,13 +7,12 @@ import {
   getPaginationRowModel,
   useReactTable,
 } from '@tanstack/react-table'
-import { type SchoolClass } from '@/types/school_class.ts'
-import { type Subject } from '@/types/subject.ts'
 import { type SubjectClass } from '@/types/subject_class.ts'
 import { type LaravelPaginatedResource } from 'laravel-resource-pagination-type'
 import { LoaderCircle, PenLine, Trash } from 'lucide-react'
 import { toast } from 'sonner'
 import { deleteById, fetchIndex } from '@/api/subject-class'
+import { ability } from '@/lib/casl/ability.ts'
 import { Button } from '@/components/ui/button.tsx'
 import {
   Table,
@@ -30,54 +29,59 @@ const getColumns = (opts: {
   onDelete: (id: string) => void
 }): ColumnDef<SubjectClass>[] => [
   {
-    accessorKey: 'subject',
-    header: 'Предмет',
-    cell: (props) => (
-      <p>{String((props.getValue() as Subject)?.name_ru ?? '')}</p>
-    ),
-  },
-  {
     accessorKey: 'class',
     header: 'Класс',
     cell: (props) => {
-      const cls = props.getValue() as SchoolClass
-      return (
-        <p>
-          {/* eslint-disable-next-line no-constant-binary-expression */}
-          {String(cls?.number + ' ' + cls?.letter) ?? ''}
-        </p>
-      )
+      const original = props.row.original as SubjectClass
+      const cls = `${original.items[0].class.number} ${original.items[0].class.letter}`
+      return <p>{cls}</p>
+    },
+  },
+  {
+    accessorKey: 'subject',
+    header: 'Предметы',
+    cell: (props) => {
+      const original = props.row.original as SubjectClass
+      const subjects = original.items
+        .map((item) => item.subject.title.ru)
+        .join(', ')
+      return <p>{subjects}</p>
     },
   },
   {
     accessorKey: 'id',
     header: 'Действие',
     cell: (props) => {
-      const id: string = props.getValue() as string
+      const original = props.row.original as SubjectClass
+      const id = original.items[0].class.id
       const isDeleting = opts.deleting === id
 
       return (
         <div className='flex items-center gap-2'>
-          <Link
-            params={{ subjectClassId: id }}
-            to='/subject-class/$subjectClassId/edit'
-          >
-            <PenLine />
-          </Link>
+          {ability.can('edit', 'subject_class') ? (
+            <Link
+              params={{ subjectClassId: id }}
+              to='/subject-class/$subjectClassId/edit'
+            >
+              <PenLine />
+            </Link>
+          ) : null}
 
-          <Button
-            type='button'
-            variant='ghost'
-            disabled={isDeleting}
-            onClick={() => opts.onDelete(id)}
-            className='px-2'
-          >
-            {isDeleting ? (
-              <LoaderCircle className='size-5 animate-spin' />
-            ) : (
-              <Trash />
-            )}
-          </Button>
+          {ability.can('delete', 'subject_class') ? (
+            <Button
+              type='button'
+              variant='ghost'
+              disabled={isDeleting}
+              onClick={() => opts.onDelete(id)}
+              className='px-2'
+            >
+              {isDeleting ? (
+                <LoaderCircle className='size-5 animate-spin' />
+              ) : (
+                <Trash />
+              )}
+            </Button>
+          ) : null}
         </div>
       )
     },
@@ -109,8 +113,17 @@ export const SubjectClassTable = () => {
     return getColumns({ deleting, onDelete })
   }, [deleting])
 
+  const rows = useMemo(() => {
+    return Object.entries(subjectClasses?.data ?? {}).map(
+      ([classId, group]) => ({
+        id: classId,
+        items: group.items,
+      })
+    )
+  }, [subjectClasses])
+
   const table = useReactTable({
-    data: subjectClasses?.data ?? [],
+    data: rows,
     columns: columns,
     getCoreRowModel: getCoreRowModel(),
     pageCount: subjectClasses?.meta?.last_page ?? 1,

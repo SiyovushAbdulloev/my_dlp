@@ -1,5 +1,6 @@
 import { useNavigate } from '@tanstack/react-router'
 import { Plus } from 'lucide-react'
+import { ability } from '@/lib/casl/ability.ts'
 import { Button } from '@/components/ui/button.tsx'
 import { Main } from '@/components/layout/main'
 import { SubjectClassTable } from '@/features/subject-class/components/subject-class-table.tsx'
@@ -16,12 +17,14 @@ export function SubjectClass() {
               Предметы-Классы
             </h2>
           </div>
-          <Button
-            className='space-x-1'
-            onClick={() => navigate({ to: '/subject-class/create' })}
-          >
-            <span>Прикрепить предмет к классу</span> <Plus size={18} />
-          </Button>
+          {ability.can('create', 'subject_class') ? (
+            <Button
+              className='space-x-1'
+              onClick={() => navigate({ to: '/subject-class/create' })}
+            >
+              <span>Прикрепить предмет к классу</span> <Plus size={18} />
+            </Button>
+          ) : null}
         </div>
         <SubjectClassTable />
       </Main>

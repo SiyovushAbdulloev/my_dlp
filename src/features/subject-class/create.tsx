@@ -7,6 +7,7 @@ import { Route } from '@/routes/_authenticated/subject-class/create'
 import { ArrowLeft, Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { create } from '@/api/subject-class'
+import { applyValidationErrors } from '@/lib/applyValidationErrors.ts'
 import { Button } from '@/components/ui/button.tsx'
 import {
   Form,
@@ -44,9 +45,10 @@ export function SubjectClassCreate() {
       form.reset()
       toast.success('Предмет-класс успешно создан')
       navigate({ to: '/subject-class' })
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
-      // console.log(err)
+      if (!applyValidationErrors(form, err)) {
+        toast.error('Не валидные данные')
+      }
     } finally {
       setLoading(false)
     }
@@ -100,7 +102,7 @@ export function SubjectClassCreate() {
                       placeholder={'Выберите предметы'}
                       options={subjects.data.map((s) => ({
                         value: s.id,
-                        label: s.name_ru,
+                        label: s.title.ru,
                       }))}
                       onValueChange={field.onChange}
                       defaultValue={field.value}
