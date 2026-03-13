@@ -14,6 +14,7 @@ import { type LaravelPaginatedResource } from 'laravel-resource-pagination-type'
 import { LoaderCircle, PenLine, Trash } from 'lucide-react'
 import { toast } from 'sonner'
 import { deleteById, fetchIndex } from '@/api/lesson-topics'
+import { ability } from '@/lib/casl/ability.ts'
 import { Button } from '@/components/ui/button.tsx'
 import {
   Table,
@@ -45,7 +46,7 @@ const getColumns = (opts: {
   {
     accessorKey: 'subject',
     header: 'Предмет',
-    cell: (props) => <p>{(props.getValue() as Subject)?.name_ru}</p>,
+    cell: (props) => <p>{(props.getValue() as Subject)?.title?.ru}</p>,
   },
   {
     accessorKey: 'id',
@@ -56,26 +57,30 @@ const getColumns = (opts: {
 
       return (
         <div className='flex items-center gap-2'>
-          <Link
-            params={{ lessonTopicId: id }}
-            to='/lesson-topics/$lessonTopicId/edit'
-          >
-            <PenLine />
-          </Link>
+          {ability.can('edit', 'lesson_topics') ? (
+            <Link
+              params={{ lessonTopicId: id }}
+              to='/lesson-topics/$lessonTopicId/edit'
+            >
+              <PenLine />
+            </Link>
+          ) : null}
 
-          <Button
-            type='button'
-            variant='ghost'
-            disabled={isDeleting}
-            onClick={() => opts.onDelete(id)}
-            className='px-2'
-          >
-            {isDeleting ? (
-              <LoaderCircle className='size-5 animate-spin' />
-            ) : (
-              <Trash />
-            )}
-          </Button>
+          {ability.can('delete', 'lesson_topics') ? (
+            <Button
+              type='button'
+              variant='ghost'
+              disabled={isDeleting}
+              onClick={() => opts.onDelete(id)}
+              className='px-2'
+            >
+              {isDeleting ? (
+                <LoaderCircle className='size-5 animate-spin' />
+              ) : (
+                <Trash />
+              )}
+            </Button>
+          ) : null}
         </div>
       )
     },

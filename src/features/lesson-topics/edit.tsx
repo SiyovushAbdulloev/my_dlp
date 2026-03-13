@@ -7,6 +7,7 @@ import { type SerializedEditorState } from 'lexical'
 import { ArrowLeft, Loader2, Sparkles } from 'lucide-react'
 import { toast } from 'sonner'
 import { edit } from '@/api/lesson-topics'
+import { applyValidationErrors } from '@/lib/applyValidationErrors.ts'
 import { Button } from '@/components/ui/button'
 import { Field } from '@/components/ui/field'
 import {
@@ -35,10 +36,10 @@ export function LessonTopicEdit() {
   const form = useForm<LessonTopicForm>({
     resolver: zodResolver(lessonTopicFormSchema),
     defaultValues: {
-      class_id: topic.class_id,
-      subject_id: topic.subject_id,
+      class_id: topic.class?.id,
+      subject_id: topic.subject?.id,
       topic: topic.topic,
-      content: '',
+      content: topic.content,
     },
   })
 
@@ -55,7 +56,7 @@ export function LessonTopicEdit() {
     () =>
       subjects.data.map((s) => ({
         value: s.id,
-        label: s.name_ru,
+        label: s.title.ru,
       })),
     [subjects]
   )
@@ -66,9 +67,10 @@ export function LessonTopicEdit() {
       await edit(topic.id, data)
       toast.success('Тема урока успешно редактирована')
       navigate({ to: '/lesson-topics' })
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (e) {
-      // console.log(e)
+      if (!applyValidationErrors(form, e)) {
+        toast.error('Не валидные данные')
+      }
     } finally {
       setLoading(false)
     }

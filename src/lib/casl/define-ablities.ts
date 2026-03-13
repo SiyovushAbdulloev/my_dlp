@@ -162,5 +162,22 @@ export function defineAbilitiesFor(user: User | null) {
     can('delete', 'subject_class')
   }
 
+  //Lesson topics
+  if (permissions.find((p) => p.name === 'lesson_topics_list')) {
+    can('list', 'lesson_topics')
+  }
+  if (permissions.find((p) => p.name === 'lesson_topics_create')) {
+    can('create', 'lesson_topics')
+  }
+  if (permissions.find((p) => p.name === 'lesson_topics_view')) {
+    can('view', 'lesson_topics')
+  }
+  if (permissions.find((p) => p.name === 'lesson_topics_edit')) {
+    can('edit', 'lesson_topics')
+  }
+  if (permissions.find((p) => p.name === 'lesson_topics_delete')) {
+    can('delete', 'lesson_topics')
+  }
+
   return build()
 }

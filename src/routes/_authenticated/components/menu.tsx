@@ -159,7 +159,7 @@ export const NAV: NavItem[] = [
     access: [
       {
         action: 'list',
-        subject: 'lesson-topics',
+        subject: 'lesson_topics',
       },
     ],
   },

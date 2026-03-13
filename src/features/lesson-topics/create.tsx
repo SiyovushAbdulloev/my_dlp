@@ -8,6 +8,7 @@ import { type SerializedEditorState } from 'lexical'
 import { ArrowLeft, Loader2, Sparkles } from 'lucide-react'
 import { toast } from 'sonner'
 import { create } from '@/api/lesson-topics'
+import { applyValidationErrors } from '@/lib/applyValidationErrors.ts'
 import { Button } from '@/components/ui/button'
 import { Field } from '@/components/ui/field'
 import {
@@ -61,7 +62,7 @@ export function LessonTopicCreate() {
     () =>
       subjects.data.map((s) => ({
         value: s.id,
-        label: s.name_ru,
+        label: s.title.ru,
       })),
     [subjects]
   )
@@ -72,9 +73,10 @@ export function LessonTopicCreate() {
       await create(data)
       toast.success('Тема урока успешно создана')
       navigate({ to: '/lesson-topics' })
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (e) {
-      /* empty */
+      if (!applyValidationErrors(form, e)) {
+        toast.error('Не валидные данные')
+      }
     } finally {
       setLoading(false)
     }
