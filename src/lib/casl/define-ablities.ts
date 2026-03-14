@@ -179,5 +179,22 @@ export function defineAbilitiesFor(user: User | null) {
     can('delete', 'lesson_topics')
   }
 
+  //Libraries
+  if (permissions.find((p) => p.name === 'libraries_list')) {
+    can('list', 'libraries')
+  }
+  if (permissions.find((p) => p.name === 'libraries_create')) {
+    can('create', 'libraries')
+  }
+  if (permissions.find((p) => p.name === 'libraries_view')) {
+    can('view', 'libraries')
+  }
+  if (permissions.find((p) => p.name === 'libraries_edit')) {
+    can('edit', 'libraries')
+  }
+  if (permissions.find((p) => p.name === 'libraries_delete')) {
+    can('delete', 'libraries')
+  }
+
   return build()
 }

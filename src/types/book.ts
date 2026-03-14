@@ -1,9 +1,18 @@
+import { type File } from '@/types/file.ts'
+import { type Translatable } from '@/types/translatable.ts'
+
 export interface Book {
   id: string
-  name_ru: string
-  name_tg: string
-  name_en: string
-  thumbnail_url: string
-  file_url: string
-  is_mp3: boolean
+  title: Translatable
+  cover: File
+  book: File
+  type: BookType
+  is_published: number
+}
+
+export type BookType = 1 | 2
+
+export const BookTypeLabel = {
+  1: 'Книга',
+  2: 'Аудиокнига',
 }

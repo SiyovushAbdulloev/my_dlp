@@ -6,6 +6,7 @@ import { Route } from '@/routes/_authenticated/books/$bookId.edit'
 import { ArrowLeft, FileUp, ImageIcon, Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { edit } from '@/api/books'
+import { applyValidationErrors } from '@/lib/applyValidationErrors.ts'
 import { Button } from '@/components/ui/button'
 import { Field } from '@/components/ui/field'
 import {
@@ -29,44 +30,49 @@ export function BooksEdit() {
   const [loading, setLoading] = useState(false)
 
   const { book } = Route.useRouteContext()
+  console.log({ book })
 
   const form = useForm<BookForm>({
     resolver: zodResolver(bookFormSchema),
     defaultValues: {
-      name: {
-        ru: book.name_ru ?? '',
-        en: book.name_en ?? '',
-        tg: book.name_tg ?? '',
+      title: {
+        ru: book.title.ru ?? '',
+        en: book.title.en ?? '',
+        tg: book.title.tg ?? '',
       },
+      is_published: !!book.is_published,
     },
   })
 
-  const newThumbnail = form.watch('thumbnail')
+  const newCover = form.watch('cover')
   const newFile = form.watch('file')
 
   const thumbnailPreview = useMemo(() => {
-    if (newThumbnail) return URL.createObjectURL(newThumbnail)
-    return book.thumbnail_url ?? ''
-  }, [newThumbnail, book.thumbnail_url])
+    if (newCover) return URL.createObjectURL(newCover)
+    return book.cover.url ?? ''
+  }, [newCover, book.cover])
 
   const onSubmit = async (data: BookForm) => {
     setLoading(true)
     try {
       const fd = new FormData()
-      fd.append('name_ru', data.name.ru)
-      fd.append('name_en', data.name.en)
-      fd.append('name_tg', data.name.tg)
+      fd.append('title[ru]', data.title.ru)
+      fd.append('title[en]', data.title.en)
+      fd.append('title[tg]', data.title.tg)
+      fd.append('is_published', data.is_published ? '1' : '0')
+      fd.append('_method', 'PUT')
 
       if (data.file) fd.append('file', data.file)
-      if (data.thumbnail) fd.append('thumbnail', data.thumbnail)
+      if (data.cover) fd.append('cover', data.cover)
 
       await edit(book.id, fd)
 
       toast.success('Книга успешно обновлена')
       navigate({ to: '/books' })
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (e) {
-      // console.log(e)
+      if (!applyValidationErrors(form, e)) {
+        toast.error('Не валидные данные')
+      }
     } finally {
       setLoading(false)
     }
@@ -115,7 +121,7 @@ export function BooksEdit() {
                 <TabsContent value='ru' className='mt-4'>
                   <FormField
                     control={form.control}
-                    name='name.ru'
+                    name='title.ru'
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Название (RU)</FormLabel>
@@ -136,7 +142,7 @@ export function BooksEdit() {
                 <TabsContent value='en' className='mt-4'>
                   <FormField
                     control={form.control}
-                    name='name.en'
+                    name='title.en'
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Name (EN)</FormLabel>
@@ -157,7 +163,7 @@ export function BooksEdit() {
                 <TabsContent value='tg' className='mt-4'>
                   <FormField
                     control={form.control}
-                    name='name.tg'
+                    name='title.tg'
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Ном (TG)</FormLabel>
@@ -189,7 +195,7 @@ export function BooksEdit() {
                           file={field.value}
                           onPick={(f) => field.onChange(f ?? undefined)}
                           hint={
-                            book.file_url
+                            book.book.url
                               ? 'Текущий файл уже загружен.'
                               : 'Файл отсутствует.'
                           }
@@ -203,7 +209,7 @@ export function BooksEdit() {
 
                 <FormField
                   control={form.control}
-                  name='thumbnail'
+                  name='cover'
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>
@@ -213,7 +219,7 @@ export function BooksEdit() {
                           file={field.value}
                           onPick={(f) => field.onChange(f ?? undefined)}
                           hint={
-                            book.thumbnail_url
+                            book.cover.url
                               ? 'Текущая обложка установлена.'
                               : 'Обложка отсутствует.'
                           }
@@ -258,10 +264,10 @@ export function BooksEdit() {
 
                 <div className='p-4'>
                   <p className='text-sm font-semibold text-slate-900'>
-                    {form.watch('name.ru') || 'Название (RU)'}
+                    {form.watch('title.ru') || 'Название (RU)'}
                   </p>
                   <p className='mt-1 text-xs text-slate-500'>
-                    {book.is_mp3
+                    {book.type === 2
                       ? 'Тип: аудио (MP3)'
                       : 'Тип: электронная книга (PDF)'}
                   </p>

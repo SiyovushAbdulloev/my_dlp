@@ -1,5 +1,6 @@
 import { useNavigate } from '@tanstack/react-router'
 import { Plus } from 'lucide-react'
+import { ability } from '@/lib/casl/ability.ts'
 import { Button } from '@/components/ui/button'
 import { Main } from '@/components/layout/main'
 import { BooksTable } from './components/books-table'
@@ -17,12 +18,14 @@ export function Books() {
           </p>
         </div>
 
-        <Button
-          className='space-x-1'
-          onClick={() => navigate({ to: '/books/create' })}
-        >
-          <span>Добавить книгу</span> <Plus size={18} />
-        </Button>
+        {ability.can('create', 'libraries') ? (
+          <Button
+            className='space-x-1'
+            onClick={() => navigate({ to: '/books/create' })}
+          >
+            <span>Добавить книгу</span> <Plus size={18} />
+          </Button>
+        ) : null}
       </div>
 
       <BooksTable />

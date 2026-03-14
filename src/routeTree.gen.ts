@@ -62,7 +62,6 @@ import { Route as AuthenticatedErrorsErrorRouteImport } from './routes/_authenti
 import { Route as AuthenticatedEducationDepartmentsCreateRouteImport } from './routes/_authenticated/education-departments/create'
 import { Route as AuthenticatedClassesCreateRouteImport } from './routes/_authenticated/classes/create'
 import { Route as AuthenticatedBooksCreateRouteImport } from './routes/_authenticated/books/create'
-import { Route as AuthenticatedBooksBookIdRouteImport } from './routes/_authenticated/books/$bookId'
 import { Route as AuthenticatedDictionariesRegionsIndexRouteImport } from './routes/_authenticated/dictionaries/regions/index'
 import { Route as AuthenticatedDictionariesDistrictsIndexRouteImport } from './routes/_authenticated/dictionaries/districts/index'
 import { Route as AuthenticatedDictionariesCitiesIndexRouteImport } from './routes/_authenticated/dictionaries/cities/index'
@@ -81,6 +80,7 @@ import { Route as AuthenticatedDictionariesRegionsCreateRouteImport } from './ro
 import { Route as AuthenticatedDictionariesDistrictsCreateRouteImport } from './routes/_authenticated/dictionaries/districts/create'
 import { Route as AuthenticatedDictionariesCitiesCreateRouteImport } from './routes/_authenticated/dictionaries/cities/create'
 import { Route as AuthenticatedClassesClassIdEditRouteImport } from './routes/_authenticated/classes/$classId.edit'
+import { Route as AuthenticatedBooksBookIdShowRouteImport } from './routes/_authenticated/books/$bookId.show'
 import { Route as AuthenticatedBooksBookIdEditRouteImport } from './routes/_authenticated/books/$bookId.edit'
 import { Route as AuthenticatedDictionariesRegionsRegionIdEditRouteImport } from './routes/_authenticated/dictionaries/regions/$regionId.edit'
 import { Route as AuthenticatedDictionariesDistrictsDistrictIdEditRouteImport } from './routes/_authenticated/dictionaries/districts/$districtId.edit'
@@ -385,12 +385,6 @@ const AuthenticatedBooksCreateRoute =
     path: '/books/create',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedBooksBookIdRoute =
-  AuthenticatedBooksBookIdRouteImport.update({
-    id: '/books/$bookId',
-    path: '/books/$bookId',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
 const AuthenticatedDictionariesRegionsIndexRoute =
   AuthenticatedDictionariesRegionsIndexRouteImport.update({
     id: '/dictionaries/regions/',
@@ -499,11 +493,17 @@ const AuthenticatedClassesClassIdEditRoute =
     path: '/classes/$classId/edit',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedBooksBookIdShowRoute =
+  AuthenticatedBooksBookIdShowRouteImport.update({
+    id: '/books/$bookId/show',
+    path: '/books/$bookId/show',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedBooksBookIdEditRoute =
   AuthenticatedBooksBookIdEditRouteImport.update({
-    id: '/edit',
-    path: '/edit',
-    getParentRoute: () => AuthenticatedBooksBookIdRoute,
+    id: '/books/$bookId/edit',
+    path: '/books/$bookId/edit',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedDictionariesRegionsRegionIdEditRoute =
   AuthenticatedDictionariesRegionsRegionIdEditRouteImport.update({
@@ -535,7 +535,6 @@ export interface FileRoutesByFullPath {
   '/500': typeof errors500Route
   '/503': typeof errors503Route
   '/': typeof AuthenticatedIndexRoute
-  '/books/$bookId': typeof AuthenticatedBooksBookIdRouteWithChildren
   '/books/create': typeof AuthenticatedBooksCreateRoute
   '/classes/create': typeof AuthenticatedClassesCreateRoute
   '/education-departments/create': typeof AuthenticatedEducationDepartmentsCreateRoute
@@ -578,6 +577,7 @@ export interface FileRoutesByFullPath {
   '/video-lessons': typeof AuthenticatedVideoLessonsIndexRoute
   '/webinars': typeof AuthenticatedWebinarsIndexRoute
   '/books/$bookId/edit': typeof AuthenticatedBooksBookIdEditRoute
+  '/books/$bookId/show': typeof AuthenticatedBooksBookIdShowRoute
   '/classes/$classId/edit': typeof AuthenticatedClassesClassIdEditRoute
   '/dictionaries/cities/create': typeof AuthenticatedDictionariesCitiesCreateRoute
   '/dictionaries/districts/create': typeof AuthenticatedDictionariesDistrictsCreateRoute
@@ -610,7 +610,6 @@ export interface FileRoutesByTo {
   '/500': typeof errors500Route
   '/503': typeof errors503Route
   '/': typeof AuthenticatedIndexRoute
-  '/books/$bookId': typeof AuthenticatedBooksBookIdRouteWithChildren
   '/books/create': typeof AuthenticatedBooksCreateRoute
   '/classes/create': typeof AuthenticatedClassesCreateRoute
   '/education-departments/create': typeof AuthenticatedEducationDepartmentsCreateRoute
@@ -653,6 +652,7 @@ export interface FileRoutesByTo {
   '/video-lessons': typeof AuthenticatedVideoLessonsIndexRoute
   '/webinars': typeof AuthenticatedWebinarsIndexRoute
   '/books/$bookId/edit': typeof AuthenticatedBooksBookIdEditRoute
+  '/books/$bookId/show': typeof AuthenticatedBooksBookIdShowRoute
   '/classes/$classId/edit': typeof AuthenticatedClassesClassIdEditRoute
   '/dictionaries/cities/create': typeof AuthenticatedDictionariesCitiesCreateRoute
   '/dictionaries/districts/create': typeof AuthenticatedDictionariesDistrictsCreateRoute
@@ -689,7 +689,6 @@ export interface FileRoutesById {
   '/(errors)/500': typeof errors500Route
   '/(errors)/503': typeof errors503Route
   '/_authenticated/': typeof AuthenticatedIndexRoute
-  '/_authenticated/books/$bookId': typeof AuthenticatedBooksBookIdRouteWithChildren
   '/_authenticated/books/create': typeof AuthenticatedBooksCreateRoute
   '/_authenticated/classes/create': typeof AuthenticatedClassesCreateRoute
   '/_authenticated/education-departments/create': typeof AuthenticatedEducationDepartmentsCreateRoute
@@ -732,6 +731,7 @@ export interface FileRoutesById {
   '/_authenticated/video-lessons/': typeof AuthenticatedVideoLessonsIndexRoute
   '/_authenticated/webinars/': typeof AuthenticatedWebinarsIndexRoute
   '/_authenticated/books/$bookId/edit': typeof AuthenticatedBooksBookIdEditRoute
+  '/_authenticated/books/$bookId/show': typeof AuthenticatedBooksBookIdShowRoute
   '/_authenticated/classes/$classId/edit': typeof AuthenticatedClassesClassIdEditRoute
   '/_authenticated/dictionaries/cities/create': typeof AuthenticatedDictionariesCitiesCreateRoute
   '/_authenticated/dictionaries/districts/create': typeof AuthenticatedDictionariesDistrictsCreateRoute
@@ -767,7 +767,6 @@ export interface FileRouteTypes {
     | '/500'
     | '/503'
     | '/'
-    | '/books/$bookId'
     | '/books/create'
     | '/classes/create'
     | '/education-departments/create'
@@ -810,6 +809,7 @@ export interface FileRouteTypes {
     | '/video-lessons'
     | '/webinars'
     | '/books/$bookId/edit'
+    | '/books/$bookId/show'
     | '/classes/$classId/edit'
     | '/dictionaries/cities/create'
     | '/dictionaries/districts/create'
@@ -842,7 +842,6 @@ export interface FileRouteTypes {
     | '/500'
     | '/503'
     | '/'
-    | '/books/$bookId'
     | '/books/create'
     | '/classes/create'
     | '/education-departments/create'
@@ -885,6 +884,7 @@ export interface FileRouteTypes {
     | '/video-lessons'
     | '/webinars'
     | '/books/$bookId/edit'
+    | '/books/$bookId/show'
     | '/classes/$classId/edit'
     | '/dictionaries/cities/create'
     | '/dictionaries/districts/create'
@@ -920,7 +920,6 @@ export interface FileRouteTypes {
     | '/(errors)/500'
     | '/(errors)/503'
     | '/_authenticated/'
-    | '/_authenticated/books/$bookId'
     | '/_authenticated/books/create'
     | '/_authenticated/classes/create'
     | '/_authenticated/education-departments/create'
@@ -963,6 +962,7 @@ export interface FileRouteTypes {
     | '/_authenticated/video-lessons/'
     | '/_authenticated/webinars/'
     | '/_authenticated/books/$bookId/edit'
+    | '/_authenticated/books/$bookId/show'
     | '/_authenticated/classes/$classId/edit'
     | '/_authenticated/dictionaries/cities/create'
     | '/_authenticated/dictionaries/districts/create'
@@ -1369,13 +1369,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedBooksCreateRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/books/$bookId': {
-      id: '/_authenticated/books/$bookId'
-      path: '/books/$bookId'
-      fullPath: '/books/$bookId'
-      preLoaderRoute: typeof AuthenticatedBooksBookIdRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
     '/_authenticated/dictionaries/regions/': {
       id: '/_authenticated/dictionaries/regions/'
       path: '/dictionaries/regions'
@@ -1502,12 +1495,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedClassesClassIdEditRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/books/$bookId/show': {
+      id: '/_authenticated/books/$bookId/show'
+      path: '/books/$bookId/show'
+      fullPath: '/books/$bookId/show'
+      preLoaderRoute: typeof AuthenticatedBooksBookIdShowRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/books/$bookId/edit': {
       id: '/_authenticated/books/$bookId/edit'
-      path: '/edit'
+      path: '/books/$bookId/edit'
       fullPath: '/books/$bookId/edit'
       preLoaderRoute: typeof AuthenticatedBooksBookIdEditRouteImport
-      parentRoute: typeof AuthenticatedBooksBookIdRoute
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/dictionaries/regions/$regionId/edit': {
       id: '/_authenticated/dictionaries/regions/$regionId/edit'
@@ -1572,20 +1572,6 @@ const AuthenticatedSettingsRouteRouteWithChildren =
     AuthenticatedSettingsRouteRouteChildren,
   )
 
-interface AuthenticatedBooksBookIdRouteChildren {
-  AuthenticatedBooksBookIdEditRoute: typeof AuthenticatedBooksBookIdEditRoute
-}
-
-const AuthenticatedBooksBookIdRouteChildren: AuthenticatedBooksBookIdRouteChildren =
-  {
-    AuthenticatedBooksBookIdEditRoute: AuthenticatedBooksBookIdEditRoute,
-  }
-
-const AuthenticatedBooksBookIdRouteWithChildren =
-  AuthenticatedBooksBookIdRoute._addFileChildren(
-    AuthenticatedBooksBookIdRouteChildren,
-  )
-
 interface AuthenticatedTeacherCoursesCourseIdRouteChildren {
   AuthenticatedTeacherCoursesCourseIdEditRoute: typeof AuthenticatedTeacherCoursesCourseIdEditRoute
 }
@@ -1634,7 +1620,6 @@ const AuthenticatedWebinarsWebinarIdRouteWithChildren =
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedSettingsRouteRoute: typeof AuthenticatedSettingsRouteRouteWithChildren
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
-  AuthenticatedBooksBookIdRoute: typeof AuthenticatedBooksBookIdRouteWithChildren
   AuthenticatedBooksCreateRoute: typeof AuthenticatedBooksCreateRoute
   AuthenticatedClassesCreateRoute: typeof AuthenticatedClassesCreateRoute
   AuthenticatedEducationDepartmentsCreateRoute: typeof AuthenticatedEducationDepartmentsCreateRoute
@@ -1671,6 +1656,8 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedUsersIndexRoute: typeof AuthenticatedUsersIndexRoute
   AuthenticatedVideoLessonsIndexRoute: typeof AuthenticatedVideoLessonsIndexRoute
   AuthenticatedWebinarsIndexRoute: typeof AuthenticatedWebinarsIndexRoute
+  AuthenticatedBooksBookIdEditRoute: typeof AuthenticatedBooksBookIdEditRoute
+  AuthenticatedBooksBookIdShowRoute: typeof AuthenticatedBooksBookIdShowRoute
   AuthenticatedClassesClassIdEditRoute: typeof AuthenticatedClassesClassIdEditRoute
   AuthenticatedDictionariesCitiesCreateRoute: typeof AuthenticatedDictionariesCitiesCreateRoute
   AuthenticatedDictionariesDistrictsCreateRoute: typeof AuthenticatedDictionariesDistrictsCreateRoute
@@ -1694,7 +1681,6 @@ interface AuthenticatedRouteRouteChildren {
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedSettingsRouteRoute: AuthenticatedSettingsRouteRouteWithChildren,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
-  AuthenticatedBooksBookIdRoute: AuthenticatedBooksBookIdRouteWithChildren,
   AuthenticatedBooksCreateRoute: AuthenticatedBooksCreateRoute,
   AuthenticatedClassesCreateRoute: AuthenticatedClassesCreateRoute,
   AuthenticatedEducationDepartmentsCreateRoute:
@@ -1739,6 +1725,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedUsersIndexRoute: AuthenticatedUsersIndexRoute,
   AuthenticatedVideoLessonsIndexRoute: AuthenticatedVideoLessonsIndexRoute,
   AuthenticatedWebinarsIndexRoute: AuthenticatedWebinarsIndexRoute,
+  AuthenticatedBooksBookIdEditRoute: AuthenticatedBooksBookIdEditRoute,
+  AuthenticatedBooksBookIdShowRoute: AuthenticatedBooksBookIdShowRoute,
   AuthenticatedClassesClassIdEditRoute: AuthenticatedClassesClassIdEditRoute,
   AuthenticatedDictionariesCitiesCreateRoute:
     AuthenticatedDictionariesCitiesCreateRoute,

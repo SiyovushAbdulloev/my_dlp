@@ -1,8 +1,6 @@
+import { type Translatable } from '@/types/translatable.ts'
+
 export interface Subject {
   id: string
-  title: {
-    en: string
-    ru: string
-    tg: string
-  }
+  title: Translatable
 }

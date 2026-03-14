@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { useNavigate } from '@tanstack/react-router'
-import { Route } from '@/routes/_authenticated/books/$bookId'
+import { Route } from '@/routes/_authenticated/books/$bookId.show.tsx'
 import {
   ArrowLeft,
   BookOpen,
@@ -32,19 +32,20 @@ function clamp(n: number, min: number, max: number) {
 export function BookShow() {
   const navigate = useNavigate()
   const { book } = Route.useRouteContext()
+  console.log({ book })
 
   const [numPages, setNumPages] = useState<number>(0)
   const [page, setPage] = useState<number>(1)
   const [scale, setScale] = useState<number>(1.1)
 
-  const isPdf = !book.is_mp3
+  const isPdf = book.type === 1
 
-  const titleRu = book.name_ru || '—'
-  const titleEn = book.name_en || '—'
-  const titleTg = book.name_tg || '—'
+  const titleRu = book.title.ru || '—'
+  const titleEn = book.title.en || '—'
+  const titleTg = book.title.tg || '—'
 
   const typeBadge = useMemo(() => {
-    if (book.is_mp3) {
+    if (book.type === 2) {
       return (
         <Badge className='gap-1'>
           <Headphones className='size-3.5' />
@@ -58,7 +59,15 @@ export function BookShow() {
         PDF
       </Badge>
     )
-  }, [book.is_mp3])
+  }, [book.type])
+
+  const pdfFile = useMemo(
+    () => ({
+      url: `${import.meta.env.VITE_API_URL}libraries/${book.id}/file`,
+      withCredentials: true,
+    }),
+    [book.id]
+  )
 
   return (
     <Main className='flex flex-1 flex-col gap-4 sm:gap-6'>
@@ -93,7 +102,7 @@ export function BookShow() {
           <Button
             variant='outline'
             onClick={() =>
-              window.open(book.file_url, '_blank', 'noopener,noreferrer')
+              window.open(book.book.url, '_blank', 'noopener,noreferrer')
             }
           >
             <ExternalLink className='mr-2 size-4' />
@@ -101,7 +110,7 @@ export function BookShow() {
           </Button>
 
           <Button asChild>
-            <a href={book.file_url} download>
+            <a href={book.book.url} download>
               <Download className='mr-2 size-4' />
               Скачать
             </a>
@@ -117,9 +126,9 @@ export function BookShow() {
 
           <div className='mt-4 overflow-hidden rounded-2xl border bg-slate-50'>
             <div className='aspect-[16/10] w-full bg-slate-100'>
-              {book.thumbnail_url ? (
+              {book.cover.url ? (
                 <img
-                  src={book.thumbnail_url}
+                  src={book.cover.url}
                   alt={titleRu}
                   className='h-full w-full object-cover'
                   loading='lazy'
@@ -164,13 +173,13 @@ export function BookShow() {
             <div className='flex items-center justify-between'>
               <span className='text-slate-500'>Тип</span>
               <span className='font-medium text-slate-900'>
-                {book.is_mp3 ? 'Аудио (MP3)' : 'Электронная (PDF)'}
+                {book.type === 2 ? 'Аудио (MP3)' : 'Электронная (PDF)'}
               </span>
             </div>
             <div className='flex items-center justify-between'>
               <span className='text-slate-500'>Файл</span>
               <span className='max-w-[240px] truncate font-medium text-slate-900'>
-                {book.file_url}
+                {book.book.url}
               </span>
             </div>
           </div>
@@ -183,9 +192,9 @@ export function BookShow() {
                 tracks={[
                   {
                     id: book.id,
-                    audioUrl: book.file_url,
-                    cover: book.thumbnail_url,
-                    title: book.name_ru,
+                    audioUrl: book.book.url,
+                    cover: book.cover.url,
+                    title: book.title.ru,
                   },
                 ]}
               />
@@ -259,7 +268,7 @@ export function BookShow() {
               {/* PDF canvas */}
               <div className='relative flex min-h-[520px] justify-center overflow-hidden rounded-2xl border bg-slate-50 p-4'>
                 <Document
-                  file={book.file_url}
+                  file={pdfFile}
                   onLoadSuccess={(pdf) => {
                     setNumPages(pdf.numPages)
                     setPage(1)

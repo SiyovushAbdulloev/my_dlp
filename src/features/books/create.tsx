@@ -6,6 +6,7 @@ import { useNavigate } from '@tanstack/react-router'
 import { ArrowLeft, FileUp, ImageIcon, Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { create } from '@/api/books'
+import { applyValidationErrors } from '@/lib/applyValidationErrors.ts'
 import { Button } from '@/components/ui/button'
 import { Field } from '@/components/ui/field'
 import {
@@ -22,13 +23,16 @@ import { Dropzone } from '@/components/dropzone.tsx'
 import { Main } from '@/components/layout/main'
 
 export const bookFormSchema = z.object({
-  name: z.object({
+  title: z.object({
     ru: z.string().min(1, 'Название (RU) обязательно'),
     en: z.string().min(1, 'Name (EN) required'),
     tg: z.string().min(1, 'Ном (TG) ҳатмист'),
   }),
   file: z.instanceof(File, { message: 'Файл книги обязателен' }),
-  thumbnail: z.instanceof(File, { message: 'Обложка обязательна' }),
+  cover: z.instanceof(File, { message: 'Обложка обязательна' }),
+  is_published: z.boolean({
+    message: 'Опубликовано/Не опубликовано обязательно',
+  }),
 })
 
 export type BookForm = z.infer<typeof bookFormSchema>
@@ -42,35 +46,38 @@ export function BooksCreate() {
   const form = useForm<BookForm>({
     resolver: zodResolver(bookFormSchema),
     defaultValues: {
-      name: { ru: '', en: '', tg: '' },
+      title: { ru: '', en: '', tg: '' },
+      is_published: true,
     },
   })
 
   const file = form.watch('file')
-  const thumbnail = form.watch('thumbnail')
+  const cover = form.watch('cover')
 
-  const thumbnailPreview = useMemo(() => {
-    if (!thumbnail) return ''
-    return URL.createObjectURL(thumbnail)
-  }, [thumbnail])
+  const coverPreview = useMemo(() => {
+    if (!cover) return ''
+    return URL.createObjectURL(cover)
+  }, [cover])
 
   const onSubmit = async (data: BookForm) => {
     setLoading(true)
     try {
       const fd = new FormData()
-      fd.append('name_ru', data.name.ru)
-      fd.append('name_en', data.name.en)
-      fd.append('name_tg', data.name.tg)
+      fd.append('title[ru]', data.title.ru)
+      fd.append('title[en]', data.title.en)
+      fd.append('title[tg]', data.title.tg)
       fd.append('file', data.file)
-      fd.append('thumbnail', data.thumbnail)
+      fd.append('cover', data.cover)
+      fd.append('is_published', data.is_published ? '1' : '0')
 
       await create(fd)
 
       toast.success('Книга успешно создана')
       navigate({ to: '/books' })
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (e) {
-      // console.log(e)
+      if (!applyValidationErrors(form, e)) {
+        toast.error('Не валидные данные')
+      }
     } finally {
       setLoading(false)
     }
@@ -118,7 +125,7 @@ export function BooksCreate() {
                 <TabsContent value='ru' className='mt-4'>
                   <FormField
                     control={form.control}
-                    name='name.ru'
+                    name='title.ru'
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Название (RU)</FormLabel>
@@ -139,7 +146,7 @@ export function BooksCreate() {
                 <TabsContent value='en' className='mt-4'>
                   <FormField
                     control={form.control}
-                    name='name.en'
+                    name='title.en'
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Name (EN)</FormLabel>
@@ -160,7 +167,7 @@ export function BooksCreate() {
                 <TabsContent value='tg' className='mt-4'>
                   <FormField
                     control={form.control}
-                    name='name.tg'
+                    name='title.tg'
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Ном (TG)</FormLabel>
@@ -202,12 +209,12 @@ export function BooksCreate() {
 
                 <FormField
                   control={form.control}
-                  name='thumbnail'
+                  name='cover'
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>
                         <Dropzone
-                          label='Обложка (thumbnail)'
+                          label='Обложка (cover)'
                           accept='image/*'
                           file={field.value}
                           onPick={(f) => field.onChange(f)}
@@ -229,9 +236,9 @@ export function BooksCreate() {
 
               <div className='mt-4 overflow-hidden rounded-2xl border bg-slate-50'>
                 <div className='aspect-[16/10] w-full bg-slate-100'>
-                  {thumbnailPreview ? (
+                  {coverPreview ? (
                     <img
-                      src={thumbnailPreview}
+                      src={coverPreview}
                       alt='thumbnail preview'
                       className='h-full w-full object-cover'
                     />
@@ -244,7 +251,7 @@ export function BooksCreate() {
 
                 <div className='p-4'>
                   <p className='text-sm font-semibold text-slate-900'>
-                    {form.watch('name.ru') || 'Название (RU)'}
+                    {form.watch('title.ru') || 'Название (RU)'}
                   </p>
                   <p className='mt-1 text-xs text-slate-500'>
                     {file ? `Файл: ${file.name}` : 'Файл: не выбран'}

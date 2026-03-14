@@ -5,7 +5,7 @@ import {
   getPaginationRowModel,
   useReactTable,
 } from '@tanstack/react-table'
-import { type Book } from '@/types/book'
+import { type Book, type BookType } from '@/types/book'
 import { type LaravelPaginatedResource } from 'laravel-resource-pagination-type'
 import {
   Headphones,
@@ -21,13 +21,11 @@ import { Button } from '@/components/ui/button'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { DataTablePagination } from '@/components/data-table'
 
-type BookKind = 'ebook' | 'audio'
-
 export const BooksTable = () => {
   const navigate = useNavigate()
 
-  const [kind, setKind] = useState<BookKind>('ebook')
-  const isMp3 = kind === 'audio'
+  const [kind, setKind] = useState<string>('1')
+  const isMp3 = kind === '2'
 
   const [books, setBooks] = useState<LaravelPaginatedResource<Book> | null>(
     null
@@ -50,7 +48,11 @@ export const BooksTable = () => {
   const fetchData = async () => {
     try {
       setFetching(true)
-      const response = await fetchIndex(pagination.pageIndex + 1, isMp3)
+      const response = await fetchIndex(
+        pagination.pageIndex + 1,
+        parseInt(kind) as BookType
+      )
+      console.log({ response })
       setBooks(response)
     } finally {
       setFetching(false)
@@ -86,15 +88,15 @@ export const BooksTable = () => {
           onValueChange={(v) => {
             // reset to first page on tab change
             setPagination((p) => ({ ...p, pageIndex: 0 }))
-            setKind(v as BookKind)
+            setKind(v)
           }}
         >
           <TabsList>
-            <TabsTrigger value='ebook' className='gap-2'>
+            <TabsTrigger value={'1'} className='gap-2'>
               <BookOpen className='size-4' />
               Электронные книги
             </TabsTrigger>
-            <TabsTrigger value='audio' className='gap-2'>
+            <TabsTrigger value={'2'} className='gap-2'>
               <Headphones className='size-4' />
               Аудио книги
             </TabsTrigger>
@@ -120,7 +122,7 @@ export const BooksTable = () => {
                   key={book.id}
                   onClick={() =>
                     navigate({
-                      to: '/books/$bookId',
+                      to: '/books/$bookId/show',
                       params: { bookId: book.id },
                     })
                   }
@@ -128,10 +130,10 @@ export const BooksTable = () => {
                 >
                   {/* Thumbnail */}
                   <div className='relative aspect-[16/10] w-full bg-slate-100'>
-                    {book.thumbnail_url ? (
+                    {book.cover ? (
                       <img
-                        src={book.thumbnail_url}
-                        alt={book.name_ru}
+                        src={book.cover.url}
+                        alt={book.title.ru}
                         className='h-full w-full object-cover'
                         loading='lazy'
                       />
@@ -146,7 +148,7 @@ export const BooksTable = () => {
 
                     {/* type badge */}
                     <div className='absolute top-4 left-4 flex items-center gap-2'>
-                      {book.is_mp3 ? (
+                      {book.type === 2 ? (
                         <Badge className='gap-1'>
                           <Headphones className='size-3.5' />
                           Audio
@@ -164,10 +166,10 @@ export const BooksTable = () => {
                   <div className='flex flex-col gap-3 p-5'>
                     <div className='min-h-[44px]'>
                       <h3 className='line-clamp-2 text-base font-semibold text-slate-900'>
-                        {book.name_ru}
+                        {book.title.ru}
                       </h3>
                       <p className='mt-1 line-clamp-1 text-xs text-slate-500'>
-                        {book.file_url
+                        {book.book.url
                           ? 'Файл прикреплён'
                           : 'Файл не прикреплён'}
                       </p>
