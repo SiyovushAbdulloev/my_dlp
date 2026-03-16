@@ -17,4 +17,5 @@ export interface User {
   email: string
   head_directorate_id?: string
   education_department_id?: string
+  login: string
 }

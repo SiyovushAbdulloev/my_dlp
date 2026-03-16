@@ -1,16 +1,16 @@
-import { useState } from 'react'
-import { format, parse } from 'date-fns'
+// src/features/users/edit.tsx
+import { useEffect, useState } from 'react'
+import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate } from '@tanstack/react-router'
-import { Route } from '@/routes/_authenticated/users/$userId.edit'
-import { ArrowLeft, CalendarIcon, Loader2, Sparkles } from 'lucide-react'
+import { Route } from '@/routes/_authenticated/users/$userId.edit.tsx'
+import { type Role } from '@/types'
+import { ArrowLeft, Loader2, Sparkles } from 'lucide-react'
 import { toast } from 'sonner'
-import { fetchIndex as fetchIndexEducationDepartments } from '@/api/education-departments'
-import { fetchIndex } from '@/api/head-directorates'
 import { edit } from '@/api/users'
+import { applyValidationErrors } from '@/lib/applyValidationErrors'
 import { Button } from '@/components/ui/button'
-import { Calendar } from '@/components/ui/calendar'
 import { Field } from '@/components/ui/field'
 import {
   Form,
@@ -21,49 +21,79 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover'
-import { Separator } from '@/components/ui/separator'
-import { Combobox } from '@/components/combobox.tsx'
 import { Main } from '@/components/layout/main'
 import { SelectDropdown } from '@/components/select-dropdown'
-import { type UserForm, userFormSchema } from '@/features/users/create.tsx'
+
+export const userEditFormSchema = z
+  .object({
+    phone: z.string().min(1, 'Телефон обязателен'),
+    login: z.string().optional(),
+    first_name: z.string().min(1, 'Имя обязательно'),
+    last_name: z.string().min(1, 'Фамилия обязательна'),
+    middle_name: z.string().min(1, 'Отчество обязательно'),
+    email: z.string().email('Неверный email'),
+    password: z.string().optional(),
+    password_confirmation: z.string().optional(),
+    role: z.string().min(1, 'Роль обязательна'),
+  })
+  .refine(
+    (data) => {
+      if (!data.password && !data.password_confirmation) return true
+      return data.password === data.password_confirmation
+    },
+    {
+      path: ['password_confirmation'],
+      message: 'Пароли не совпадают',
+    }
+  )
+
+export type UserEditForm = z.infer<typeof userEditFormSchema>
 
 export function UsersEdit() {
   const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
-
   const { roles, user } = Route.useRouteContext()
 
-  const form = useForm<UserForm>({
-    resolver: zodResolver(userFormSchema),
-    reValidateMode: 'onChange',
+  const form = useForm<UserEditForm>({
+    resolver: zodResolver(userEditFormSchema),
     defaultValues: {
-      first_name: user.first_name,
-      last_name: user.last_name,
-      middle_name: user.middle_name,
-      role_id: user.role.id,
-      education: user.education,
-      university: user.university,
-      profession: user.profession,
-      category: user.category,
-      phone: user.phone,
-      email: user.email,
-      head_directorate_id: user.head_directorate_id,
-      education_department_id: user.education_department_id,
-      birthdate: parse(user.birthdate, 'dd.MM.yyyy', new Date()),
+      phone: '',
+      login: '',
+      first_name: '',
+      last_name: '',
+      middle_name: '',
+      email: '',
+      password: '',
+      password_confirmation: '',
+      role: user.role.id,
     },
   })
 
-  const onSubmit = async (data: UserForm) => {
+  useEffect(() => {
+    if (!user) return
+
+    form.reset({
+      phone: user.phone ?? '',
+      login: user.login ?? '',
+      first_name: user.first_name ?? '',
+      last_name: user.last_name ?? '',
+      middle_name: user.middle_name ?? '',
+      email: user.email ?? '',
+      password: '',
+      password_confirmation: '',
+    })
+  }, [user, form])
+
+  const onSubmit = async (data: UserEditForm) => {
     setLoading(true)
     try {
       await edit(user.id, data)
       toast.success('Пользователь успешно обновлён')
       navigate({ to: '/users' })
+    } catch (e) {
+      if (!applyValidationErrors(form, e)) {
+        toast.error('Не валидные данные')
+      }
     } finally {
       setLoading(false)
     }
@@ -77,7 +107,7 @@ export function UsersEdit() {
             Редактировать пользователя
           </h1>
           <p className='mt-1 text-sm text-muted-foreground'>
-            Обновите персональные данные, роль и подразделение.
+            Обновите данные пользователя и роль.
           </p>
         </div>
 
@@ -98,9 +128,11 @@ export function UsersEdit() {
                 </div>
                 <div>
                   <p className='text-sm font-semibold text-slate-900'>
-                    Профиль
+                    Основные данные
                   </p>
-                  <p className='text-xs text-slate-500'>ФИО / дата / роль</p>
+                  <p className='text-xs text-slate-500'>
+                    ФИО, логин, телефон и роль
+                  </p>
                 </div>
               </div>
 
@@ -113,7 +145,7 @@ export function UsersEdit() {
                       <FormLabel>Фамилия</FormLabel>
                       <FormControl>
                         <Field>
-                          <Input {...field} placeholder='Например: Ибрагимов' />
+                          <Input {...field} />
                         </Field>
                       </FormControl>
                       <FormMessage />
@@ -129,7 +161,7 @@ export function UsersEdit() {
                       <FormLabel>Имя</FormLabel>
                       <FormControl>
                         <Field>
-                          <Input {...field} placeholder='Например: Сиёвуш' />
+                          <Input {...field} />
                         </Field>
                       </FormControl>
                       <FormMessage />
@@ -145,148 +177,7 @@ export function UsersEdit() {
                       <FormLabel>Отчество</FormLabel>
                       <FormControl>
                         <Field>
-                          <Input {...field} placeholder='(необязательно)' />
-                        </Field>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <div className='grid grid-cols-2 gap-3'>
-                  <FormField
-                    control={form.control}
-                    name='birthdate'
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Дата рождения</FormLabel>
-                        <FormControl>
-                          <Popover>
-                            <PopoverTrigger asChild>
-                              <Button
-                                type='button'
-                                variant='outline'
-                                data-empty={!field.value}
-                                className='w-full justify-start text-left font-normal data-[empty=true]:text-muted-foreground'
-                              >
-                                <CalendarIcon className='mr-2 size-4' />
-                                {field.value ? (
-                                  format(field.value, 'PPP')
-                                ) : (
-                                  <span>Выберите</span>
-                                )}
-                              </Button>
-                            </PopoverTrigger>
-
-                            <PopoverContent className='w-auto p-0'>
-                              <Calendar
-                                mode='single'
-                                selected={field.value}
-                                onSelect={(date) => {
-                                  if (date) field.onChange(date)
-                                }}
-                              />
-                            </PopoverContent>
-                          </Popover>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name='role_id'
-                    render={({ field }) => (
-                      <FormItem className='w-full'>
-                        <FormLabel>Роль</FormLabel>
-                        <FormControl>
-                          <SelectDropdown
-                            className='w-full'
-                            defaultValue={field.value}
-                            onValueChange={field.onChange}
-                            placeholder='Выберите роль'
-                            items={roles.data.map((role) => ({
-                              label: role.name,
-                              value: role.id,
-                            }))}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-              </div>
-
-              <Separator className='my-6' />
-
-              <div className='space-y-4'>
-                <FormField
-                  control={form.control}
-                  name='head_directorate_id'
-                  render={({ field }) => (
-                    <FormItem className='w-full'>
-                      <FormLabel>Сарраёсат</FormLabel>
-                      <FormControl>
-                        <Combobox
-                          value={field.value}
-                          onChange={field.onChange}
-                          placeholder='Выберите сарраёсат'
-                          searchPlaceholder='Поиск по сарраёсат...'
-                          load={({ page }) => fetchIndex(page)}
-                          getValue={(d) => String(d.id)}
-                          getLabel={(d) => d.name_ru}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name='education_department_id'
-                  render={({ field }) => (
-                    <FormItem className='w-full'>
-                      <FormLabel>Отдел образования</FormLabel>
-                      <FormControl>
-                        <Combobox
-                          value={field.value}
-                          onChange={field.onChange}
-                          placeholder='Выберите маориф'
-                          searchPlaceholder='Поиск по маориф...'
-                          load={({ page }) =>
-                            fetchIndexEducationDepartments(page)
-                          }
-                          getValue={(d) => String(d.id)}
-                          getLabel={(d) => d.name_ru}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-            </div>
-
-            {/* Right */}
-            <div className='rounded-2xl border border-slate-200 bg-white p-6 shadow-sm'>
-              <p className='text-sm font-semibold text-slate-900'>Детали</p>
-              <p className='mt-1 text-xs text-slate-500'>
-                Образование, контакты и профессия
-              </p>
-
-              <div className='mt-6 grid gap-4 md:grid-cols-2'>
-                <FormField
-                  control={form.control}
-                  name='education'
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Образование</FormLabel>
-                      <FormControl>
-                        <Field>
-                          <Input {...field} placeholder='Например: Высшее' />
+                          <Input {...field} />
                         </Field>
                       </FormControl>
                       <FormMessage />
@@ -296,45 +187,13 @@ export function UsersEdit() {
 
                 <FormField
                   control={form.control}
-                  name='university'
+                  name='login'
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Университет</FormLabel>
+                      <FormLabel>Логин</FormLabel>
                       <FormControl>
                         <Field>
-                          <Input {...field} placeholder='Например: ТНУ' />
-                        </Field>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name='profession'
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Профессия</FormLabel>
-                      <FormControl>
-                        <Field>
-                          <Input {...field} placeholder='Например: Учитель' />
-                        </Field>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name='category'
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Категория</FormLabel>
-                      <FormControl>
-                        <Field>
-                          <Input {...field} placeholder='Например: Высшая' />
+                          <Input {...field} />
                         </Field>
                       </FormControl>
                       <FormMessage />
@@ -350,7 +209,7 @@ export function UsersEdit() {
                       <FormLabel>Телефон</FormLabel>
                       <FormControl>
                         <Field>
-                          <Input {...field} placeholder='+992...' />
+                          <Input {...field} />
                         </Field>
                       </FormControl>
                       <FormMessage />
@@ -360,13 +219,87 @@ export function UsersEdit() {
 
                 <FormField
                   control={form.control}
+                  name='role'
+                  render={({ field }) => (
+                    <FormItem className='w-full'>
+                      <FormLabel>Роль</FormLabel>
+                      <FormControl>
+                        <SelectDropdown
+                          className='w-full'
+                          defaultValue={field.value}
+                          onValueChange={field.onChange}
+                          placeholder='Выберите роль'
+                          items={roles.data.map((role: Role) => ({
+                            value: role.id,
+                            label:
+                              role.description ?? role.name ?? String(role.id),
+                          }))}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </div>
+
+            {/* Right */}
+            <div className='rounded-2xl border border-slate-200 bg-white p-6 shadow-sm'>
+              <p className='text-sm font-semibold text-slate-900'>Доступ</p>
+              <p className='mt-1 text-xs text-slate-500'>
+                Email и пароль для входа в систему
+              </p>
+
+              <div className='mt-6 grid gap-4 md:grid-cols-2'>
+                <FormField
+                  control={form.control}
                   name='email'
                   render={({ field }) => (
-                    <FormItem>
+                    <FormItem className='md:col-span-2'>
                       <FormLabel>Email</FormLabel>
                       <FormControl>
                         <Field>
-                          <Input {...field} placeholder='user@example.com' />
+                          <Input {...field} />
+                        </Field>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name='password'
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Новый пароль</FormLabel>
+                      <FormControl>
+                        <Field>
+                          <Input
+                            type='password'
+                            {...field}
+                            placeholder='Оставьте пустым, если не менять'
+                          />
+                        </Field>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name='password_confirmation'
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Подтверждение пароля</FormLabel>
+                      <FormControl>
+                        <Field>
+                          <Input
+                            type='password'
+                            {...field}
+                            placeholder='Повторите новый пароль'
+                          />
                         </Field>
                       </FormControl>
                       <FormMessage />
@@ -377,7 +310,6 @@ export function UsersEdit() {
             </div>
           </div>
 
-          {/* Sticky actions */}
           <div className='sticky bottom-4 z-20'>
             <div className='flex items-center justify-end gap-3 rounded-2xl border border-slate-200 bg-white/80 p-4 shadow-sm backdrop-blur'>
               <Button

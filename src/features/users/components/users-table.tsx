@@ -1,5 +1,4 @@
-// src/features/users/components/users-table.tsx
-import { useEffect, useMemo, useState, type ReactNode } from 'react'
+import { type ReactNode, useEffect, useMemo, useState } from 'react'
 import { Link } from '@tanstack/react-router'
 import {
   type ColumnDef,
@@ -8,14 +7,12 @@ import {
   getPaginationRowModel,
   useReactTable,
 } from '@tanstack/react-table'
-import { type EducationDepartment } from '@/types/education_department.ts'
-import { type HeadDirectorate } from '@/types/head_directorate.ts'
 import { type User } from '@/types/user'
 import { type LaravelPaginatedResource } from 'laravel-resource-pagination-type'
 import { LoaderCircle, PenLine, Trash } from 'lucide-react'
 import { toast } from 'sonner'
 import { deleteById, fetchIndex } from '@/api/users'
-import { Badge } from '@/components/ui/badge'
+import { ability } from '@/lib/casl/ability.ts'
 import { Button } from '@/components/ui/button'
 import {
   Table,
@@ -27,103 +24,60 @@ import {
 } from '@/components/ui/table'
 import { DataTablePagination } from '@/components/data-table'
 
-function getFullName(u: User) {
-  return [u.last_name, u.first_name, u.middle_name].filter(Boolean).join(' ')
-}
-
 const getColumns = (opts: {
   deleting: string | null
   onDelete: (id: string) => void
 }): ColumnDef<User>[] => [
   {
-    accessorKey: 'head_directorate_id',
-    header: 'Сарраёсат',
-    cell: (props) => {
-      const v = props.getValue() as HeadDirectorate | null
-      return v ? (
-        <Badge variant='secondary'>{v.name_ru}</Badge>
-      ) : (
-        <span className='text-slate-400'>—</span>
-      )
-    },
+    accessorKey: 'last_name',
+    header: 'Фамилия',
+    cell: (props) => <p>{String(props.getValue() ?? '')}</p>,
   },
   {
-    accessorKey: 'education_department_id',
-    header: 'Отдел',
-    cell: (props) => {
-      const v = props.getValue() as EducationDepartment | null
-      return v ? (
-        <Badge variant='outline'>{v.name_ru}</Badge>
-      ) : (
-        <span className='text-slate-400'>—</span>
-      )
-    },
+    accessorKey: 'first_name',
+    header: 'Имя',
+    cell: (props) => <p>{String(props.getValue() ?? '')}</p>,
   },
   {
-    id: 'full_name',
-    header: 'ФИО',
-    cell: ({ row }) => (
-      <div className='min-w-[220px]'>
-        <p className='font-medium text-slate-900'>
-          {getFullName(row.original)}
-        </p>
-        <p className='text-xs text-slate-500'>{row.original.email}</p>
-      </div>
-    ),
+    accessorKey: 'middle_name',
+    header: 'Отчество',
+    cell: (props) => <p>{String(props.getValue() ?? '')}</p>,
   },
   {
-    accessorKey: 'birthdate',
-    header: 'Дата рождения',
-    cell: (props) => <p>{String(props.getValue() ?? '—')}</p>,
-  },
-  {
-    accessorKey: 'education',
-    header: 'Образование',
-    cell: (props) => (
-      <p className='max-w-[260px] truncate'>
-        {String(props.getValue() ?? '—')}
-      </p>
-    ),
-  },
-  {
-    accessorKey: 'university',
-    header: 'Университет',
-    cell: (props) => (
-      <p className='max-w-[260px] truncate'>
-        {String(props.getValue() ?? '—')}
-      </p>
-    ),
+    accessorKey: 'email',
+    header: 'Email',
+    cell: (props) => <p>{String(props.getValue() ?? '')}</p>,
   },
   {
     accessorKey: 'id',
     header: 'Действие',
     cell: (props) => {
-      const id = props.getValue() as string
+      const id = String(props.getValue())
       const isDeleting = opts.deleting === id
 
       return (
         <div className='flex items-center gap-2'>
-          <Link
-            params={{ userId: id }}
-            to='/users/$userId/edit'
-            className='text-slate-500 hover:text-primary'
-          >
-            <PenLine className='size-5' />
-          </Link>
+          {ability.can('edit', 'users') ? (
+            <Link params={{ userId: id }} to='/users/$userId/edit'>
+              <PenLine className='size-5' />
+            </Link>
+          ) : null}
 
-          <Button
-            type='button'
-            variant='ghost'
-            disabled={isDeleting}
-            onClick={() => opts.onDelete(id)}
-            className='px-2'
-          >
-            {isDeleting ? (
-              <LoaderCircle className='size-5 animate-spin' />
-            ) : (
-              <Trash className='size-5' />
-            )}
-          </Button>
+          {ability.can('delete', 'users') ? (
+            <Button
+              type='button'
+              variant='ghost'
+              disabled={isDeleting}
+              onClick={() => opts.onDelete(id)}
+              className='px-2'
+            >
+              {isDeleting ? (
+                <LoaderCircle className='size-5 animate-spin' />
+              ) : (
+                <Trash className='size-5' />
+              )}
+            </Button>
+          ) : null}
         </div>
       )
     },
@@ -134,7 +88,10 @@ export function UsersTable() {
   const [users, setUsers] = useState<LaravelPaginatedResource<User> | null>(
     null
   )
-  const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 10 })
+  const [pagination, setPagination] = useState({
+    pageIndex: 0,
+    pageSize: 10,
+  })
   const [fetching, setFetching] = useState(false)
   const [deleting, setDeleting] = useState<string>('')
 
@@ -142,6 +99,7 @@ export function UsersTable() {
     try {
       setFetching(true)
       const response = await fetchIndex(pagination.pageIndex + 1)
+      console.log('response', response)
       setUsers(response)
     } finally {
       setFetching(false)
@@ -150,7 +108,6 @@ export function UsersTable() {
 
   useEffect(() => {
     fetchData()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pagination.pageIndex])
 
   const onDelete = async (id: string) => {
@@ -164,7 +121,9 @@ export function UsersTable() {
     }
   }
 
-  const columns = useMemo(() => getColumns({ deleting, onDelete }), [deleting])
+  const columns = useMemo(() => {
+    return getColumns({ deleting, onDelete })
+  }, [deleting])
 
   const table = useReactTable({
     data: users?.data ?? [],
@@ -179,7 +138,7 @@ export function UsersTable() {
 
   return (
     <div>
-      <div className='relative mb-4 overflow-hidden rounded-2xl border bg-white'>
+      <div className='relative mb-4 overflow-hidden rounded-md border bg-white'>
         {fetching ? (
           <span className='absolute inset-0 z-10 flex items-center justify-center bg-white/70'>
             <LoaderCircle className='size-10 animate-spin' />
@@ -188,11 +147,11 @@ export function UsersTable() {
 
         <Table>
           <TableHeader>
-            {table.getHeaderGroups().map((hg) => (
-              <TableRow key={hg.id}>
-                {hg.headers.map((h) => (
-                  <TableHead key={h.id} colSpan={h.colSpan}>
-                    {h.column.columnDef.header as ReactNode}
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header) => (
+                  <TableHead key={header.id} colSpan={header.colSpan}>
+                    {header.column.columnDef.header as ReactNode}
                   </TableHead>
                 ))}
               </TableRow>
@@ -201,9 +160,9 @@ export function UsersTable() {
 
           <TableBody>
             {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id}>
-                  {row.getVisibleCells().map((cell) => (
+              table.getRowModel().rows.map((rowModel) => (
+                <TableRow key={rowModel.id}>
+                  {rowModel.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,

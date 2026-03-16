@@ -13,7 +13,7 @@ export const Route = createFileRoute('/_authenticated/users/$userId/edit')({
     const roles = await fetchAll()
 
     return {
-      user,
+      user: user.data,
       roles,
     }
   },

@@ -1,5 +1,6 @@
 import { useNavigate } from '@tanstack/react-router'
 import { Plus } from 'lucide-react'
+import { ability } from '@/lib/casl/ability.ts'
 import { Button } from '@/components/ui/button'
 import { Main } from '@/components/layout/main'
 import { UsersTable } from './components/users-table'
@@ -13,12 +14,14 @@ export function Users() {
         <div>
           <h2 className='text-2xl font-bold tracking-tight'>Пользователи</h2>
         </div>
-        <Button
-          className='space-x-1'
-          onClick={() => navigate({ to: '/users/create' })}
-        >
-          <span>Создать пользователя</span> <Plus size={18} />
-        </Button>
+        {ability.can('create', 'users') ? (
+          <Button
+            className='space-x-1'
+            onClick={() => navigate({ to: '/users/create' })}
+          >
+            <span>Создать пользователя</span> <Plus size={18} />
+          </Button>
+        ) : null}
       </div>
 
       <UsersTable />

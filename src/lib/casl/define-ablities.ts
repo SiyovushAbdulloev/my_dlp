@@ -196,5 +196,22 @@ export function defineAbilitiesFor(user: User | null) {
     can('delete', 'libraries')
   }
 
+  //Users
+  if (permissions.find((p) => p.name === 'users_list')) {
+    can('list', 'users')
+  }
+  if (permissions.find((p) => p.name === 'users_create')) {
+    can('create', 'users')
+  }
+  if (permissions.find((p) => p.name === 'users_view')) {
+    can('view', 'users')
+  }
+  if (permissions.find((p) => p.name === 'users_edit')) {
+    can('edit', 'users')
+  }
+  if (permissions.find((p) => p.name === 'users_delete')) {
+    can('delete', 'users')
+  }
+
   return build()
 }
