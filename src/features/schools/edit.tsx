@@ -5,7 +5,7 @@ import { useNavigate } from '@tanstack/react-router'
 import { Route } from '@/routes/_authenticated/schools/$schoolId.edit.tsx'
 import { ArrowLeft, Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
-import { edit } from '@/api/dictionaries/regions'
+import { edit } from '@/api/schools'
 import { Button } from '@/components/ui/button.tsx'
 import {
   Form,

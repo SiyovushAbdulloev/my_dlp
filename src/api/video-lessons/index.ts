@@ -1,116 +1,44 @@
-// import { client } from '@/api/client.ts'
+import { type JsonResponse } from '@/types/json-response.ts'
 import { type VideoLesson } from '@/types/video_lesson.ts'
 import { type LaravelPaginatedResource } from 'laravel-resource-pagination-type'
-import { sleep } from '@/lib/utils.ts'
-import { type VideoLessonForm } from '@/features/video-lessons/create.tsx'
+import { client } from '@/api/client.ts'
 
 export const fetchIndex = async (
   page: number
 ): Promise<LaravelPaginatedResource<VideoLesson>> => {
-  // const json: LaravelPaginatedResource<VideoLesson> = await client.get(import.meta.env.API_URL + '/api/video-lessons').json();
-  // return json
-  await sleep(3000)
-  return {
-    data: Array.from({ length: 10 }).map((_, index) => ({
-      id: index + 1 + '',
-      title_ru: `Заголовок №${index + 1}, page: ${page}`,
-      title_tg: `Заголовок №${index + 1}, page: ${page}`,
-      title_en: `Title №${index + 1}, page: ${page}`,
-      class_id: '1',
-      subject_id: '1',
-      class: {
-        id: '1',
-        number: 10,
-        letter: 'a',
-      },
-      subject: {
-        id: '1',
-        name_ru: `Предмет №${index + 1}, page: ${page}`,
-        name_en: `Subject №${index + 1}, page: ${page}`,
-        name_tg: `Фан №${index + 1}, page: ${page}`,
-      },
-      video_url: 'https://www.youtube.com/watch?v=eJnejBp9edA',
-    })),
-    links: {
-      first: '',
-      last: '',
-      prev: null,
-      next: null,
-    },
-    meta: {
-      current_page: 1,
-      from: 0,
-      last_page: 6,
-      path: '',
-      per_page: 10,
-      to: 0,
-      total: 60,
-    },
-  }
+  const json: LaravelPaginatedResource<VideoLesson> = await client
+    .get(`video-lessons?page=${page}`)
+    .json()
+  return json
 }
 
-export const create = async (data: VideoLessonForm) => {
-  // const json: VideoLesson = await client.post(import.meta.env.API_URL + '/api/video-lessons', {
-  //   body: JSON.stringify(data),
-  // }).json();
-  // return json
-
-  await sleep(3000)
-  return {
-    id: 1 + '',
-    data,
-    title_ru: `Заголовок`,
-    title_tg: `Заголовок`,
-    title_en: `Title`,
-    class_id: '1',
-    subject_id: '1',
-    video_url: 'https://www.youtube.com/watch?v=eJnejBp9edA',
-  }
+export const create = async (data: FormData) => {
+  const json: VideoLesson = await client
+    .post('video-lessons', {
+      body: data,
+    })
+    .json()
+  return json
 }
 
 export const getById = async (id: string) => {
-  // const json: VideoLesson = await client.get(import.meta.env.API_URL + `/api/video-lessons/${id}`).json();
-  // return json
-
-  await sleep(3000)
-  return {
-    id: 1 + '',
-    id1: id,
-    title_ru: `Заголовок`,
-    title_tg: `Заголовок`,
-    title_en: `Title`,
-    class_id: '1',
-    subject_id: '1',
-    video_url: 'https://www.youtube.com/watch?v=eJnejBp9edA',
-    external_url: undefined,
-  }
+  const json: JsonResponse<VideoLesson> = await client
+    .get(`video-lessons/${id}`)
+    .json()
+  return json
 }
 
-export const edit = async (id: string, data: VideoLessonForm) => {
-  // const json: VideoLesson = await client.post(import.meta.env.API_URL + `/api/video-lessons/${id}`, {
-  //   method: 'PUT',
-  //   body: JSON.stringify(data),
-  // }).json();
-  // return json
-
-  await sleep(3000)
-  return {
-    id: 1 + '',
-    id1: id,
-    data,
-    title_ru: `Заголовок`,
-    title_tg: `Заголовок`,
-    title_en: `Title`,
-    class_id: '1',
-    subject_id: '1',
-    video_url: 'https://www.youtube.com/watch?v=eJnejBp9edA',
-  }
+export const edit = async (id: string, data: FormData) => {
+  const json: VideoLesson = await client
+    .post(`video-lessons/${id}`, {
+      body: data,
+    })
+    .json()
+  return json
 }
 
 export const deleteById = async (id: string) => {
-  // const json = await client.delete(import.meta.env.API_URL + `/api/video-lessons/${id}`).json();
-  // return json
-
-  await sleep(3000)
-  return id
+  console.log({ id })
+  const json = await client.delete(`video-lessons/${id}`).json()
+  return json
 }

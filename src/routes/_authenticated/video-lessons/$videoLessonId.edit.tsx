@@ -17,7 +17,7 @@ export const Route = createFileRoute(
     }
 
     return {
-      lesson,
+      lesson: lesson.data,
       classes,
       subjects,
     }

@@ -29,6 +29,8 @@ export function SubjectClassEdit() {
   const [loading, setLoading] = useState<boolean>(false)
   const { subjects, classes, subject } = Route.useRouteContext()
   const row = useMemo(() => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    //@ts-expect-error
     return Object.keys(subject).map((key) => subject[key])
   }, [subject])
 

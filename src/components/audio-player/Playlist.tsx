@@ -79,7 +79,7 @@ export function Playlist({
             </div>
 
             <div className='flex-shrink-0 text-sm text-purple-200/60'>
-              {formatTime(track.duration)}
+              {formatTime(track.duration as number)}
             </div>
           </motion.button>
         ))}

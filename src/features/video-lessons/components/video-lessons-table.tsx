@@ -10,6 +10,7 @@ import { type LaravelPaginatedResource } from 'laravel-resource-pagination-type'
 import {
   BookOpen,
   GraduationCap,
+  Image as ImageIcon,
   LoaderCircle,
   PenLine,
   PlayCircle,
@@ -53,14 +54,13 @@ export const VideoLessonsTable = () => {
     try {
       setDeleting(id)
       await deleteById(id)
-      toast.success('Видео-урок успешно удален')
+      toast.success('Видео-урок успешно удалён')
       await fetchData()
     } finally {
       setDeleting('')
     }
   }
 
-  // table нужен только для pagination
   const table = useReactTable({
     data: lessons?.data ?? [],
     columns: [],
@@ -75,49 +75,45 @@ export const VideoLessonsTable = () => {
   return (
     <div className='flex flex-col gap-6'>
       <div className='relative'>
-        {/* Loader overlay */}
         {fetching && (
           <div className='absolute inset-0 z-10 flex items-center justify-center rounded-2xl bg-white/70 backdrop-blur-sm'>
             <LoaderCircle className='size-10 animate-spin' />
           </div>
         )}
 
-        {/* Cards grid */}
         {lessons?.data?.length ? (
           <div className='grid gap-6 sm:grid-cols-2 xl:grid-cols-3'>
             {lessons.data.map((lesson) => {
               const isDeleting = deleting === lesson.id
 
-              const videoUrl = lesson.video_url ?? lesson.external_url ?? ''
+              const videoUrl = lesson.video?.url ?? lesson.link ?? ''
               const hasVideo = Boolean(videoUrl)
 
-              const classLabel = lesson.class
-                ? `${lesson.class.number}${lesson.class.letter ? `-${lesson.class.letter}` : ''}`
+              const classLabel = lesson.schoolClass
+                ? `${lesson.schoolClass.number}${lesson.schoolClass.letter ? `-${lesson.schoolClass.letter}` : ''}`
                 : lesson.class_id
 
-              const subjectLabel = lesson.subject?.name_ru ?? lesson.subject_id
+              const subjectLabel =
+                lesson.subject?.title.ru ?? lesson.subject_id ?? '—'
 
               return (
                 <div
                   key={lesson.id}
                   onClick={() =>
                     navigate({
-                      to: '/video-lessons/$videoLessonId',
+                      to: '/video-lessons/$videoLessonId/show',
                       params: { videoLessonId: lesson.id },
                     })
                   }
                   className='group relative cursor-pointer overflow-hidden rounded-2xl border border-slate-200 bg-gradient-to-br from-white via-white to-slate-50 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl'
                 >
-                  {/* top subtle glow */}
                   <div className='pointer-events-none absolute -top-24 left-1/2 h-48 w-[420px] -translate-x-1/2 rounded-full bg-primary/10 opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-100' />
 
-                  {/* Video preview */}
                   <div className='relative'>
-                    <div className='overflow-hidden rounded-t-2xl rounded-b-none border-b border-slate-200 bg-slate-100'>
+                    <div className='overflow-hidden rounded-t-2xl border-b border-slate-200 bg-slate-100'>
                       <div className='relative aspect-video'>
                         {hasVideo ? (
                           <>
-                            {/* ReactPlayer preview (no interactions, whole card stays clickable) */}
                             <div className='pointer-events-none absolute inset-0'>
                               <ReactPlayer
                                 src={videoUrl}
@@ -128,17 +124,22 @@ export const VideoLessonsTable = () => {
                                 muted
                               />
                             </div>
-
-                            {/* Overlay gradient + play icon */}
                             <div className='absolute inset-0 bg-gradient-to-t from-slate-950/45 via-slate-950/10 to-transparent' />
                             <div className='absolute bottom-4 left-4 inline-flex items-center gap-2 rounded-full bg-white/90 px-3 py-1.5 text-xs font-semibold text-slate-800 shadow-sm'>
                               <PlayCircle className='size-4' />
                               Видео
                             </div>
                           </>
+                        ) : lesson.cover?.url ? (
+                          <img
+                            src={lesson.cover?.url}
+                            alt={lesson.title.ru}
+                            className='h-full w-full object-cover'
+                          />
                         ) : (
                           <div className='flex h-full w-full items-center justify-center text-sm text-slate-500'>
-                            Нет видео
+                            <ImageIcon className='mr-2 size-4' />
+                            Нет превью
                           </div>
                         )}
                       </div>
@@ -146,16 +147,15 @@ export const VideoLessonsTable = () => {
                   </div>
 
                   <div className='relative flex flex-col gap-4 p-6'>
-                    {/* Header */}
                     <div className='flex items-start justify-between gap-3'>
                       <div className='min-w-0'>
                         <h3 className='truncate text-lg font-semibold tracking-tight text-slate-900'>
-                          {lesson.title_ru}
+                          {lesson.title.ru}
                         </h3>
 
                         <div className='mt-2 flex flex-col gap-1 text-sm text-slate-500'>
-                          <span className='truncate'>🇹🇯 {lesson.title_tg}</span>
-                          <span className='truncate'>🇬🇧 {lesson.title_en}</span>
+                          <span className='truncate'>🇹🇯 {lesson.title.tg}</span>
+                          <span className='truncate'>🇬🇧 {lesson.title.en}</span>
                         </div>
                       </div>
 
@@ -174,7 +174,6 @@ export const VideoLessonsTable = () => {
                       </div>
                     </div>
 
-                    {/* Meta */}
                     <div className='grid grid-cols-2 gap-3'>
                       <div className='rounded-xl border border-slate-200 bg-white/70 p-3'>
                         <div className='flex items-center gap-2 text-xs font-medium text-slate-500'>
@@ -197,7 +196,6 @@ export const VideoLessonsTable = () => {
                       </div>
                     </div>
 
-                    {/* Actions */}
                     <div className='mt-2 flex items-center justify-end gap-2'>
                       <Link
                         to='/video-lessons/$videoLessonId/edit'
@@ -227,7 +225,6 @@ export const VideoLessonsTable = () => {
                     </div>
                   </div>
 
-                  {/* hover ring */}
                   <div className='pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-transparent transition group-hover:ring-primary/25' />
                 </div>
               )
@@ -240,7 +237,6 @@ export const VideoLessonsTable = () => {
         )}
       </div>
 
-      {/* Pagination (НЕ ТРОГАЕМ) */}
       <DataTablePagination table={table} className='mt-auto' />
     </div>
   )

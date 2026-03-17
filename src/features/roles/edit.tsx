@@ -175,7 +175,11 @@ export function RolesEdit() {
               <FormItem>
                 <FormLabel>Описание роли</FormLabel>
                 <FormControl>
-                  <Input {...field} placeholder='Например: Контент менеджер' />
+                  <Input
+                    disabled={role.is_systemic}
+                    {...field}
+                    placeholder='Например: Контент менеджер'
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>

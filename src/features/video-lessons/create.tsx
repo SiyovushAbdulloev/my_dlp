@@ -1,14 +1,16 @@
-import { useState, useRef } from 'react'
+import { useRef, useState } from 'react'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate } from '@tanstack/react-router'
 import { Route } from '@/routes/_authenticated/video-lessons/create'
-import { ArrowLeft, Loader2, Trash } from 'lucide-react'
+import { ArrowLeft, ImageIcon, Loader2, Trash } from 'lucide-react'
 import ReactPlayer from 'react-player'
 import { toast } from 'sonner'
 import { create } from '@/api/video-lessons'
-import { Button } from '@/components/ui/button.tsx'
+import { applyValidationErrors } from '@/lib/applyValidationErrors'
+import { Button } from '@/components/ui/button'
+import { Checkbox } from '@/components/ui/checkbox'
 import {
   Form,
   FormControl,
@@ -16,45 +18,46 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form.tsx'
-import { Input } from '@/components/ui/input.tsx'
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from '@/components/ui/tabs.tsx'
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Main } from '@/components/layout/main'
-import { SelectDropdown } from '@/components/select-dropdown.tsx'
+import { SelectDropdown } from '@/components/select-dropdown'
 
 export const videoLessonFormSchema = z
   .object({
     title: z.object({
-      ru: z.string().min(1, 'Заголовок на русском обязательно'),
-      en: z.string().min(1, 'Заголовок на английском обязательно'),
-      tg: z.string().min(1, 'Заголовок на таджикском обязательно'),
+      ru: z.string().min(1, 'Заголовок на русском обязателен'),
+      en: z.string().min(1, 'Заголовок на английском обязателен'),
+      tg: z.string().min(1, 'Заголовок на таджикском обязателен'),
     }),
-    subject_id: z.string({ message: 'Предмет обязателен' }),
-    class_id: z.string({ message: 'Класс обязательно' }),
-    video: z.any().optional(),
-    external_url: z.string().optional(),
+    subject_id: z.string().optional(),
+    class_id: z.string().min(1, 'Класс обязателен'),
+    video: z.instanceof(File).nullable().optional(),
+    cover: z.instanceof(File).nullable().optional(),
+    link: z.string().optional(),
     use_external: z.boolean(),
+    is_published: z.boolean(),
   })
-  .refine((data) => data.video || (data.use_external && data.external_url), {
+  .refine((data) => data.video || (data.use_external && data.link), {
     message: 'Необходимо выбрать видео-файл или ввести ссылку',
     path: ['video'],
   })
 
 export type VideoLessonForm = z.infer<typeof videoLessonFormSchema>
 
-const defaultLang = 'en'
+const defaultLang = 'ru'
 
 export function VideoLessonsCreate() {
   const navigate = useNavigate()
-  const [loading, setLoading] = useState<boolean>(false)
+  const [loading, setLoading] = useState(false)
   const [filePreview, setFilePreview] = useState<string | null>(null)
+  const [coverPreview, setCoverPreview] = useState<string | null>(null)
+
   const { classes, subjects } = Route.useRouteContext()
+
   const fileInputRef = useRef<HTMLInputElement | null>(null)
+  const coverInputRef = useRef<HTMLInputElement | null>(null)
 
   const form = useForm<VideoLessonForm>({
     resolver: zodResolver(videoLessonFormSchema),
@@ -62,40 +65,77 @@ export function VideoLessonsCreate() {
       title: { ru: '', en: '', tg: '' },
       use_external: false,
       video: null,
-      external_url: '',
+      cover: null,
+      link: '',
+      is_published: true,
     },
   })
 
   const onSubmit = async (data: VideoLessonForm) => {
     setLoading(true)
     try {
-      await create(data)
-      form.reset()
-      setFilePreview(null)
+      const fd = new FormData()
+      fd.append('title[ru]', data.title.ru)
+      fd.append('title[en]', data.title.en)
+      fd.append('title[tg]', data.title.tg)
+      fd.append('class_id', data.class_id)
+      fd.append('is_published', data.is_published ? '1' : '0')
+
+      if (data.subject_id) {
+        fd.append('subject_id', data.subject_id)
+      }
+
+      if (data.video) {
+        fd.append('video', data.video)
+      }
+
+      if (data.cover) {
+        fd.append('cover', data.cover)
+      }
+
+      if (data.link) {
+        fd.append('link', data.link)
+      }
+
+      await create(fd)
+
       toast.success('Видео-урок успешно создан')
       navigate({ to: '/video-lessons' })
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (err) {
-      // console.log(err)
+    } catch (e) {
+      if (!applyValidationErrors(form, e)) {
+        toast.error('Не валидные данные')
+      }
     } finally {
       setLoading(false)
     }
   }
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleVideoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
-    if (file) {
-      form.setValue('video', file)
-      setFilePreview(URL.createObjectURL(file))
-    }
+    if (!file) return
+
+    form.setValue('video', file, { shouldValidate: true, shouldDirty: true })
+    setFilePreview(URL.createObjectURL(file))
   }
 
-  const removeFile = () => {
-    form.setValue('video', null)
+  const handleCoverChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    form.setValue('cover', file, { shouldValidate: true, shouldDirty: true })
+    setCoverPreview(URL.createObjectURL(file))
+  }
+
+  const removeVideo = () => {
+    form.setValue('video', null, { shouldValidate: true, shouldDirty: true })
     setFilePreview(null)
-    if (fileInputRef.current) {
-      fileInputRef.current.value = ''
-    }
+    if (fileInputRef.current) fileInputRef.current.value = ''
+  }
+
+  const removeCover = () => {
+    form.setValue('cover', null, { shouldValidate: true, shouldDirty: true })
+    setCoverPreview(null)
+    if (coverInputRef.current) coverInputRef.current.value = ''
   }
 
   return (
@@ -113,7 +153,6 @@ export function VideoLessonsCreate() {
           onSubmit={form.handleSubmit(onSubmit)}
           className='w-full space-y-6'
         >
-          {/* Tabs для трёх языков */}
           <Tabs defaultValue={defaultLang} className='w-full'>
             <div className='flex items-center justify-between'>
               <TabsList>
@@ -172,7 +211,6 @@ export function VideoLessonsCreate() {
             </TabsContent>
           </Tabs>
 
-          {/* SelectDropdowns */}
           <div className='grid grid-cols-2 gap-3'>
             <FormField
               control={form.control}
@@ -208,7 +246,7 @@ export function VideoLessonsCreate() {
                     placeholder='Выберите предмет'
                     items={subjects.data.map((s) => ({
                       value: s.id,
-                      label: s.name_ru,
+                      label: s.title.ru,
                     }))}
                   />
                   <FormMessage />
@@ -217,27 +255,40 @@ export function VideoLessonsCreate() {
             />
           </div>
 
-          {/* Выбор источника видео */}
+          <FormField
+            control={form.control}
+            name='is_published'
+            render={({ field }) => (
+              <FormItem className='flex items-center gap-3 rounded-md border p-3'>
+                <FormControl>
+                  <Checkbox
+                    checked={field.value}
+                    onCheckedChange={(v) => field.onChange(Boolean(v))}
+                  />
+                </FormControl>
+                <FormLabel className='!mt-0'>Опубликовано</FormLabel>
+              </FormItem>
+            )}
+          />
+
           <FormField
             control={form.control}
             name='use_external'
             render={({ field }) => (
-              <FormItem className='flex items-center space-x-2'>
-                <input
-                  type='checkbox'
-                  checked={field.value}
-                  onChange={(e) => field.onChange(e.target.checked)}
-                  id='use_external'
-                  className='rounded border-gray-300 text-blue-600 shadow-sm focus:ring-blue-500'
-                />
-                <FormLabel htmlFor='use_external' className='text-sm'>
+              <FormItem className='flex items-center gap-3 rounded-md border p-3'>
+                <FormControl>
+                  <Checkbox
+                    checked={field.value}
+                    onCheckedChange={(v) => field.onChange(Boolean(v))}
+                  />
+                </FormControl>
+                <FormLabel className='!mt-0'>
                   Внешняя ссылка вместо файла
                 </FormLabel>
               </FormItem>
             )}
           />
 
-          {/* Drag & Drop / File Upload */}
           {!form.watch('use_external') && (
             <FormField
               control={form.control}
@@ -253,10 +304,12 @@ export function VideoLessonsCreate() {
                       onDrop={(e) => {
                         e.preventDefault()
                         const file = e.dataTransfer.files[0]
-                        if (file) {
-                          form.setValue('video', file)
-                          setFilePreview(URL.createObjectURL(file))
-                        }
+                        if (!file) return
+                        form.setValue('video', file, {
+                          shouldValidate: true,
+                          shouldDirty: true,
+                        })
+                        setFilePreview(URL.createObjectURL(file))
                       }}
                     >
                       {filePreview ? (
@@ -271,22 +324,26 @@ export function VideoLessonsCreate() {
                             type='button'
                             variant='default'
                             className='absolute top-2 right-2'
-                            onClick={removeFile}
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              removeVideo()
+                            }}
                           >
                             <Trash />
                           </Button>
                         </div>
                       ) : (
                         <p className='text-gray-400'>
-                          Перетащите файл или кликните для выбора
+                          Перетащите видео или кликните для выбора
                         </p>
                       )}
+
                       <input
                         type='file'
                         accept='video/*'
                         className='hidden'
                         ref={fileInputRef}
-                        onChange={handleFileChange}
+                        onChange={handleVideoChange}
                       />
                     </div>
                   </FormControl>
@@ -296,11 +353,10 @@ export function VideoLessonsCreate() {
             />
           )}
 
-          {/* Внешняя ссылка */}
           {form.watch('use_external') && (
             <FormField
               control={form.control}
-              name='external_url'
+              name='link'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Ссылка на видео</FormLabel>
@@ -315,6 +371,57 @@ export function VideoLessonsCreate() {
               )}
             />
           )}
+
+          <FormField
+            control={form.control}
+            name='cover'
+            render={() => (
+              <FormItem>
+                <FormLabel>Обложка</FormLabel>
+                <FormControl>
+                  <div
+                    onClick={() => coverInputRef.current?.click()}
+                    className='flex min-h-[150px] w-full cursor-pointer items-center justify-center rounded-md border border-dashed border-gray-300 transition-colors hover:bg-gray-50'
+                  >
+                    {coverPreview ? (
+                      <div className='relative w-full'>
+                        <img
+                          src={coverPreview}
+                          alt='cover'
+                          className='h-[250px] w-full rounded-md object-cover'
+                        />
+                        <Button
+                          type='button'
+                          variant='default'
+                          className='absolute top-2 right-2'
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            removeCover()
+                          }}
+                        >
+                          <Trash />
+                        </Button>
+                      </div>
+                    ) : (
+                      <div className='flex items-center gap-2 text-gray-400'>
+                        <ImageIcon className='size-5' />
+                        Выберите обложку
+                      </div>
+                    )}
+
+                    <input
+                      type='file'
+                      accept='image/*'
+                      className='hidden'
+                      ref={coverInputRef}
+                      onChange={handleCoverChange}
+                    />
+                  </div>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
           <Button disabled={loading} type='submit'>
             {loading && <Loader2 className='mr-2 animate-spin' />}

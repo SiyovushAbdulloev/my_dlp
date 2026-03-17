@@ -5,7 +5,6 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate } from '@tanstack/react-router'
 import { ArrowLeft, Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
-import { create } from '@/api/schools'
 import { Button } from '@/components/ui/button.tsx'
 import {
   Form,
@@ -54,7 +53,8 @@ export function SchoolsCreate() {
   const onSubmit = async (data: SchoolForm) => {
     setLoading(true)
     try {
-      await create(data)
+      console.log(data)
+      // await create(data)
       form.reset()
       toast.success('Школа успешно создана')
       navigate({ to: '/schools' })

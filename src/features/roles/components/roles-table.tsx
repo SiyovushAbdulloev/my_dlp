@@ -44,14 +44,14 @@ const getColumns = (opts: {
 
       return (
         <div className='flex items-center gap-2'>
+          {ability.can('edit', 'roles') ? (
+            <Link params={{ roleId: id }} to='/roles/$roleId/edit'>
+              <PenLine className={'size-5'} />
+            </Link>
+          ) : null}
+
           {!props.row.original.is_systemic ? (
             <>
-              {ability.can('edit', 'roles') ? (
-                <Link params={{ roleId: id }} to='/roles/$roleId/edit'>
-                  <PenLine className={'size-5'} />
-                </Link>
-              ) : null}
-
               {ability.can('delete', 'roles') ? (
                 <Button
                   type='button'

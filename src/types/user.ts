@@ -1,3 +1,4 @@
+import { type File } from '@/types/file.ts'
 import { type Role } from '@/types/role.ts'
 
 export interface User {
@@ -18,4 +19,5 @@ export interface User {
   head_directorate_id?: string
   education_department_id?: string
   login: string
+  avatar?: File
 }

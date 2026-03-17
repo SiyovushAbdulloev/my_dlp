@@ -47,6 +47,8 @@ export function CitiesEdit() {
       name_en: city.name_en,
       name_tj: city.name_tj,
       type: Object.keys(CityTypeLabel).find(
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        //@ts-expect-error
         (k) => CityTypeLabel[k] === city.type
       ),
       district_id: city.district.id,

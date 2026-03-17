@@ -1,15 +1,17 @@
-import { type SchoolClass } from '@/types/school_class.ts'
-import { type Subject } from '@/types/subject.ts'
+import { type File } from '@/types/file.ts'
+import { type SchoolClass } from '@/types/school_class'
+import { type Subject } from '@/types/subject'
+import { type Translatable } from '@/types/translatable.ts'
 
 export interface VideoLesson {
   id: string
-  title_ru: string
-  title_tg: string
-  title_en: string
+  title: Translatable
+  is_published: boolean
   class_id: string
-  class?: SchoolClass
-  subject_id: string
+  schoolClass?: SchoolClass
+  subject_id?: string
   subject?: Subject
-  video_url?: string
-  external_url?: string
+  link?: string | null
+  video?: File | null
+  cover?: File | null
 }
