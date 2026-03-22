@@ -77,13 +77,16 @@ import { Route as AuthenticatedEducationDepartmentsDepartmentIdEditRouteImport }
 import { Route as AuthenticatedDictionariesRegionsCreateRouteImport } from './routes/_authenticated/dictionaries/regions/create'
 import { Route as AuthenticatedDictionariesDistrictsCreateRouteImport } from './routes/_authenticated/dictionaries/districts/create'
 import { Route as AuthenticatedDictionariesCitiesCreateRouteImport } from './routes/_authenticated/dictionaries/cities/create'
-import { Route as AuthenticatedCoursesCourseIdEditRouteImport } from './routes/_authenticated/courses/$courseId.edit'
+import { Route as AuthenticatedCoursesCourseIdEditRouteImport } from './routes/_authenticated/courses/$courseId/edit'
 import { Route as AuthenticatedClassesClassIdEditRouteImport } from './routes/_authenticated/classes/$classId.edit'
 import { Route as AuthenticatedBooksBookIdShowRouteImport } from './routes/_authenticated/books/$bookId.show'
 import { Route as AuthenticatedBooksBookIdEditRouteImport } from './routes/_authenticated/books/$bookId.edit'
+import { Route as AuthenticatedCoursesCourseIdModulesIndexRouteImport } from './routes/_authenticated/courses/$courseId/modules/index'
 import { Route as AuthenticatedDictionariesRegionsRegionIdEditRouteImport } from './routes/_authenticated/dictionaries/regions/$regionId.edit'
 import { Route as AuthenticatedDictionariesDistrictsDistrictIdEditRouteImport } from './routes/_authenticated/dictionaries/districts/$districtId.edit'
 import { Route as AuthenticatedDictionariesCitiesCityIdEditRouteImport } from './routes/_authenticated/dictionaries/cities/$cityId.edit'
+import { Route as AuthenticatedCoursesCourseIdModulesCreateRouteImport } from './routes/_authenticated/courses/$courseId/modules/create'
+import { Route as AuthenticatedCoursesCourseIdModulesModuleIdEditRouteImport } from './routes/_authenticated/courses/$courseId/modules/$moduleId.edit'
 
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
   id: '/_authenticated',
@@ -498,6 +501,12 @@ const AuthenticatedBooksBookIdEditRoute =
     path: '/books/$bookId/edit',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedCoursesCourseIdModulesIndexRoute =
+  AuthenticatedCoursesCourseIdModulesIndexRouteImport.update({
+    id: '/courses/$courseId/modules/',
+    path: '/courses/$courseId/modules/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedDictionariesRegionsRegionIdEditRoute =
   AuthenticatedDictionariesRegionsRegionIdEditRouteImport.update({
     id: '/dictionaries/regions/$regionId/edit',
@@ -514,6 +523,18 @@ const AuthenticatedDictionariesCitiesCityIdEditRoute =
   AuthenticatedDictionariesCitiesCityIdEditRouteImport.update({
     id: '/dictionaries/cities/$cityId/edit',
     path: '/dictionaries/cities/$cityId/edit',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedCoursesCourseIdModulesCreateRoute =
+  AuthenticatedCoursesCourseIdModulesCreateRouteImport.update({
+    id: '/courses/$courseId/modules/create',
+    path: '/courses/$courseId/modules/create',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedCoursesCourseIdModulesModuleIdEditRoute =
+  AuthenticatedCoursesCourseIdModulesModuleIdEditRouteImport.update({
+    id: '/courses/$courseId/modules/$moduleId/edit',
+    path: '/courses/$courseId/modules/$moduleId/edit',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 
@@ -588,9 +609,12 @@ export interface FileRoutesByFullPath {
   '/dictionaries/cities': typeof AuthenticatedDictionariesCitiesIndexRoute
   '/dictionaries/districts': typeof AuthenticatedDictionariesDistrictsIndexRoute
   '/dictionaries/regions': typeof AuthenticatedDictionariesRegionsIndexRoute
+  '/courses/$courseId/modules/create': typeof AuthenticatedCoursesCourseIdModulesCreateRoute
   '/dictionaries/cities/$cityId/edit': typeof AuthenticatedDictionariesCitiesCityIdEditRoute
   '/dictionaries/districts/$districtId/edit': typeof AuthenticatedDictionariesDistrictsDistrictIdEditRoute
   '/dictionaries/regions/$regionId/edit': typeof AuthenticatedDictionariesRegionsRegionIdEditRoute
+  '/courses/$courseId/modules': typeof AuthenticatedCoursesCourseIdModulesIndexRoute
+  '/courses/$courseId/modules/$moduleId/edit': typeof AuthenticatedCoursesCourseIdModulesModuleIdEditRoute
 }
 export interface FileRoutesByTo {
   '/sign-in': typeof authSignInRoute
@@ -662,9 +686,12 @@ export interface FileRoutesByTo {
   '/dictionaries/cities': typeof AuthenticatedDictionariesCitiesIndexRoute
   '/dictionaries/districts': typeof AuthenticatedDictionariesDistrictsIndexRoute
   '/dictionaries/regions': typeof AuthenticatedDictionariesRegionsIndexRoute
+  '/courses/$courseId/modules/create': typeof AuthenticatedCoursesCourseIdModulesCreateRoute
   '/dictionaries/cities/$cityId/edit': typeof AuthenticatedDictionariesCitiesCityIdEditRoute
   '/dictionaries/districts/$districtId/edit': typeof AuthenticatedDictionariesDistrictsDistrictIdEditRoute
   '/dictionaries/regions/$regionId/edit': typeof AuthenticatedDictionariesRegionsRegionIdEditRoute
+  '/courses/$courseId/modules': typeof AuthenticatedCoursesCourseIdModulesIndexRoute
+  '/courses/$courseId/modules/$moduleId/edit': typeof AuthenticatedCoursesCourseIdModulesModuleIdEditRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -740,9 +767,12 @@ export interface FileRoutesById {
   '/_authenticated/dictionaries/cities/': typeof AuthenticatedDictionariesCitiesIndexRoute
   '/_authenticated/dictionaries/districts/': typeof AuthenticatedDictionariesDistrictsIndexRoute
   '/_authenticated/dictionaries/regions/': typeof AuthenticatedDictionariesRegionsIndexRoute
+  '/_authenticated/courses/$courseId/modules/create': typeof AuthenticatedCoursesCourseIdModulesCreateRoute
   '/_authenticated/dictionaries/cities/$cityId/edit': typeof AuthenticatedDictionariesCitiesCityIdEditRoute
   '/_authenticated/dictionaries/districts/$districtId/edit': typeof AuthenticatedDictionariesDistrictsDistrictIdEditRoute
   '/_authenticated/dictionaries/regions/$regionId/edit': typeof AuthenticatedDictionariesRegionsRegionIdEditRoute
+  '/_authenticated/courses/$courseId/modules/': typeof AuthenticatedCoursesCourseIdModulesIndexRoute
+  '/_authenticated/courses/$courseId/modules/$moduleId/edit': typeof AuthenticatedCoursesCourseIdModulesModuleIdEditRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -817,9 +847,12 @@ export interface FileRouteTypes {
     | '/dictionaries/cities'
     | '/dictionaries/districts'
     | '/dictionaries/regions'
+    | '/courses/$courseId/modules/create'
     | '/dictionaries/cities/$cityId/edit'
     | '/dictionaries/districts/$districtId/edit'
     | '/dictionaries/regions/$regionId/edit'
+    | '/courses/$courseId/modules'
+    | '/courses/$courseId/modules/$moduleId/edit'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/sign-in'
@@ -891,9 +924,12 @@ export interface FileRouteTypes {
     | '/dictionaries/cities'
     | '/dictionaries/districts'
     | '/dictionaries/regions'
+    | '/courses/$courseId/modules/create'
     | '/dictionaries/cities/$cityId/edit'
     | '/dictionaries/districts/$districtId/edit'
     | '/dictionaries/regions/$regionId/edit'
+    | '/courses/$courseId/modules'
+    | '/courses/$courseId/modules/$moduleId/edit'
   id:
     | '__root__'
     | '/(auth)'
@@ -968,9 +1004,12 @@ export interface FileRouteTypes {
     | '/_authenticated/dictionaries/cities/'
     | '/_authenticated/dictionaries/districts/'
     | '/_authenticated/dictionaries/regions/'
+    | '/_authenticated/courses/$courseId/modules/create'
     | '/_authenticated/dictionaries/cities/$cityId/edit'
     | '/_authenticated/dictionaries/districts/$districtId/edit'
     | '/_authenticated/dictionaries/regions/$regionId/edit'
+    | '/_authenticated/courses/$courseId/modules/'
+    | '/_authenticated/courses/$courseId/modules/$moduleId/edit'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -1489,6 +1528,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedBooksBookIdEditRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/courses/$courseId/modules/': {
+      id: '/_authenticated/courses/$courseId/modules/'
+      path: '/courses/$courseId/modules'
+      fullPath: '/courses/$courseId/modules'
+      preLoaderRoute: typeof AuthenticatedCoursesCourseIdModulesIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/dictionaries/regions/$regionId/edit': {
       id: '/_authenticated/dictionaries/regions/$regionId/edit'
       path: '/dictionaries/regions/$regionId/edit'
@@ -1508,6 +1554,20 @@ declare module '@tanstack/react-router' {
       path: '/dictionaries/cities/$cityId/edit'
       fullPath: '/dictionaries/cities/$cityId/edit'
       preLoaderRoute: typeof AuthenticatedDictionariesCitiesCityIdEditRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/courses/$courseId/modules/create': {
+      id: '/_authenticated/courses/$courseId/modules/create'
+      path: '/courses/$courseId/modules/create'
+      fullPath: '/courses/$courseId/modules/create'
+      preLoaderRoute: typeof AuthenticatedCoursesCourseIdModulesCreateRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/courses/$courseId/modules/$moduleId/edit': {
+      id: '/_authenticated/courses/$courseId/modules/$moduleId/edit'
+      path: '/courses/$courseId/modules/$moduleId/edit'
+      fullPath: '/courses/$courseId/modules/$moduleId/edit'
+      preLoaderRoute: typeof AuthenticatedCoursesCourseIdModulesModuleIdEditRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
   }
@@ -1624,9 +1684,12 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedDictionariesCitiesIndexRoute: typeof AuthenticatedDictionariesCitiesIndexRoute
   AuthenticatedDictionariesDistrictsIndexRoute: typeof AuthenticatedDictionariesDistrictsIndexRoute
   AuthenticatedDictionariesRegionsIndexRoute: typeof AuthenticatedDictionariesRegionsIndexRoute
+  AuthenticatedCoursesCourseIdModulesCreateRoute: typeof AuthenticatedCoursesCourseIdModulesCreateRoute
   AuthenticatedDictionariesCitiesCityIdEditRoute: typeof AuthenticatedDictionariesCitiesCityIdEditRoute
   AuthenticatedDictionariesDistrictsDistrictIdEditRoute: typeof AuthenticatedDictionariesDistrictsDistrictIdEditRoute
   AuthenticatedDictionariesRegionsRegionIdEditRoute: typeof AuthenticatedDictionariesRegionsRegionIdEditRoute
+  AuthenticatedCoursesCourseIdModulesIndexRoute: typeof AuthenticatedCoursesCourseIdModulesIndexRoute
+  AuthenticatedCoursesCourseIdModulesModuleIdEditRoute: typeof AuthenticatedCoursesCourseIdModulesModuleIdEditRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -1704,12 +1767,18 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
     AuthenticatedDictionariesDistrictsIndexRoute,
   AuthenticatedDictionariesRegionsIndexRoute:
     AuthenticatedDictionariesRegionsIndexRoute,
+  AuthenticatedCoursesCourseIdModulesCreateRoute:
+    AuthenticatedCoursesCourseIdModulesCreateRoute,
   AuthenticatedDictionariesCitiesCityIdEditRoute:
     AuthenticatedDictionariesCitiesCityIdEditRoute,
   AuthenticatedDictionariesDistrictsDistrictIdEditRoute:
     AuthenticatedDictionariesDistrictsDistrictIdEditRoute,
   AuthenticatedDictionariesRegionsRegionIdEditRoute:
     AuthenticatedDictionariesRegionsRegionIdEditRoute,
+  AuthenticatedCoursesCourseIdModulesIndexRoute:
+    AuthenticatedCoursesCourseIdModulesIndexRoute,
+  AuthenticatedCoursesCourseIdModulesModuleIdEditRoute:
+    AuthenticatedCoursesCourseIdModulesModuleIdEditRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =

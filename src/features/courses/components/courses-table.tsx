@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link } from '@tanstack/react-router'
+import { Link, useNavigate } from '@tanstack/react-router'
 import {
   getCoreRowModel,
   getPaginationRowModel,
@@ -14,11 +14,12 @@ import { type LaravelPaginatedResource } from 'laravel-resource-pagination-type'
 import { LoaderCircle, PenLine, Trash } from 'lucide-react'
 import { toast } from 'sonner'
 import { deleteById, fetchIndex } from '@/api/courses'
+import { ability } from '@/lib/casl/ability.ts'
 import { Button } from '@/components/ui/button'
 import { DataTablePagination } from '@/components/data-table'
 
 export const CoursesTable = () => {
-  // const navigate = useNavigate()
+  const navigate = useNavigate()
   const [courses, setCourses] =
     useState<LaravelPaginatedResource<Course> | null>(null)
   const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 10 })
@@ -78,12 +79,14 @@ export const CoursesTable = () => {
               return (
                 <div
                   key={course.id}
-                  // onClick={() =>
-                  //   navigate({
-                  //     to: '/courses/$courseId/modules',
-                  //     params: { courseId: course.id },
-                  //   })
-                  // }
+                  onClick={() => {
+                    if (ability.can('list', 'course_modules')) {
+                      navigate({
+                        to: '/courses/$courseId/modules',
+                        params: { courseId: course.id },
+                      })
+                    }
+                  }}
                   className='group relative cursor-pointer overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition-all hover:-translate-y-1 hover:shadow-xl'
                 >
                   <div className='aspect-[16/9] bg-slate-100'>
@@ -121,30 +124,34 @@ export const CoursesTable = () => {
                     </div>
 
                     <div className='mt-4 flex items-center justify-end gap-2'>
-                      <Link
-                        to='/courses/$courseId/edit'
-                        params={{ courseId: course.id }}
-                        onClick={(e) => e.stopPropagation()}
-                        className='rounded-xl border bg-white px-3 py-2 text-slate-600 transition hover:text-primary'
-                      >
-                        <PenLine className='size-4' />
-                      </Link>
+                      {ability.can('edit', 'courses') ? (
+                        <Link
+                          to='/courses/$courseId/edit'
+                          params={{ courseId: course.id }}
+                          onClick={(e) => e.stopPropagation()}
+                          className='rounded-xl border bg-white px-3 py-2 text-slate-600 transition hover:text-primary'
+                        >
+                          <PenLine className='size-4' />
+                        </Link>
+                      ) : null}
 
-                      <Button
-                        type='button'
-                        variant='outline'
-                        disabled={isDeleting}
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          onDelete(course.id)
-                        }}
-                      >
-                        {isDeleting ? (
-                          <LoaderCircle className='size-4 animate-spin' />
-                        ) : (
-                          <Trash className='size-4' />
-                        )}
-                      </Button>
+                      {ability.can('delete', 'courses') ? (
+                        <Button
+                          type='button'
+                          variant='outline'
+                          disabled={isDeleting}
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            onDelete(course.id)
+                          }}
+                        >
+                          {isDeleting ? (
+                            <LoaderCircle className='size-4 animate-spin' />
+                          ) : (
+                            <Trash className='size-4' />
+                          )}
+                        </Button>
+                      ) : null}
                     </div>
                   </div>
                 </div>
