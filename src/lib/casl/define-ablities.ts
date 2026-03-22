@@ -281,5 +281,22 @@ export function defineAbilitiesFor(user: User | null) {
     can('delete', 'course_lessons')
   }
 
+  //Module questions
+  if (permissions.find((p) => p.name === 'course_module_questions_list')) {
+    can('list', 'course_module_questions')
+  }
+  if (permissions.find((p) => p.name === 'course_module_questions_create')) {
+    can('create', 'course_module_questions')
+  }
+  if (permissions.find((p) => p.name === 'course_module_questions_view')) {
+    can('view', 'course_module_questions')
+  }
+  if (permissions.find((p) => p.name === 'course_module_questions_edit')) {
+    can('edit', 'course_module_questions')
+  }
+  if (permissions.find((p) => p.name === 'course_module_questions_delete')) {
+    can('delete', 'course_module_questions')
+  }
+
   return build()
 }

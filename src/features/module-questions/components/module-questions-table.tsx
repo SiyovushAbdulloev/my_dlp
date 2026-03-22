@@ -5,28 +5,22 @@ import {
   getPaginationRowModel,
   useReactTable,
 } from '@tanstack/react-table'
-import { Route } from '@/routes/_authenticated/courses/$courseId/modules/$moduleId/lessons'
-import { type CourseLesson } from '@/types/course_lesson'
+import { Route } from '@/routes/_authenticated/courses/$courseId/modules/$moduleId/questions'
+import { type ModuleQuestion } from '@/types/module_question'
 import { type LaravelPaginatedResource } from 'laravel-resource-pagination-type'
-import {
-  FileText,
-  Film,
-  LoaderCircle,
-  Paperclip,
-  PenLine,
-  Trash,
-} from 'lucide-react'
+import { LoaderCircle, PenLine, Trash } from 'lucide-react'
 import { toast } from 'sonner'
-import { deleteById, fetchIndex } from '@/api/course-lessons'
+import { deleteById, fetchIndex } from '@/api/module-questions'
 import { ability } from '@/lib/casl/ability.ts'
 import { Button } from '@/components/ui/button'
 import { DataTablePagination } from '@/components/data-table'
 
-export const CourseLessonsTable = () => {
+export const ModuleQuestionsTable = () => {
+  // const navigate = useNavigate()
   const { course, module } = Route.useRouteContext()
 
-  const [lessons, setLessons] =
-    useState<LaravelPaginatedResource<CourseLesson> | null>(null)
+  const [questions, setQuestions] =
+    useState<LaravelPaginatedResource<ModuleQuestion> | null>(null)
 
   const [pagination, setPagination] = useState({
     pageIndex: 0,
@@ -44,7 +38,7 @@ export const CourseLessonsTable = () => {
         module.id,
         pagination.pageIndex + 1
       )
-      setLessons(response)
+      setQuestions(response)
     } finally {
       setFetching(false)
     }
@@ -58,7 +52,7 @@ export const CourseLessonsTable = () => {
     try {
       setDeleting(id)
       await deleteById(course.id, module.id, id)
-      toast.success('Урок успешно удалён')
+      toast.success('Вопрос успешно удалён')
       await fetchData()
     } finally {
       setDeleting('')
@@ -66,10 +60,10 @@ export const CourseLessonsTable = () => {
   }
 
   const table = useReactTable({
-    data: lessons?.data ?? [],
+    data: questions?.data ?? [],
     columns: [],
     getCoreRowModel: getCoreRowModel(),
-    pageCount: lessons?.meta?.last_page ?? 1,
+    pageCount: questions?.meta?.last_page ?? 1,
     manualPagination: true,
     getPaginationRowModel: getPaginationRowModel(),
     onPaginationChange: setPagination,
@@ -85,94 +79,72 @@ export const CourseLessonsTable = () => {
           </div>
         )}
 
-        {lessons?.data?.length ? (
-          <div className='grid gap-6 sm:grid-cols-2 xl:grid-cols-3'>
-            {lessons.data.map((lesson) => {
-              const isDeleting = deleting === lesson.id
+        {questions?.data?.length ? (
+          <div className='space-y-4'>
+            {questions.data.map((question) => {
+              const isDeleting = deleting === question.id
 
               return (
                 <div
-                  key={lesson.id}
-                  className='rounded-2xl border border-slate-200 bg-white p-6 shadow-sm'
+                  key={question.id}
+                  // onClick={() =>
+                  //   navigate({
+                  //     to: '/courses/$courseId/modules/$moduleId/questions/$questionId/answers',
+                  //     params: {
+                  //       courseId: course.id,
+                  //       moduleId: module.id,
+                  //       questionId: question.id,
+                  //     },
+                  //   })
+                  // }
+                  className='w-fit cursor-pointer rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:shadow-md'
                 >
                   <div className='flex items-start justify-between gap-3'>
                     <div>
-                      <h3 className='text-lg font-semibold text-slate-900'>
-                        {lesson.title.ru}
+                      <h3 className='text-base font-semibold text-slate-900'>
+                        {question.text.ru}
                       </h3>
                       <div className='mt-2 text-sm text-slate-500'>
-                        <div>🇬🇧 {lesson.title.en}</div>
-                        <div>🇹🇯 {lesson.title.tg}</div>
+                        <div>🇬🇧 {question.text.en}</div>
+                        <div>🇹🇯 {question.text.tg}</div>
                       </div>
                     </div>
 
-                    <div className='rounded-full border px-3 py-1 text-xs font-medium'>
-                      #{lesson.sort_order}
-                    </div>
-                  </div>
-
-                  <div className='mt-4 grid grid-cols-2 gap-3'>
-                    <div className='rounded-xl border p-3'>
-                      <div className='text-xs text-slate-500'>Длительность</div>
-                      <div className='text-sm font-semibold'>
-                        {lesson.duration_minutes ?? '—'} мин.
-                      </div>
-                    </div>
-
-                    <div className='rounded-xl border p-3'>
-                      <div className='text-xs text-slate-500'>Файлы</div>
-                      <div className='text-sm font-semibold'>
-                        {lesson.files?.length ?? 0}
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className='mt-4 flex flex-wrap gap-2'>
-                    {lesson.video?.url || lesson.video_link ? (
-                      <span className='inline-flex items-center gap-1 rounded-full bg-slate-100 px-3 py-1 text-xs'>
-                        <Film className='size-3.5' />
-                        Видео
+                    <div className='flex items-center gap-2'>
+                      <span className='rounded-full border px-3 py-1 text-xs'>
+                        {question.type}
                       </span>
-                    ) : null}
-
-                    {lesson.text_content?.ru ||
-                    lesson.text_content?.en ||
-                    lesson.text_content?.tg ? (
-                      <span className='inline-flex items-center gap-1 rounded-full bg-slate-100 px-3 py-1 text-xs'>
-                        <FileText className='size-3.5' />
-                        Текст
+                      <span className='rounded-full border px-3 py-1 text-xs'>
+                        #{question.sort_order}
                       </span>
-                    ) : null}
-
-                    {lesson.files?.length ? (
-                      <span className='inline-flex items-center gap-1 rounded-full bg-slate-100 px-3 py-1 text-xs'>
-                        <Paperclip className='size-3.5' />
-                        Материалы
-                      </span>
-                    ) : null}
+                    </div>
                   </div>
 
                   <div className='mt-6 flex items-center justify-end gap-2'>
-                    {ability.can('edit', 'course_lessons') ? (
+                    {ability.can('edit', 'course_module_questions') ? (
                       <Link
-                        to='/courses/$courseId/modules/$moduleId/lessons/$lessonId/edit'
+                        to='/courses/$courseId/modules/$moduleId/questions/$questionId/edit'
                         params={{
                           courseId: course.id,
                           moduleId: module.id,
-                          lessonId: lesson.id,
+                          questionId: question.id,
                         }}
+                        onClick={(e) => e.stopPropagation()}
                         className='rounded-xl border bg-white px-3 py-2 text-slate-600 transition hover:text-primary'
                       >
                         <PenLine className='size-4' />
                       </Link>
                     ) : null}
 
-                    {ability.can('delete', 'course_lessons') ? (
+                    {ability.can('delete', 'course_module_questions') ? (
                       <Button
                         type='button'
                         variant='outline'
                         disabled={isDeleting}
-                        onClick={() => onDelete(lesson.id)}
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          onDelete(question.id)
+                        }}
                       >
                         {isDeleting ? (
                           <LoaderCircle className='size-4 animate-spin' />

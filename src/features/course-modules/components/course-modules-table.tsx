@@ -8,7 +8,7 @@ import {
 import { Route } from '@/routes/_authenticated/courses/$courseId/modules'
 import { type CourseModule } from '@/types/course_module'
 import { type LaravelPaginatedResource } from 'laravel-resource-pagination-type'
-import { LoaderCircle, PenLine, Trash } from 'lucide-react'
+import { ClipboardList, LoaderCircle, PenLine, Trash } from 'lucide-react'
 import { toast } from 'sonner'
 import { deleteById, fetchIndex } from '@/api/course-modules'
 import { ability } from '@/lib/casl/ability.ts'
@@ -128,39 +128,45 @@ export const CourseModulesTable = () => {
                   </div>
 
                   <div className='mt-6 flex items-center justify-end gap-2'>
-                    {/*<Link*/}
-                    {/*  to='/courses/$courseId/modules/$moduleId/questions'*/}
-                    {/*  params={{ courseId: course.id, moduleId: module.id }}*/}
-                    {/*  onClick={(e) => e.stopPropagation()}*/}
-                    {/*  className='rounded-xl border bg-white px-3 py-2 text-slate-600 transition hover:text-primary'*/}
-                    {/*>*/}
-                    {/*  <ClipboardList className='size-4' />*/}
-                    {/*</Link>*/}
+                    {ability.can('list', 'course_module_questions') ? (
+                      <Link
+                        to='/courses/$courseId/modules/$moduleId/questions'
+                        params={{ courseId: course.id, moduleId: module.id }}
+                        onClick={(e) => e.stopPropagation()}
+                        className='rounded-xl border bg-white px-3 py-2 text-slate-600 transition hover:text-primary'
+                      >
+                        <ClipboardList className='size-4' />
+                      </Link>
+                    ) : null}
 
-                    <Link
-                      to='/courses/$courseId/modules/$moduleId/edit'
-                      params={{ courseId: course.id, moduleId: module.id }}
-                      onClick={(e) => e.stopPropagation()}
-                      className='rounded-xl border bg-white px-3 py-2 text-slate-600 transition hover:text-primary'
-                    >
-                      <PenLine className='size-4' />
-                    </Link>
+                    {ability.can('edit', 'course_modules') ? (
+                      <Link
+                        to='/courses/$courseId/modules/$moduleId/edit'
+                        params={{ courseId: course.id, moduleId: module.id }}
+                        onClick={(e) => e.stopPropagation()}
+                        className='rounded-xl border bg-white px-3 py-2 text-slate-600 transition hover:text-primary'
+                      >
+                        <PenLine className='size-4' />
+                      </Link>
+                    ) : null}
 
-                    <Button
-                      type='button'
-                      variant='outline'
-                      disabled={isDeleting}
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        onDelete(module.id)
-                      }}
-                    >
-                      {isDeleting ? (
-                        <LoaderCircle className='size-4 animate-spin' />
-                      ) : (
-                        <Trash className='size-4' />
-                      )}
-                    </Button>
+                    {ability.can('delete', 'course_modules') ? (
+                      <Button
+                        type='button'
+                        variant='outline'
+                        disabled={isDeleting}
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          onDelete(module.id)
+                        }}
+                      >
+                        {isDeleting ? (
+                          <LoaderCircle className='size-4 animate-spin' />
+                        ) : (
+                          <Trash className='size-4' />
+                        )}
+                      </Button>
+                    ) : null}
                   </div>
                 </div>
               )

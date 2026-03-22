@@ -87,8 +87,11 @@ import { Route as AuthenticatedDictionariesDistrictsDistrictIdEditRouteImport } 
 import { Route as AuthenticatedDictionariesCitiesCityIdEditRouteImport } from './routes/_authenticated/dictionaries/cities/$cityId.edit'
 import { Route as AuthenticatedCoursesCourseIdModulesCreateRouteImport } from './routes/_authenticated/courses/$courseId/modules/create'
 import { Route as AuthenticatedCoursesCourseIdModulesModuleIdEditRouteImport } from './routes/_authenticated/courses/$courseId/modules/$moduleId/edit'
+import { Route as AuthenticatedCoursesCourseIdModulesModuleIdQuestionsIndexRouteImport } from './routes/_authenticated/courses/$courseId/modules/$moduleId/questions/index'
 import { Route as AuthenticatedCoursesCourseIdModulesModuleIdLessonsIndexRouteImport } from './routes/_authenticated/courses/$courseId/modules/$moduleId/lessons/index'
+import { Route as AuthenticatedCoursesCourseIdModulesModuleIdQuestionsCreateRouteImport } from './routes/_authenticated/courses/$courseId/modules/$moduleId/questions/create'
 import { Route as AuthenticatedCoursesCourseIdModulesModuleIdLessonsCreateRouteImport } from './routes/_authenticated/courses/$courseId/modules/$moduleId/lessons/create'
+import { Route as AuthenticatedCoursesCourseIdModulesModuleIdQuestionsQuestionIdEditRouteImport } from './routes/_authenticated/courses/$courseId/modules/$moduleId/questions/$questionId.edit'
 import { Route as AuthenticatedCoursesCourseIdModulesModuleIdLessonsLessonIdEditRouteImport } from './routes/_authenticated/courses/$courseId/modules/$moduleId/lessons/$lessonId.edit'
 
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
@@ -540,10 +543,22 @@ const AuthenticatedCoursesCourseIdModulesModuleIdEditRoute =
     path: '/courses/$courseId/modules/$moduleId/edit',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedCoursesCourseIdModulesModuleIdQuestionsIndexRoute =
+  AuthenticatedCoursesCourseIdModulesModuleIdQuestionsIndexRouteImport.update({
+    id: '/courses/$courseId/modules/$moduleId/questions/',
+    path: '/courses/$courseId/modules/$moduleId/questions/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedCoursesCourseIdModulesModuleIdLessonsIndexRoute =
   AuthenticatedCoursesCourseIdModulesModuleIdLessonsIndexRouteImport.update({
     id: '/courses/$courseId/modules/$moduleId/lessons/',
     path: '/courses/$courseId/modules/$moduleId/lessons/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedCoursesCourseIdModulesModuleIdQuestionsCreateRoute =
+  AuthenticatedCoursesCourseIdModulesModuleIdQuestionsCreateRouteImport.update({
+    id: '/courses/$courseId/modules/$moduleId/questions/create',
+    path: '/courses/$courseId/modules/$moduleId/questions/create',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedCoursesCourseIdModulesModuleIdLessonsCreateRoute =
@@ -552,6 +567,14 @@ const AuthenticatedCoursesCourseIdModulesModuleIdLessonsCreateRoute =
     path: '/courses/$courseId/modules/$moduleId/lessons/create',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedCoursesCourseIdModulesModuleIdQuestionsQuestionIdEditRoute =
+  AuthenticatedCoursesCourseIdModulesModuleIdQuestionsQuestionIdEditRouteImport.update(
+    {
+      id: '/courses/$courseId/modules/$moduleId/questions/$questionId/edit',
+      path: '/courses/$courseId/modules/$moduleId/questions/$questionId/edit',
+      getParentRoute: () => AuthenticatedRouteRoute,
+    } as any,
+  )
 const AuthenticatedCoursesCourseIdModulesModuleIdLessonsLessonIdEditRoute =
   AuthenticatedCoursesCourseIdModulesModuleIdLessonsLessonIdEditRouteImport.update(
     {
@@ -639,8 +662,11 @@ export interface FileRoutesByFullPath {
   '/courses/$courseId/modules': typeof AuthenticatedCoursesCourseIdModulesIndexRoute
   '/courses/$courseId/modules/$moduleId/edit': typeof AuthenticatedCoursesCourseIdModulesModuleIdEditRoute
   '/courses/$courseId/modules/$moduleId/lessons/create': typeof AuthenticatedCoursesCourseIdModulesModuleIdLessonsCreateRoute
+  '/courses/$courseId/modules/$moduleId/questions/create': typeof AuthenticatedCoursesCourseIdModulesModuleIdQuestionsCreateRoute
   '/courses/$courseId/modules/$moduleId/lessons': typeof AuthenticatedCoursesCourseIdModulesModuleIdLessonsIndexRoute
+  '/courses/$courseId/modules/$moduleId/questions': typeof AuthenticatedCoursesCourseIdModulesModuleIdQuestionsIndexRoute
   '/courses/$courseId/modules/$moduleId/lessons/$lessonId/edit': typeof AuthenticatedCoursesCourseIdModulesModuleIdLessonsLessonIdEditRoute
+  '/courses/$courseId/modules/$moduleId/questions/$questionId/edit': typeof AuthenticatedCoursesCourseIdModulesModuleIdQuestionsQuestionIdEditRoute
 }
 export interface FileRoutesByTo {
   '/sign-in': typeof authSignInRoute
@@ -719,8 +745,11 @@ export interface FileRoutesByTo {
   '/courses/$courseId/modules': typeof AuthenticatedCoursesCourseIdModulesIndexRoute
   '/courses/$courseId/modules/$moduleId/edit': typeof AuthenticatedCoursesCourseIdModulesModuleIdEditRoute
   '/courses/$courseId/modules/$moduleId/lessons/create': typeof AuthenticatedCoursesCourseIdModulesModuleIdLessonsCreateRoute
+  '/courses/$courseId/modules/$moduleId/questions/create': typeof AuthenticatedCoursesCourseIdModulesModuleIdQuestionsCreateRoute
   '/courses/$courseId/modules/$moduleId/lessons': typeof AuthenticatedCoursesCourseIdModulesModuleIdLessonsIndexRoute
+  '/courses/$courseId/modules/$moduleId/questions': typeof AuthenticatedCoursesCourseIdModulesModuleIdQuestionsIndexRoute
   '/courses/$courseId/modules/$moduleId/lessons/$lessonId/edit': typeof AuthenticatedCoursesCourseIdModulesModuleIdLessonsLessonIdEditRoute
+  '/courses/$courseId/modules/$moduleId/questions/$questionId/edit': typeof AuthenticatedCoursesCourseIdModulesModuleIdQuestionsQuestionIdEditRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -803,8 +832,11 @@ export interface FileRoutesById {
   '/_authenticated/courses/$courseId/modules/': typeof AuthenticatedCoursesCourseIdModulesIndexRoute
   '/_authenticated/courses/$courseId/modules/$moduleId/edit': typeof AuthenticatedCoursesCourseIdModulesModuleIdEditRoute
   '/_authenticated/courses/$courseId/modules/$moduleId/lessons/create': typeof AuthenticatedCoursesCourseIdModulesModuleIdLessonsCreateRoute
+  '/_authenticated/courses/$courseId/modules/$moduleId/questions/create': typeof AuthenticatedCoursesCourseIdModulesModuleIdQuestionsCreateRoute
   '/_authenticated/courses/$courseId/modules/$moduleId/lessons/': typeof AuthenticatedCoursesCourseIdModulesModuleIdLessonsIndexRoute
+  '/_authenticated/courses/$courseId/modules/$moduleId/questions/': typeof AuthenticatedCoursesCourseIdModulesModuleIdQuestionsIndexRoute
   '/_authenticated/courses/$courseId/modules/$moduleId/lessons/$lessonId/edit': typeof AuthenticatedCoursesCourseIdModulesModuleIdLessonsLessonIdEditRoute
+  '/_authenticated/courses/$courseId/modules/$moduleId/questions/$questionId/edit': typeof AuthenticatedCoursesCourseIdModulesModuleIdQuestionsQuestionIdEditRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -886,8 +918,11 @@ export interface FileRouteTypes {
     | '/courses/$courseId/modules'
     | '/courses/$courseId/modules/$moduleId/edit'
     | '/courses/$courseId/modules/$moduleId/lessons/create'
+    | '/courses/$courseId/modules/$moduleId/questions/create'
     | '/courses/$courseId/modules/$moduleId/lessons'
+    | '/courses/$courseId/modules/$moduleId/questions'
     | '/courses/$courseId/modules/$moduleId/lessons/$lessonId/edit'
+    | '/courses/$courseId/modules/$moduleId/questions/$questionId/edit'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/sign-in'
@@ -966,8 +1001,11 @@ export interface FileRouteTypes {
     | '/courses/$courseId/modules'
     | '/courses/$courseId/modules/$moduleId/edit'
     | '/courses/$courseId/modules/$moduleId/lessons/create'
+    | '/courses/$courseId/modules/$moduleId/questions/create'
     | '/courses/$courseId/modules/$moduleId/lessons'
+    | '/courses/$courseId/modules/$moduleId/questions'
     | '/courses/$courseId/modules/$moduleId/lessons/$lessonId/edit'
+    | '/courses/$courseId/modules/$moduleId/questions/$questionId/edit'
   id:
     | '__root__'
     | '/(auth)'
@@ -1049,8 +1087,11 @@ export interface FileRouteTypes {
     | '/_authenticated/courses/$courseId/modules/'
     | '/_authenticated/courses/$courseId/modules/$moduleId/edit'
     | '/_authenticated/courses/$courseId/modules/$moduleId/lessons/create'
+    | '/_authenticated/courses/$courseId/modules/$moduleId/questions/create'
     | '/_authenticated/courses/$courseId/modules/$moduleId/lessons/'
+    | '/_authenticated/courses/$courseId/modules/$moduleId/questions/'
     | '/_authenticated/courses/$courseId/modules/$moduleId/lessons/$lessonId/edit'
+    | '/_authenticated/courses/$courseId/modules/$moduleId/questions/$questionId/edit'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -1611,6 +1652,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedCoursesCourseIdModulesModuleIdEditRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/courses/$courseId/modules/$moduleId/questions/': {
+      id: '/_authenticated/courses/$courseId/modules/$moduleId/questions/'
+      path: '/courses/$courseId/modules/$moduleId/questions'
+      fullPath: '/courses/$courseId/modules/$moduleId/questions'
+      preLoaderRoute: typeof AuthenticatedCoursesCourseIdModulesModuleIdQuestionsIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/courses/$courseId/modules/$moduleId/lessons/': {
       id: '/_authenticated/courses/$courseId/modules/$moduleId/lessons/'
       path: '/courses/$courseId/modules/$moduleId/lessons'
@@ -1618,11 +1666,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedCoursesCourseIdModulesModuleIdLessonsIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/courses/$courseId/modules/$moduleId/questions/create': {
+      id: '/_authenticated/courses/$courseId/modules/$moduleId/questions/create'
+      path: '/courses/$courseId/modules/$moduleId/questions/create'
+      fullPath: '/courses/$courseId/modules/$moduleId/questions/create'
+      preLoaderRoute: typeof AuthenticatedCoursesCourseIdModulesModuleIdQuestionsCreateRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/courses/$courseId/modules/$moduleId/lessons/create': {
       id: '/_authenticated/courses/$courseId/modules/$moduleId/lessons/create'
       path: '/courses/$courseId/modules/$moduleId/lessons/create'
       fullPath: '/courses/$courseId/modules/$moduleId/lessons/create'
       preLoaderRoute: typeof AuthenticatedCoursesCourseIdModulesModuleIdLessonsCreateRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/courses/$courseId/modules/$moduleId/questions/$questionId/edit': {
+      id: '/_authenticated/courses/$courseId/modules/$moduleId/questions/$questionId/edit'
+      path: '/courses/$courseId/modules/$moduleId/questions/$questionId/edit'
+      fullPath: '/courses/$courseId/modules/$moduleId/questions/$questionId/edit'
+      preLoaderRoute: typeof AuthenticatedCoursesCourseIdModulesModuleIdQuestionsQuestionIdEditRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/courses/$courseId/modules/$moduleId/lessons/$lessonId/edit': {
@@ -1753,8 +1815,11 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedCoursesCourseIdModulesIndexRoute: typeof AuthenticatedCoursesCourseIdModulesIndexRoute
   AuthenticatedCoursesCourseIdModulesModuleIdEditRoute: typeof AuthenticatedCoursesCourseIdModulesModuleIdEditRoute
   AuthenticatedCoursesCourseIdModulesModuleIdLessonsCreateRoute: typeof AuthenticatedCoursesCourseIdModulesModuleIdLessonsCreateRoute
+  AuthenticatedCoursesCourseIdModulesModuleIdQuestionsCreateRoute: typeof AuthenticatedCoursesCourseIdModulesModuleIdQuestionsCreateRoute
   AuthenticatedCoursesCourseIdModulesModuleIdLessonsIndexRoute: typeof AuthenticatedCoursesCourseIdModulesModuleIdLessonsIndexRoute
+  AuthenticatedCoursesCourseIdModulesModuleIdQuestionsIndexRoute: typeof AuthenticatedCoursesCourseIdModulesModuleIdQuestionsIndexRoute
   AuthenticatedCoursesCourseIdModulesModuleIdLessonsLessonIdEditRoute: typeof AuthenticatedCoursesCourseIdModulesModuleIdLessonsLessonIdEditRoute
+  AuthenticatedCoursesCourseIdModulesModuleIdQuestionsQuestionIdEditRoute: typeof AuthenticatedCoursesCourseIdModulesModuleIdQuestionsQuestionIdEditRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -1846,10 +1911,16 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
     AuthenticatedCoursesCourseIdModulesModuleIdEditRoute,
   AuthenticatedCoursesCourseIdModulesModuleIdLessonsCreateRoute:
     AuthenticatedCoursesCourseIdModulesModuleIdLessonsCreateRoute,
+  AuthenticatedCoursesCourseIdModulesModuleIdQuestionsCreateRoute:
+    AuthenticatedCoursesCourseIdModulesModuleIdQuestionsCreateRoute,
   AuthenticatedCoursesCourseIdModulesModuleIdLessonsIndexRoute:
     AuthenticatedCoursesCourseIdModulesModuleIdLessonsIndexRoute,
+  AuthenticatedCoursesCourseIdModulesModuleIdQuestionsIndexRoute:
+    AuthenticatedCoursesCourseIdModulesModuleIdQuestionsIndexRoute,
   AuthenticatedCoursesCourseIdModulesModuleIdLessonsLessonIdEditRoute:
     AuthenticatedCoursesCourseIdModulesModuleIdLessonsLessonIdEditRoute,
+  AuthenticatedCoursesCourseIdModulesModuleIdQuestionsQuestionIdEditRoute:
+    AuthenticatedCoursesCourseIdModulesModuleIdQuestionsQuestionIdEditRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
