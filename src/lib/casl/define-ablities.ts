@@ -264,5 +264,22 @@ export function defineAbilitiesFor(user: User | null) {
     can('delete', 'course_modules')
   }
 
+  //Course module lessons
+  if (permissions.find((p) => p.name === 'course_lessons_list')) {
+    can('list', 'course_lessons')
+  }
+  if (permissions.find((p) => p.name === 'course_lessons_create')) {
+    can('create', 'course_lessons')
+  }
+  if (permissions.find((p) => p.name === 'course_lessons_view')) {
+    can('view', 'course_lessons')
+  }
+  if (permissions.find((p) => p.name === 'course_lessons_edit')) {
+    can('edit', 'course_lessons')
+  }
+  if (permissions.find((p) => p.name === 'course_lessons_delete')) {
+    can('delete', 'course_lessons')
+  }
+
   return build()
 }

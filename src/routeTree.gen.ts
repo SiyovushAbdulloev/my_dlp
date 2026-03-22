@@ -86,7 +86,10 @@ import { Route as AuthenticatedDictionariesRegionsRegionIdEditRouteImport } from
 import { Route as AuthenticatedDictionariesDistrictsDistrictIdEditRouteImport } from './routes/_authenticated/dictionaries/districts/$districtId.edit'
 import { Route as AuthenticatedDictionariesCitiesCityIdEditRouteImport } from './routes/_authenticated/dictionaries/cities/$cityId.edit'
 import { Route as AuthenticatedCoursesCourseIdModulesCreateRouteImport } from './routes/_authenticated/courses/$courseId/modules/create'
-import { Route as AuthenticatedCoursesCourseIdModulesModuleIdEditRouteImport } from './routes/_authenticated/courses/$courseId/modules/$moduleId.edit'
+import { Route as AuthenticatedCoursesCourseIdModulesModuleIdEditRouteImport } from './routes/_authenticated/courses/$courseId/modules/$moduleId/edit'
+import { Route as AuthenticatedCoursesCourseIdModulesModuleIdLessonsIndexRouteImport } from './routes/_authenticated/courses/$courseId/modules/$moduleId/lessons/index'
+import { Route as AuthenticatedCoursesCourseIdModulesModuleIdLessonsCreateRouteImport } from './routes/_authenticated/courses/$courseId/modules/$moduleId/lessons/create'
+import { Route as AuthenticatedCoursesCourseIdModulesModuleIdLessonsLessonIdEditRouteImport } from './routes/_authenticated/courses/$courseId/modules/$moduleId/lessons/$lessonId.edit'
 
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
   id: '/_authenticated',
@@ -537,6 +540,26 @@ const AuthenticatedCoursesCourseIdModulesModuleIdEditRoute =
     path: '/courses/$courseId/modules/$moduleId/edit',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedCoursesCourseIdModulesModuleIdLessonsIndexRoute =
+  AuthenticatedCoursesCourseIdModulesModuleIdLessonsIndexRouteImport.update({
+    id: '/courses/$courseId/modules/$moduleId/lessons/',
+    path: '/courses/$courseId/modules/$moduleId/lessons/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedCoursesCourseIdModulesModuleIdLessonsCreateRoute =
+  AuthenticatedCoursesCourseIdModulesModuleIdLessonsCreateRouteImport.update({
+    id: '/courses/$courseId/modules/$moduleId/lessons/create',
+    path: '/courses/$courseId/modules/$moduleId/lessons/create',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedCoursesCourseIdModulesModuleIdLessonsLessonIdEditRoute =
+  AuthenticatedCoursesCourseIdModulesModuleIdLessonsLessonIdEditRouteImport.update(
+    {
+      id: '/courses/$courseId/modules/$moduleId/lessons/$lessonId/edit',
+      path: '/courses/$courseId/modules/$moduleId/lessons/$lessonId/edit',
+      getParentRoute: () => AuthenticatedRouteRoute,
+    } as any,
+  )
 
 export interface FileRoutesByFullPath {
   '/settings': typeof AuthenticatedSettingsRouteRouteWithChildren
@@ -615,6 +638,9 @@ export interface FileRoutesByFullPath {
   '/dictionaries/regions/$regionId/edit': typeof AuthenticatedDictionariesRegionsRegionIdEditRoute
   '/courses/$courseId/modules': typeof AuthenticatedCoursesCourseIdModulesIndexRoute
   '/courses/$courseId/modules/$moduleId/edit': typeof AuthenticatedCoursesCourseIdModulesModuleIdEditRoute
+  '/courses/$courseId/modules/$moduleId/lessons/create': typeof AuthenticatedCoursesCourseIdModulesModuleIdLessonsCreateRoute
+  '/courses/$courseId/modules/$moduleId/lessons': typeof AuthenticatedCoursesCourseIdModulesModuleIdLessonsIndexRoute
+  '/courses/$courseId/modules/$moduleId/lessons/$lessonId/edit': typeof AuthenticatedCoursesCourseIdModulesModuleIdLessonsLessonIdEditRoute
 }
 export interface FileRoutesByTo {
   '/sign-in': typeof authSignInRoute
@@ -692,6 +718,9 @@ export interface FileRoutesByTo {
   '/dictionaries/regions/$regionId/edit': typeof AuthenticatedDictionariesRegionsRegionIdEditRoute
   '/courses/$courseId/modules': typeof AuthenticatedCoursesCourseIdModulesIndexRoute
   '/courses/$courseId/modules/$moduleId/edit': typeof AuthenticatedCoursesCourseIdModulesModuleIdEditRoute
+  '/courses/$courseId/modules/$moduleId/lessons/create': typeof AuthenticatedCoursesCourseIdModulesModuleIdLessonsCreateRoute
+  '/courses/$courseId/modules/$moduleId/lessons': typeof AuthenticatedCoursesCourseIdModulesModuleIdLessonsIndexRoute
+  '/courses/$courseId/modules/$moduleId/lessons/$lessonId/edit': typeof AuthenticatedCoursesCourseIdModulesModuleIdLessonsLessonIdEditRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -773,6 +802,9 @@ export interface FileRoutesById {
   '/_authenticated/dictionaries/regions/$regionId/edit': typeof AuthenticatedDictionariesRegionsRegionIdEditRoute
   '/_authenticated/courses/$courseId/modules/': typeof AuthenticatedCoursesCourseIdModulesIndexRoute
   '/_authenticated/courses/$courseId/modules/$moduleId/edit': typeof AuthenticatedCoursesCourseIdModulesModuleIdEditRoute
+  '/_authenticated/courses/$courseId/modules/$moduleId/lessons/create': typeof AuthenticatedCoursesCourseIdModulesModuleIdLessonsCreateRoute
+  '/_authenticated/courses/$courseId/modules/$moduleId/lessons/': typeof AuthenticatedCoursesCourseIdModulesModuleIdLessonsIndexRoute
+  '/_authenticated/courses/$courseId/modules/$moduleId/lessons/$lessonId/edit': typeof AuthenticatedCoursesCourseIdModulesModuleIdLessonsLessonIdEditRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -853,6 +885,9 @@ export interface FileRouteTypes {
     | '/dictionaries/regions/$regionId/edit'
     | '/courses/$courseId/modules'
     | '/courses/$courseId/modules/$moduleId/edit'
+    | '/courses/$courseId/modules/$moduleId/lessons/create'
+    | '/courses/$courseId/modules/$moduleId/lessons'
+    | '/courses/$courseId/modules/$moduleId/lessons/$lessonId/edit'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/sign-in'
@@ -930,6 +965,9 @@ export interface FileRouteTypes {
     | '/dictionaries/regions/$regionId/edit'
     | '/courses/$courseId/modules'
     | '/courses/$courseId/modules/$moduleId/edit'
+    | '/courses/$courseId/modules/$moduleId/lessons/create'
+    | '/courses/$courseId/modules/$moduleId/lessons'
+    | '/courses/$courseId/modules/$moduleId/lessons/$lessonId/edit'
   id:
     | '__root__'
     | '/(auth)'
@@ -1010,6 +1048,9 @@ export interface FileRouteTypes {
     | '/_authenticated/dictionaries/regions/$regionId/edit'
     | '/_authenticated/courses/$courseId/modules/'
     | '/_authenticated/courses/$courseId/modules/$moduleId/edit'
+    | '/_authenticated/courses/$courseId/modules/$moduleId/lessons/create'
+    | '/_authenticated/courses/$courseId/modules/$moduleId/lessons/'
+    | '/_authenticated/courses/$courseId/modules/$moduleId/lessons/$lessonId/edit'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -1570,6 +1611,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedCoursesCourseIdModulesModuleIdEditRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/courses/$courseId/modules/$moduleId/lessons/': {
+      id: '/_authenticated/courses/$courseId/modules/$moduleId/lessons/'
+      path: '/courses/$courseId/modules/$moduleId/lessons'
+      fullPath: '/courses/$courseId/modules/$moduleId/lessons'
+      preLoaderRoute: typeof AuthenticatedCoursesCourseIdModulesModuleIdLessonsIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/courses/$courseId/modules/$moduleId/lessons/create': {
+      id: '/_authenticated/courses/$courseId/modules/$moduleId/lessons/create'
+      path: '/courses/$courseId/modules/$moduleId/lessons/create'
+      fullPath: '/courses/$courseId/modules/$moduleId/lessons/create'
+      preLoaderRoute: typeof AuthenticatedCoursesCourseIdModulesModuleIdLessonsCreateRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/courses/$courseId/modules/$moduleId/lessons/$lessonId/edit': {
+      id: '/_authenticated/courses/$courseId/modules/$moduleId/lessons/$lessonId/edit'
+      path: '/courses/$courseId/modules/$moduleId/lessons/$lessonId/edit'
+      fullPath: '/courses/$courseId/modules/$moduleId/lessons/$lessonId/edit'
+      preLoaderRoute: typeof AuthenticatedCoursesCourseIdModulesModuleIdLessonsLessonIdEditRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
@@ -1690,6 +1752,9 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedDictionariesRegionsRegionIdEditRoute: typeof AuthenticatedDictionariesRegionsRegionIdEditRoute
   AuthenticatedCoursesCourseIdModulesIndexRoute: typeof AuthenticatedCoursesCourseIdModulesIndexRoute
   AuthenticatedCoursesCourseIdModulesModuleIdEditRoute: typeof AuthenticatedCoursesCourseIdModulesModuleIdEditRoute
+  AuthenticatedCoursesCourseIdModulesModuleIdLessonsCreateRoute: typeof AuthenticatedCoursesCourseIdModulesModuleIdLessonsCreateRoute
+  AuthenticatedCoursesCourseIdModulesModuleIdLessonsIndexRoute: typeof AuthenticatedCoursesCourseIdModulesModuleIdLessonsIndexRoute
+  AuthenticatedCoursesCourseIdModulesModuleIdLessonsLessonIdEditRoute: typeof AuthenticatedCoursesCourseIdModulesModuleIdLessonsLessonIdEditRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -1779,6 +1844,12 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
     AuthenticatedCoursesCourseIdModulesIndexRoute,
   AuthenticatedCoursesCourseIdModulesModuleIdEditRoute:
     AuthenticatedCoursesCourseIdModulesModuleIdEditRoute,
+  AuthenticatedCoursesCourseIdModulesModuleIdLessonsCreateRoute:
+    AuthenticatedCoursesCourseIdModulesModuleIdLessonsCreateRoute,
+  AuthenticatedCoursesCourseIdModulesModuleIdLessonsIndexRoute:
+    AuthenticatedCoursesCourseIdModulesModuleIdLessonsIndexRoute,
+  AuthenticatedCoursesCourseIdModulesModuleIdLessonsLessonIdEditRoute:
+    AuthenticatedCoursesCourseIdModulesModuleIdLessonsLessonIdEditRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
