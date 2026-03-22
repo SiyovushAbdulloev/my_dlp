@@ -36,6 +36,7 @@ import { Route as AuthenticatedLessonTopicsIndexRouteImport } from './routes/_au
 import { Route as AuthenticatedHelpCenterIndexRouteImport } from './routes/_authenticated/help-center/index'
 import { Route as AuthenticatedHeadDirectoratesIndexRouteImport } from './routes/_authenticated/head-directorates/index'
 import { Route as AuthenticatedEducationDepartmentsIndexRouteImport } from './routes/_authenticated/education-departments/index'
+import { Route as AuthenticatedCoursesIndexRouteImport } from './routes/_authenticated/courses/index'
 import { Route as AuthenticatedClassesIndexRouteImport } from './routes/_authenticated/classes/index'
 import { Route as AuthenticatedChatsIndexRouteImport } from './routes/_authenticated/chats/index'
 import { Route as AuthenticatedBooksIndexRouteImport } from './routes/_authenticated/books/index'
@@ -56,6 +57,7 @@ import { Route as AuthenticatedLessonTopicsCreateRouteImport } from './routes/_a
 import { Route as AuthenticatedHeadDirectoratesCreateRouteImport } from './routes/_authenticated/head-directorates/create'
 import { Route as AuthenticatedErrorsErrorRouteImport } from './routes/_authenticated/errors/$error'
 import { Route as AuthenticatedEducationDepartmentsCreateRouteImport } from './routes/_authenticated/education-departments/create'
+import { Route as AuthenticatedCoursesCreateRouteImport } from './routes/_authenticated/courses/create'
 import { Route as AuthenticatedClassesCreateRouteImport } from './routes/_authenticated/classes/create'
 import { Route as AuthenticatedBooksCreateRouteImport } from './routes/_authenticated/books/create'
 import { Route as AuthenticatedDictionariesRegionsIndexRouteImport } from './routes/_authenticated/dictionaries/regions/index'
@@ -75,6 +77,7 @@ import { Route as AuthenticatedEducationDepartmentsDepartmentIdEditRouteImport }
 import { Route as AuthenticatedDictionariesRegionsCreateRouteImport } from './routes/_authenticated/dictionaries/regions/create'
 import { Route as AuthenticatedDictionariesDistrictsCreateRouteImport } from './routes/_authenticated/dictionaries/districts/create'
 import { Route as AuthenticatedDictionariesCitiesCreateRouteImport } from './routes/_authenticated/dictionaries/cities/create'
+import { Route as AuthenticatedCoursesCourseIdEditRouteImport } from './routes/_authenticated/courses/$courseId.edit'
 import { Route as AuthenticatedClassesClassIdEditRouteImport } from './routes/_authenticated/classes/$classId.edit'
 import { Route as AuthenticatedBooksBookIdShowRouteImport } from './routes/_authenticated/books/$bookId.show'
 import { Route as AuthenticatedBooksBookIdEditRouteImport } from './routes/_authenticated/books/$bookId.edit'
@@ -228,6 +231,12 @@ const AuthenticatedEducationDepartmentsIndexRoute =
     path: '/education-departments/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedCoursesIndexRoute =
+  AuthenticatedCoursesIndexRouteImport.update({
+    id: '/courses/',
+    path: '/courses/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedClassesIndexRoute =
   AuthenticatedClassesIndexRouteImport.update({
     id: '/classes/',
@@ -345,6 +354,12 @@ const AuthenticatedEducationDepartmentsCreateRoute =
     path: '/education-departments/create',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedCoursesCreateRoute =
+  AuthenticatedCoursesCreateRouteImport.update({
+    id: '/courses/create',
+    path: '/courses/create',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedClassesCreateRoute =
   AuthenticatedClassesCreateRouteImport.update({
     id: '/classes/create',
@@ -459,6 +474,12 @@ const AuthenticatedDictionariesCitiesCreateRoute =
     path: '/dictionaries/cities/create',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedCoursesCourseIdEditRoute =
+  AuthenticatedCoursesCourseIdEditRouteImport.update({
+    id: '/courses/$courseId/edit',
+    path: '/courses/$courseId/edit',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedClassesClassIdEditRoute =
   AuthenticatedClassesClassIdEditRouteImport.update({
     id: '/classes/$classId/edit',
@@ -509,6 +530,7 @@ export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
   '/books/create': typeof AuthenticatedBooksCreateRoute
   '/classes/create': typeof AuthenticatedClassesCreateRoute
+  '/courses/create': typeof AuthenticatedCoursesCreateRoute
   '/education-departments/create': typeof AuthenticatedEducationDepartmentsCreateRoute
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
   '/head-directorates/create': typeof AuthenticatedHeadDirectoratesCreateRoute
@@ -529,6 +551,7 @@ export interface FileRoutesByFullPath {
   '/books': typeof AuthenticatedBooksIndexRoute
   '/chats': typeof AuthenticatedChatsIndexRoute
   '/classes': typeof AuthenticatedClassesIndexRoute
+  '/courses': typeof AuthenticatedCoursesIndexRoute
   '/education-departments': typeof AuthenticatedEducationDepartmentsIndexRoute
   '/head-directorates': typeof AuthenticatedHeadDirectoratesIndexRoute
   '/help-center': typeof AuthenticatedHelpCenterIndexRoute
@@ -547,6 +570,7 @@ export interface FileRoutesByFullPath {
   '/books/$bookId/edit': typeof AuthenticatedBooksBookIdEditRoute
   '/books/$bookId/show': typeof AuthenticatedBooksBookIdShowRoute
   '/classes/$classId/edit': typeof AuthenticatedClassesClassIdEditRoute
+  '/courses/$courseId/edit': typeof AuthenticatedCoursesCourseIdEditRoute
   '/dictionaries/cities/create': typeof AuthenticatedDictionariesCitiesCreateRoute
   '/dictionaries/districts/create': typeof AuthenticatedDictionariesDistrictsCreateRoute
   '/dictionaries/regions/create': typeof AuthenticatedDictionariesRegionsCreateRoute
@@ -580,6 +604,7 @@ export interface FileRoutesByTo {
   '/': typeof AuthenticatedIndexRoute
   '/books/create': typeof AuthenticatedBooksCreateRoute
   '/classes/create': typeof AuthenticatedClassesCreateRoute
+  '/courses/create': typeof AuthenticatedCoursesCreateRoute
   '/education-departments/create': typeof AuthenticatedEducationDepartmentsCreateRoute
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
   '/head-directorates/create': typeof AuthenticatedHeadDirectoratesCreateRoute
@@ -600,6 +625,7 @@ export interface FileRoutesByTo {
   '/books': typeof AuthenticatedBooksIndexRoute
   '/chats': typeof AuthenticatedChatsIndexRoute
   '/classes': typeof AuthenticatedClassesIndexRoute
+  '/courses': typeof AuthenticatedCoursesIndexRoute
   '/education-departments': typeof AuthenticatedEducationDepartmentsIndexRoute
   '/head-directorates': typeof AuthenticatedHeadDirectoratesIndexRoute
   '/help-center': typeof AuthenticatedHelpCenterIndexRoute
@@ -618,6 +644,7 @@ export interface FileRoutesByTo {
   '/books/$bookId/edit': typeof AuthenticatedBooksBookIdEditRoute
   '/books/$bookId/show': typeof AuthenticatedBooksBookIdShowRoute
   '/classes/$classId/edit': typeof AuthenticatedClassesClassIdEditRoute
+  '/courses/$courseId/edit': typeof AuthenticatedCoursesCourseIdEditRoute
   '/dictionaries/cities/create': typeof AuthenticatedDictionariesCitiesCreateRoute
   '/dictionaries/districts/create': typeof AuthenticatedDictionariesDistrictsCreateRoute
   '/dictionaries/regions/create': typeof AuthenticatedDictionariesRegionsCreateRoute
@@ -655,6 +682,7 @@ export interface FileRoutesById {
   '/_authenticated/': typeof AuthenticatedIndexRoute
   '/_authenticated/books/create': typeof AuthenticatedBooksCreateRoute
   '/_authenticated/classes/create': typeof AuthenticatedClassesCreateRoute
+  '/_authenticated/courses/create': typeof AuthenticatedCoursesCreateRoute
   '/_authenticated/education-departments/create': typeof AuthenticatedEducationDepartmentsCreateRoute
   '/_authenticated/errors/$error': typeof AuthenticatedErrorsErrorRoute
   '/_authenticated/head-directorates/create': typeof AuthenticatedHeadDirectoratesCreateRoute
@@ -675,6 +703,7 @@ export interface FileRoutesById {
   '/_authenticated/books/': typeof AuthenticatedBooksIndexRoute
   '/_authenticated/chats/': typeof AuthenticatedChatsIndexRoute
   '/_authenticated/classes/': typeof AuthenticatedClassesIndexRoute
+  '/_authenticated/courses/': typeof AuthenticatedCoursesIndexRoute
   '/_authenticated/education-departments/': typeof AuthenticatedEducationDepartmentsIndexRoute
   '/_authenticated/head-directorates/': typeof AuthenticatedHeadDirectoratesIndexRoute
   '/_authenticated/help-center/': typeof AuthenticatedHelpCenterIndexRoute
@@ -693,6 +722,7 @@ export interface FileRoutesById {
   '/_authenticated/books/$bookId/edit': typeof AuthenticatedBooksBookIdEditRoute
   '/_authenticated/books/$bookId/show': typeof AuthenticatedBooksBookIdShowRoute
   '/_authenticated/classes/$classId/edit': typeof AuthenticatedClassesClassIdEditRoute
+  '/_authenticated/courses/$courseId/edit': typeof AuthenticatedCoursesCourseIdEditRoute
   '/_authenticated/dictionaries/cities/create': typeof AuthenticatedDictionariesCitiesCreateRoute
   '/_authenticated/dictionaries/districts/create': typeof AuthenticatedDictionariesDistrictsCreateRoute
   '/_authenticated/dictionaries/regions/create': typeof AuthenticatedDictionariesRegionsCreateRoute
@@ -729,6 +759,7 @@ export interface FileRouteTypes {
     | '/'
     | '/books/create'
     | '/classes/create'
+    | '/courses/create'
     | '/education-departments/create'
     | '/errors/$error'
     | '/head-directorates/create'
@@ -749,6 +780,7 @@ export interface FileRouteTypes {
     | '/books'
     | '/chats'
     | '/classes'
+    | '/courses'
     | '/education-departments'
     | '/head-directorates'
     | '/help-center'
@@ -767,6 +799,7 @@ export interface FileRouteTypes {
     | '/books/$bookId/edit'
     | '/books/$bookId/show'
     | '/classes/$classId/edit'
+    | '/courses/$courseId/edit'
     | '/dictionaries/cities/create'
     | '/dictionaries/districts/create'
     | '/dictionaries/regions/create'
@@ -800,6 +833,7 @@ export interface FileRouteTypes {
     | '/'
     | '/books/create'
     | '/classes/create'
+    | '/courses/create'
     | '/education-departments/create'
     | '/errors/$error'
     | '/head-directorates/create'
@@ -820,6 +854,7 @@ export interface FileRouteTypes {
     | '/books'
     | '/chats'
     | '/classes'
+    | '/courses'
     | '/education-departments'
     | '/head-directorates'
     | '/help-center'
@@ -838,6 +873,7 @@ export interface FileRouteTypes {
     | '/books/$bookId/edit'
     | '/books/$bookId/show'
     | '/classes/$classId/edit'
+    | '/courses/$courseId/edit'
     | '/dictionaries/cities/create'
     | '/dictionaries/districts/create'
     | '/dictionaries/regions/create'
@@ -874,6 +910,7 @@ export interface FileRouteTypes {
     | '/_authenticated/'
     | '/_authenticated/books/create'
     | '/_authenticated/classes/create'
+    | '/_authenticated/courses/create'
     | '/_authenticated/education-departments/create'
     | '/_authenticated/errors/$error'
     | '/_authenticated/head-directorates/create'
@@ -894,6 +931,7 @@ export interface FileRouteTypes {
     | '/_authenticated/books/'
     | '/_authenticated/chats/'
     | '/_authenticated/classes/'
+    | '/_authenticated/courses/'
     | '/_authenticated/education-departments/'
     | '/_authenticated/head-directorates/'
     | '/_authenticated/help-center/'
@@ -912,6 +950,7 @@ export interface FileRouteTypes {
     | '/_authenticated/books/$bookId/edit'
     | '/_authenticated/books/$bookId/show'
     | '/_authenticated/classes/$classId/edit'
+    | '/_authenticated/courses/$courseId/edit'
     | '/_authenticated/dictionaries/cities/create'
     | '/_authenticated/dictionaries/districts/create'
     | '/_authenticated/dictionaries/regions/create'
@@ -1135,6 +1174,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedEducationDepartmentsIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/courses/': {
+      id: '/_authenticated/courses/'
+      path: '/courses'
+      fullPath: '/courses'
+      preLoaderRoute: typeof AuthenticatedCoursesIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/classes/': {
       id: '/_authenticated/classes/'
       path: '/classes'
@@ -1275,6 +1321,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedEducationDepartmentsCreateRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/courses/create': {
+      id: '/_authenticated/courses/create'
+      path: '/courses/create'
+      fullPath: '/courses/create'
+      preLoaderRoute: typeof AuthenticatedCoursesCreateRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/classes/create': {
       id: '/_authenticated/classes/create'
       path: '/classes/create'
@@ -1408,6 +1461,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDictionariesCitiesCreateRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/courses/$courseId/edit': {
+      id: '/_authenticated/courses/$courseId/edit'
+      path: '/courses/$courseId/edit'
+      fullPath: '/courses/$courseId/edit'
+      preLoaderRoute: typeof AuthenticatedCoursesCourseIdEditRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/classes/$classId/edit': {
       id: '/_authenticated/classes/$classId/edit'
       path: '/classes/$classId/edit'
@@ -1512,6 +1572,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
   AuthenticatedBooksCreateRoute: typeof AuthenticatedBooksCreateRoute
   AuthenticatedClassesCreateRoute: typeof AuthenticatedClassesCreateRoute
+  AuthenticatedCoursesCreateRoute: typeof AuthenticatedCoursesCreateRoute
   AuthenticatedEducationDepartmentsCreateRoute: typeof AuthenticatedEducationDepartmentsCreateRoute
   AuthenticatedErrorsErrorRoute: typeof AuthenticatedErrorsErrorRoute
   AuthenticatedHeadDirectoratesCreateRoute: typeof AuthenticatedHeadDirectoratesCreateRoute
@@ -1528,6 +1589,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedBooksIndexRoute: typeof AuthenticatedBooksIndexRoute
   AuthenticatedChatsIndexRoute: typeof AuthenticatedChatsIndexRoute
   AuthenticatedClassesIndexRoute: typeof AuthenticatedClassesIndexRoute
+  AuthenticatedCoursesIndexRoute: typeof AuthenticatedCoursesIndexRoute
   AuthenticatedEducationDepartmentsIndexRoute: typeof AuthenticatedEducationDepartmentsIndexRoute
   AuthenticatedHeadDirectoratesIndexRoute: typeof AuthenticatedHeadDirectoratesIndexRoute
   AuthenticatedHelpCenterIndexRoute: typeof AuthenticatedHelpCenterIndexRoute
@@ -1545,6 +1607,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedBooksBookIdEditRoute: typeof AuthenticatedBooksBookIdEditRoute
   AuthenticatedBooksBookIdShowRoute: typeof AuthenticatedBooksBookIdShowRoute
   AuthenticatedClassesClassIdEditRoute: typeof AuthenticatedClassesClassIdEditRoute
+  AuthenticatedCoursesCourseIdEditRoute: typeof AuthenticatedCoursesCourseIdEditRoute
   AuthenticatedDictionariesCitiesCreateRoute: typeof AuthenticatedDictionariesCitiesCreateRoute
   AuthenticatedDictionariesDistrictsCreateRoute: typeof AuthenticatedDictionariesDistrictsCreateRoute
   AuthenticatedDictionariesRegionsCreateRoute: typeof AuthenticatedDictionariesRegionsCreateRoute
@@ -1571,6 +1634,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
   AuthenticatedBooksCreateRoute: AuthenticatedBooksCreateRoute,
   AuthenticatedClassesCreateRoute: AuthenticatedClassesCreateRoute,
+  AuthenticatedCoursesCreateRoute: AuthenticatedCoursesCreateRoute,
   AuthenticatedEducationDepartmentsCreateRoute:
     AuthenticatedEducationDepartmentsCreateRoute,
   AuthenticatedErrorsErrorRoute: AuthenticatedErrorsErrorRoute,
@@ -1590,6 +1654,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedBooksIndexRoute: AuthenticatedBooksIndexRoute,
   AuthenticatedChatsIndexRoute: AuthenticatedChatsIndexRoute,
   AuthenticatedClassesIndexRoute: AuthenticatedClassesIndexRoute,
+  AuthenticatedCoursesIndexRoute: AuthenticatedCoursesIndexRoute,
   AuthenticatedEducationDepartmentsIndexRoute:
     AuthenticatedEducationDepartmentsIndexRoute,
   AuthenticatedHeadDirectoratesIndexRoute:
@@ -1609,6 +1674,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedBooksBookIdEditRoute: AuthenticatedBooksBookIdEditRoute,
   AuthenticatedBooksBookIdShowRoute: AuthenticatedBooksBookIdShowRoute,
   AuthenticatedClassesClassIdEditRoute: AuthenticatedClassesClassIdEditRoute,
+  AuthenticatedCoursesCourseIdEditRoute: AuthenticatedCoursesCourseIdEditRoute,
   AuthenticatedDictionariesCitiesCreateRoute:
     AuthenticatedDictionariesCitiesCreateRoute,
   AuthenticatedDictionariesDistrictsCreateRoute:

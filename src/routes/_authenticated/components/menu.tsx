@@ -175,13 +175,13 @@ export const NAV: NavItem[] = [
     ],
   },
   {
-    id: 'teacher-courses',
+    id: 'courses',
     label: 'Курсы повышения квалификации',
-    to: '/teacher-courses',
+    to: '/courses',
     access: [
       {
         action: 'list',
-        subject: 'teacher-courses',
+        subject: 'courses',
       },
     ],
   },
