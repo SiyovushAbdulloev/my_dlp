@@ -1,15 +1,14 @@
 import { useState } from 'react'
-import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate } from '@tanstack/react-router'
-import { Route } from '@/routes/_authenticated/courses/$courseId/modules/$moduleId/questions/create'
-import { ModuleQuestionTypeLabel } from '@/types/module_question.ts'
+import { Route } from '@/routes/_authenticated/courses/$courseId/modules/$moduleId/questions/$questionId/answers/$answerId.edit'
 import { ArrowLeft, Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
-import { create } from '@/api/module-questions'
+import { edit } from '@/api/module-question-answers'
 import { applyValidationErrors } from '@/lib/applyValidationErrors'
 import { Button } from '@/components/ui/button'
+import { Checkbox } from '@/components/ui/checkbox'
 import {
   Form,
   FormControl,
@@ -22,37 +21,37 @@ import { Input } from '@/components/ui/input'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Textarea } from '@/components/ui/textarea'
 import { Main } from '@/components/layout/main'
-import { SelectDropdown } from '@/components/select-dropdown'
+import {
+  questionAnswerFormSchema,
+  type QuestionAnswerForm,
+} from '@/features/module-question-answer/create'
 
-export const moduleQuestionFormSchema = z.object({
-  text: z.object({
-    ru: z.string().min(1),
-    en: z.string().min(1),
-    tg: z.string().min(1),
-  }),
-  type: z.string({ message: 'Тип обязателен' }),
-  sort_order: z.number().min(1),
-})
-
-export type ModuleQuestionForm = z.infer<typeof moduleQuestionFormSchema>
-
-export function ModuleQuestionsCreate() {
+export function ModuleQuestionAnswersEdit() {
   const navigate = useNavigate()
-  const { course, module } = Route.useRouteContext()
+  const { course, module, question, answer } = Route.useRouteContext()
   const [loading, setLoading] = useState(false)
 
-  const form = useForm<ModuleQuestionForm>({
-    resolver: zodResolver(moduleQuestionFormSchema),
+  const form = useForm<QuestionAnswerForm>({
+    resolver: zodResolver(questionAnswerFormSchema),
+    defaultValues: {
+      text: answer.text,
+      is_correct: answer.is_correct,
+      sort_order: answer.sort_order,
+    },
   })
 
-  const onSubmit = async (data: ModuleQuestionForm) => {
+  const onSubmit = async (data: QuestionAnswerForm) => {
     setLoading(true)
     try {
-      await create(course.id, module.id, data)
-      toast.success('Вопрос успешно создан')
+      await edit(course.id, module.id, question.id, answer.id, data)
+      toast.success('Ответ успешно обновлён')
       navigate({
-        to: '/courses/$courseId/modules/$moduleId/questions',
-        params: { courseId: course.id, moduleId: module.id },
+        to: '/courses/$courseId/modules/$moduleId/questions/$questionId/answers',
+        params: {
+          courseId: course.id,
+          moduleId: module.id,
+          questionId: question.id,
+        },
       })
     } catch (e) {
       if (!applyValidationErrors(form, e)) toast.error('Не валидные данные')
@@ -64,13 +63,19 @@ export function ModuleQuestionsCreate() {
   return (
     <Main className='flex flex-1 flex-col gap-4 sm:gap-6'>
       <header className='flex items-center justify-between'>
-        <h1 className='text-2xl font-bold tracking-tight'>Создать вопрос</h1>
+        <h1 className='text-2xl font-bold tracking-tight'>
+          Редактировать ответ
+        </h1>
         <Button
           variant='outline'
           onClick={() =>
             navigate({
-              to: '/courses/$courseId/modules/$moduleId/questions',
-              params: { courseId: course.id, moduleId: module.id },
+              to: '/courses/$courseId/modules/$moduleId/questions/$questionId/answers',
+              params: {
+                courseId: course.id,
+                moduleId: module.id,
+                questionId: question.id,
+              },
             })
           }
         >
@@ -95,9 +100,9 @@ export function ModuleQuestionsCreate() {
                   name={`text.${lang}`}
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Текст вопроса</FormLabel>
+                      <FormLabel>Текст ответа</FormLabel>
                       <FormControl>
-                        <Textarea {...field} rows={5} />
+                        <Textarea {...field} rows={4} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -108,29 +113,6 @@ export function ModuleQuestionsCreate() {
           </Tabs>
 
           <div className='grid gap-4 md:grid-cols-2'>
-            <FormField
-              control={form.control}
-              name='type'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Тип вопроса</FormLabel>
-                  <SelectDropdown
-                    className={'w-full'}
-                    placeholder={'Выберите тип вопроса'}
-                    defaultValue={field.value}
-                    onValueChange={field.onChange}
-                    items={Object.keys(ModuleQuestionTypeLabel).map((key) => ({
-                      value: key,
-                      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                      //@ts-expect-error
-                      label: ModuleQuestionTypeLabel[key],
-                    }))}
-                  />
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
             <FormField
               control={form.control}
               name='sort_order'
@@ -144,11 +126,27 @@ export function ModuleQuestionsCreate() {
                 </FormItem>
               )}
             />
+
+            <FormField
+              control={form.control}
+              name='is_correct'
+              render={({ field }) => (
+                <FormItem className='flex items-center gap-3 rounded-md border p-3'>
+                  <FormControl>
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={(v) => field.onChange(Boolean(v))}
+                    />
+                  </FormControl>
+                  <FormLabel className='!mt-0'>Правильный ответ</FormLabel>
+                </FormItem>
+              )}
+            />
           </div>
 
           <Button disabled={loading} type='submit'>
             {loading ? <Loader2 className='mr-2 animate-spin' /> : null}
-            Создать
+            Сохранить
           </Button>
         </form>
       </Form>

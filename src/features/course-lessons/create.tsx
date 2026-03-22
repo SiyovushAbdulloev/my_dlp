@@ -42,8 +42,8 @@ export const courseLessonFormSchema = z.object({
     en: z.string().optional(),
     tg: z.string().optional(),
   }),
-  sort_order: z.coerce.number().min(1),
-  duration_minutes: z.coerce.number().nullable().optional(),
+  sort_order: z.number().min(1),
+  duration_minutes: z.number().nullable().optional(),
 
   text_content: z.object({
     ru: z.string().optional(),

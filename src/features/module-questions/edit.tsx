@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate } from '@tanstack/react-router'
-import { Route } from '@/routes/_authenticated/courses/$courseId/modules/$moduleId/questions/$questionId.edit'
+import { Route } from '@/routes/_authenticated/courses/$courseId/modules/$moduleId/questions/$questionId/edit.tsx'
 import { ModuleQuestionTypeLabel } from '@/types/module_question.ts'
 import { ArrowLeft, Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
@@ -119,6 +119,8 @@ export function ModuleQuestionsEdit() {
                     onValueChange={field.onChange}
                     items={Object.keys(ModuleQuestionTypeLabel).map((key) => ({
                       value: key,
+                      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                      //@ts-expect-error
                       label: ModuleQuestionTypeLabel[key],
                     }))}
                   />

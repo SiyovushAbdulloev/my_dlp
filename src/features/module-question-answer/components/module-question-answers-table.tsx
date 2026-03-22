@@ -1,26 +1,31 @@
 import { useEffect, useState } from 'react'
-import { Link, useNavigate } from '@tanstack/react-router'
+import { Link } from '@tanstack/react-router'
 import {
   getCoreRowModel,
   getPaginationRowModel,
   useReactTable,
 } from '@tanstack/react-table'
-import { Route } from '@/routes/_authenticated/courses/$courseId/modules/$moduleId/questions'
-import { type ModuleQuestion } from '@/types/module_question'
+import { Route } from '@/routes/_authenticated/courses/$courseId/modules/$moduleId/questions/$questionId/answers'
+import { type ModuleQuestionAnswer } from '@/types/module_question_answer'
 import { type LaravelPaginatedResource } from 'laravel-resource-pagination-type'
-import { LoaderCircle, PenLine, Trash } from 'lucide-react'
+import {
+  CheckCircle2,
+  LoaderCircle,
+  PenLine,
+  Trash,
+  XCircle,
+} from 'lucide-react'
 import { toast } from 'sonner'
-import { deleteById, fetchIndex } from '@/api/module-questions'
+import { deleteById, fetchIndex } from '@/api/module-question-answers'
 import { ability } from '@/lib/casl/ability.ts'
 import { Button } from '@/components/ui/button'
 import { DataTablePagination } from '@/components/data-table'
 
-export const ModuleQuestionsTable = () => {
-  const navigate = useNavigate()
-  const { course, module } = Route.useRouteContext()
+export const ModuleQuestionAnswersTable = () => {
+  const { course, module, question } = Route.useRouteContext()
 
-  const [questions, setQuestions] =
-    useState<LaravelPaginatedResource<ModuleQuestion> | null>(null)
+  const [answers, setAnswers] =
+    useState<LaravelPaginatedResource<ModuleQuestionAnswer> | null>(null)
 
   const [pagination, setPagination] = useState({
     pageIndex: 0,
@@ -36,9 +41,10 @@ export const ModuleQuestionsTable = () => {
       const response = await fetchIndex(
         course.id,
         module.id,
+        question.id,
         pagination.pageIndex + 1
       )
-      setQuestions(response)
+      setAnswers(response)
     } finally {
       setFetching(false)
     }
@@ -51,8 +57,8 @@ export const ModuleQuestionsTable = () => {
   const onDelete = async (id: string) => {
     try {
       setDeleting(id)
-      await deleteById(course.id, module.id, id)
-      toast.success('Вопрос успешно удалён')
+      await deleteById(course.id, module.id, question.id, id)
+      toast.success('Ответ успешно удалён')
       await fetchData()
     } finally {
       setDeleting('')
@@ -60,10 +66,10 @@ export const ModuleQuestionsTable = () => {
   }
 
   const table = useReactTable({
-    data: questions?.data ?? [],
+    data: answers?.data ?? [],
     columns: [],
     getCoreRowModel: getCoreRowModel(),
-    pageCount: questions?.meta?.last_page ?? 1,
+    pageCount: answers?.meta?.last_page ?? 1,
     manualPagination: true,
     getPaginationRowModel: getPaginationRowModel(),
     onPaginationChange: setPagination,
@@ -79,74 +85,68 @@ export const ModuleQuestionsTable = () => {
           </div>
         )}
 
-        {questions?.data?.length ? (
+        {answers?.data?.length ? (
           <div className='space-y-4'>
-            {questions.data.map((question) => {
-              const isDeleting = deleting === question.id
+            {answers.data.map((answer) => {
+              const isDeleting = deleting === answer.id
 
               return (
                 <div
-                  key={question.id}
-                  onClick={() => {
-                    if (ability.can('list', 'course_module_question_answers')) {
-                      navigate({
-                        to: '/courses/$courseId/modules/$moduleId/questions/$questionId/answers',
-                        params: {
-                          courseId: course.id,
-                          moduleId: module.id,
-                          questionId: question.id,
-                        },
-                      })
-                    }
-                  }}
-                  className='w-fit cursor-pointer rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:shadow-md'
+                  key={answer.id}
+                  className='w-fit rounded-2xl border border-slate-200 bg-white p-6 shadow-sm'
                 >
                   <div className='flex items-start justify-between gap-3'>
                     <div>
                       <h3 className='text-base font-semibold text-slate-900'>
-                        {question.text.ru}
+                        {answer.text.ru}
                       </h3>
                       <div className='mt-2 text-sm text-slate-500'>
-                        <div>🇬🇧 {question.text.en}</div>
-                        <div>🇹🇯 {question.text.tg}</div>
+                        <div>🇬🇧 {answer.text.en}</div>
+                        <div>🇹🇯 {answer.text.tg}</div>
                       </div>
                     </div>
 
                     <div className='flex items-center gap-2'>
                       <span className='rounded-full border px-3 py-1 text-xs'>
-                        {question.type}
+                        #{answer.sort_order}
                       </span>
-                      <span className='rounded-full border px-3 py-1 text-xs'>
-                        #{question.sort_order}
-                      </span>
+
+                      {answer.is_correct ? (
+                        <span className='inline-flex items-center gap-1 rounded-full bg-emerald-50 px-3 py-1 text-xs text-emerald-700'>
+                          <CheckCircle2 className='size-3.5' />
+                          Верный
+                        </span>
+                      ) : (
+                        <span className='inline-flex items-center gap-1 rounded-full bg-slate-100 px-3 py-1 text-xs text-slate-600'>
+                          <XCircle className='size-3.5' />
+                          Неверный
+                        </span>
+                      )}
                     </div>
                   </div>
 
                   <div className='mt-6 flex items-center justify-end gap-2'>
-                    {ability.can('edit', 'course_module_questions') ? (
+                    {ability.can('edit', 'course_module_question_answers') ? (
                       <Link
-                        to='/courses/$courseId/modules/$moduleId/questions/$questionId/edit'
+                        to='/courses/$courseId/modules/$moduleId/questions/$questionId/answers/$answerId/edit'
                         params={{
                           courseId: course.id,
                           moduleId: module.id,
                           questionId: question.id,
+                          answerId: answer.id,
                         }}
-                        onClick={(e) => e.stopPropagation()}
                         className='rounded-xl border bg-white px-3 py-2 text-slate-600 transition hover:text-primary'
                       >
                         <PenLine className='size-4' />
                       </Link>
                     ) : null}
 
-                    {ability.can('delete', 'course_module_questions') ? (
+                    {ability.can('delete', 'course_module_question_answers') ? (
                       <Button
                         type='button'
                         variant='outline'
                         disabled={isDeleting}
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          onDelete(question.id)
-                        }}
+                        onClick={() => onDelete(answer.id)}
                       >
                         {isDeleting ? (
                           <LoaderCircle className='size-4 animate-spin' />

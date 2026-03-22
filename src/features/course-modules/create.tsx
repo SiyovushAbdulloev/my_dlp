@@ -34,9 +34,9 @@ export const courseModuleFormSchema = z.object({
     en: z.string().optional(),
     tg: z.string().optional(),
   }),
-  sort_order: z.coerce.number().min(1),
-  passing_score: z.coerce.number().min(1).max(100),
-  attempts_allowed: z.coerce.number().min(1),
+  sort_order: z.number().min(1),
+  passing_score: z.number().min(1).max(100),
+  attempts_allowed: z.number().min(1),
   randomize_questions: z.boolean(),
 })
 

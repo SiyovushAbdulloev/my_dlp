@@ -152,6 +152,8 @@ export function CoursesEdit() {
                     items={Object.keys(CourseDifficultyLabel).map(
                       (difficulty) => ({
                         value: difficulty,
+                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                        //@ts-expect-error
                         label: CourseDifficultyLabel[difficulty],
                       })
                     )}
@@ -174,6 +176,8 @@ export function CoursesEdit() {
                     onValueChange={field.onChange}
                     items={Object.keys(CourseStatusLabel).map((status) => ({
                       value: status,
+                      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                      //@ts-expect-error
                       label: CourseStatusLabel[status],
                     }))}
                   />

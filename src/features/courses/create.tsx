@@ -36,7 +36,7 @@ export const courseFormSchema = z.object({
     tg: z.string().optional(),
   }),
   difficulty: z.string({ message: 'Сложность обязателен' }),
-  duration_minutes: z.coerce.number().nullable().optional(),
+  duration_minutes: z.number().nullable().optional(),
   status: z.string({ message: 'Статус обязателен' }),
   cover: z.instanceof(File).nullable().optional(),
 })
@@ -151,11 +151,13 @@ export function CoursesCreate() {
                   <SelectDropdown
                     placeholder={'Выберите сложность'}
                     className={'w-full'}
-                    value={field.value}
+                    defaultValue={field.value}
                     onValueChange={field.onChange}
                     items={Object.keys(CourseDifficultyLabel).map(
                       (difficulty) => ({
                         value: difficulty,
+                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                        //@ts-expect-error
                         label: CourseDifficultyLabel[difficulty],
                       })
                     )}
@@ -174,10 +176,12 @@ export function CoursesCreate() {
                   <SelectDropdown
                     className={'w-full'}
                     placeholder={'Выберите статус'}
-                    value={field.value}
+                    defaultValue={field.value}
                     onValueChange={field.onChange}
                     items={Object.keys(CourseStatusLabel).map((status) => ({
                       value: status,
+                      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                      //@ts-expect-error
                       label: CourseStatusLabel[status],
                     }))}
                   />

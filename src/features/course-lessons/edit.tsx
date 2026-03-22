@@ -65,7 +65,7 @@ export function CourseLessonsEdit() {
 
   const visibleExistingFiles = useMemo(() => {
     return (lesson.files ?? []).filter(
-      (file) => !deleteFileIds.includes(file.id)
+      (file) => !deleteFileIds.includes(String(file.id))
     )
   }, [lesson.files, deleteFileIds])
 
@@ -431,7 +431,10 @@ export function CourseLessonsEdit() {
                               type='button'
                               variant='outline'
                               onClick={() =>
-                                setDeleteFileIds((prev) => [...prev, file.id])
+                                setDeleteFileIds((prev) => [
+                                  ...prev,
+                                  String(file.id),
+                                ])
                               }
                             >
                               <Trash className='size-4' />

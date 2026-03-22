@@ -298,5 +298,32 @@ export function defineAbilitiesFor(user: User | null) {
     can('delete', 'course_module_questions')
   }
 
+  //Module question answers
+  if (
+    permissions.find((p) => p.name === 'course_module_question_answers_list')
+  ) {
+    can('list', 'course_module_question_answers')
+  }
+  if (
+    permissions.find((p) => p.name === 'course_module_question_answers_create')
+  ) {
+    can('create', 'course_module_question_answers')
+  }
+  if (
+    permissions.find((p) => p.name === 'course_module_question_answers_view')
+  ) {
+    can('view', 'course_module_question_answers')
+  }
+  if (
+    permissions.find((p) => p.name === 'course_module_question_answers_edit')
+  ) {
+    can('edit', 'course_module_question_answers')
+  }
+  if (
+    permissions.find((p) => p.name === 'course_module_question_answers_delete')
+  ) {
+    can('delete', 'course_module_question_answers')
+  }
+
   return build()
 }
