@@ -31,7 +31,7 @@ export const moduleQuestionFormSchema = z.object({
     tg: z.string().min(1),
   }),
   type: z.string({ message: 'Тип обязателен' }),
-  sort_order: z.number().min(1),
+  sort_order: z.string({ message: 'Порядковый номер обязателен' }),
 })
 
 export type ModuleQuestionForm = z.infer<typeof moduleQuestionFormSchema>

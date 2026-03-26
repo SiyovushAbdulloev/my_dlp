@@ -37,7 +37,7 @@ export function ModuleQuestionsEdit() {
     defaultValues: {
       text: question.text,
       type: String(question.type),
-      sort_order: question.sort_order,
+      sort_order: String(question.sort_order),
     },
   })
 
