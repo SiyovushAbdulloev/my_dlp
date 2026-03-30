@@ -1,68 +1,61 @@
-import { Logo } from '@/assets/logo'
-import { cn } from '@/lib/utils'
-import dashboardDark from './assets/dashboard-dark.png'
-import dashboardLight from './assets/dashboard-light.png'
+import { GraduationCap } from 'lucide-react'
 import { UserAuthForm } from './components/user-auth-form'
 
 export function SignIn2() {
   return (
-    <div className='relative container grid h-svh flex-col items-center justify-center lg:max-w-none lg:grid-cols-2 lg:px-0'>
-      <div className='lg:p-8'>
-        <div className='mx-auto flex w-full flex-col justify-center space-y-2 py-8 sm:w-[480px] sm:p-8'>
-          <div className='mb-4 flex items-center justify-center'>
-            <Logo className='me-2' />
-            <h1 className='text-xl font-medium'>Shadcn Admin</h1>
-          </div>
-        </div>
-        <div className='mx-auto flex w-full max-w-sm flex-col justify-center space-y-2'>
-          <div className='flex flex-col space-y-2 text-start'>
-            <h2 className='text-lg font-semibold tracking-tight'>Sign in</h2>
-            <p className='text-sm text-muted-foreground'>
-              Enter your email and password below <br />
-              to log into your account
-            </p>
-          </div>
-          <UserAuthForm />
-          <p className='px-8 text-center text-sm text-muted-foreground'>
-            By clicking sign in, you agree to our{' '}
-            <a
-              href='/terms'
-              className='underline underline-offset-4 hover:text-primary'
-            >
-              Terms of Service
-            </a>{' '}
-            and{' '}
-            <a
-              href='/privacy'
-              className='underline underline-offset-4 hover:text-primary'
-            >
-              Privacy Policy
-            </a>
-            .
-          </p>
-        </div>
-      </div>
+    <div className='min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50'>
+      <div className='flex min-h-screen items-center justify-center p-4'>
+        <div className='grid w-full max-w-6xl items-center gap-8 lg:grid-cols-2'>
+          {/* Left side */}
+          <div className='hidden lg:block'>
+            <div className='relative overflow-hidden rounded-3xl shadow-2xl'>
+              <img
+                src='https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1200&q=80'
+                alt='Learning platform'
+                className='h-[640px] w-full object-cover'
+              />
+              <div className='absolute inset-0 bg-gradient-to-t from-indigo-950/90 via-indigo-900/45 to-transparent' />
 
-      <div
-        className={cn(
-          'relative h-full overflow-hidden bg-muted max-lg:hidden',
-          '[&>img]:absolute [&>img]:top-[15%] [&>img]:left-20 [&>img]:h-full [&>img]:w-full [&>img]:object-cover [&>img]:object-top-left [&>img]:select-none'
-        )}
-      >
-        <img
-          src={dashboardLight}
-          className='dark:hidden'
-          width={1024}
-          height={1151}
-          alt='Shadcn-Admin'
-        />
-        <img
-          src={dashboardDark}
-          className='hidden dark:block'
-          width={1024}
-          height={1138}
-          alt='Shadcn-Admin'
-        />
+              <div className='absolute right-0 bottom-0 left-0 p-10'>
+                <div className='mb-4 flex items-center gap-3'>
+                  <div className='flex h-12 w-12 items-center justify-center rounded-full bg-white'>
+                    <GraduationCap className='size-7 text-indigo-600' />
+                  </div>
+                  <h2 className='text-3xl font-bold text-white'>
+                    Digital Learning Platform
+                  </h2>
+                </div>
+
+                <p className='max-w-xl text-lg leading-relaxed text-white/90'>
+                  Войдите в систему и продолжите обучение, управление курсами и
+                  работу с учебными материалами.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Right side */}
+          <div className='mx-auto w-full max-w-md'>
+            <div className='rounded-3xl border-0 bg-white p-8 shadow-xl'>
+              <div className='mb-8'>
+                <div className='mb-6 flex items-center justify-center lg:hidden'>
+                  <div className='flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-red-600 via-red-500 to-yellow-500 shadow-md'>
+                    <span className='text-base font-bold text-white'>ҶТ</span>
+                  </div>
+                </div>
+
+                <h1 className='mb-2 text-3xl font-semibold text-slate-900'>
+                  С возвращением
+                </h1>
+                <p className='text-slate-500'>
+                  Войдите, чтобы продолжить работу в системе
+                </p>
+              </div>
+
+              <UserAuthForm />
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   )

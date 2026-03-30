@@ -1,7 +1,6 @@
 import * as React from 'react'
-import { Eye, EyeOff } from 'lucide-react'
+import { Eye, EyeOff, Lock } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { Button } from './ui/button'
 
 type PasswordInputProps = Omit<
   React.InputHTMLAttributes<HTMLInputElement>,
@@ -19,24 +18,35 @@ export function PasswordInput({
   const [showPassword, setShowPassword] = React.useState(false)
 
   return (
-    <div className={cn('relative rounded-md', className)}>
+    <div className={cn('relative', className)}>
+      <Lock className='pointer-events-none absolute top-1/2 left-3 z-10 size-5 -translate-y-1/2 text-slate-400' />
+
       <input
         type={showPassword ? 'text' : 'password'}
-        className='flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-xs transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-hidden disabled:cursor-not-allowed disabled:opacity-50'
         ref={ref}
         disabled={disabled}
+        className={cn(
+          'flex h-12 w-full min-w-0 rounded-xl border border-slate-200 bg-slate-50 py-3 pr-11 pl-11 text-sm text-slate-900 shadow-sm transition-[color,box-shadow,border-color] outline-none',
+          'placeholder:text-slate-400',
+          'disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50',
+          'focus-visible:border-indigo-500 focus-visible:ring-4 focus-visible:ring-indigo-500/10',
+          'aria-invalid:border-destructive aria-invalid:ring-4 aria-invalid:ring-destructive/10'
+        )}
         {...props}
       />
-      <Button
+
+      <button
         type='button'
-        size='icon'
-        variant='ghost'
         disabled={disabled}
-        className='absolute end-1 top-1/2 h-6 w-6 -translate-y-1/2 rounded-md text-muted-foreground'
+        className='absolute top-1/2 right-3 z-10 -translate-y-1/2 text-slate-400 transition hover:text-slate-600 disabled:pointer-events-none'
         onClick={() => setShowPassword((prev) => !prev)}
       >
-        {showPassword ? <Eye size={18} /> : <EyeOff size={18} />}
-      </Button>
+        {showPassword ? (
+          <EyeOff className='size-5' />
+        ) : (
+          <Eye className='size-5' />
+        )}
+      </button>
     </div>
   )
 }
