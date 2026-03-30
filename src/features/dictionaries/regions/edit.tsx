@@ -3,10 +3,8 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate } from '@tanstack/react-router'
 import { Route } from '@/routes/_authenticated/dictionaries/regions/$regionId.edit.tsx'
-import { ArrowLeft, Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { edit } from '@/api/dictionaries/regions'
-import { Button } from '@/components/ui/button.tsx'
 import {
   Form,
   FormControl,
@@ -22,7 +20,7 @@ import {
   TabsList,
   TabsTrigger,
 } from '@/components/ui/tabs.tsx'
-import { Main } from '@/components/layout/main'
+import { AdminFormCard } from '@/components/admin/form-card.tsx'
 import {
   type RegionForm,
   regionFormSchema,
@@ -61,85 +59,73 @@ export function RegionsEdit() {
 
   return (
     <>
-      <Main className='flex flex-1 flex-col gap-4 sm:gap-6'>
-        <header className={'flex items-center justify-between'}>
-          <h1>Редактировать регион</h1>
-          <Button onClick={() => navigate({ to: '/dictionaries/regions' })}>
-            <ArrowLeft size={18} />
-            Назад
-          </Button>
-        </header>
+      <Form {...form}>
+        <AdminFormCard
+          title='Редактировать регион'
+          backTo='/dictionaries/regions'
+          actionText='Сохранить'
+          loading={loading}
+          onSubmit={form.handleSubmit(onSubmit)}
+        >
+          <Tabs defaultValue={defaultLang} className='w-full'>
+            <div className='flex items-center justify-between'>
+              <TabsList>
+                <TabsTrigger value='ru'>RU</TabsTrigger>
+                <TabsTrigger value='en'>EN</TabsTrigger>
+                <TabsTrigger value='tg'>TG</TabsTrigger>
+              </TabsList>
+            </div>
 
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className='space-y-6 px-4'
-          >
-            <Tabs defaultValue={defaultLang} className='w-full'>
-              <div className='flex items-center justify-between'>
-                <TabsList>
-                  <TabsTrigger value='ru'>RU</TabsTrigger>
-                  <TabsTrigger value='en'>EN</TabsTrigger>
-                  <TabsTrigger value='tg'>TG</TabsTrigger>
-                </TabsList>
-              </div>
+            <TabsContent value='ru' className='mt-4'>
+              <FormField
+                control={form.control}
+                name='name_ru'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className='text-sm'>Наименование</FormLabel>
+                    <FormControl>
+                      <Input {...field} placeholder='На русском' />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </TabsContent>
 
-              <TabsContent value='ru' className='mt-4'>
-                <FormField
-                  control={form.control}
-                  name='name_ru'
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className='text-sm'>Наименование</FormLabel>
-                      <FormControl>
-                        <Input {...field} placeholder='На русском' />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </TabsContent>
+            <TabsContent value='en' className='mt-4'>
+              <FormField
+                control={form.control}
+                name='name_en'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className='text-sm'>Наименование</FormLabel>
+                    <FormControl>
+                      <Input {...field} placeholder='In English' />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </TabsContent>
 
-              <TabsContent value='en' className='mt-4'>
-                <FormField
-                  control={form.control}
-                  name='name_en'
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className='text-sm'>Наименование</FormLabel>
-                      <FormControl>
-                        <Input {...field} placeholder='In English' />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </TabsContent>
-
-              <TabsContent value='tg' className='mt-4'>
-                <FormField
-                  control={form.control}
-                  name='name_tj'
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className='text-sm'>Наименование</FormLabel>
-                      <FormControl>
-                        <Input {...field} placeholder='Ба тоҷикӣ' />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </TabsContent>
-            </Tabs>
-
-            <Button disabled={loading} type='submit'>
-              {loading ? <Loader2 className='animate-spin' /> : null}
-              Сохранить
-            </Button>
-          </form>
-        </Form>
-      </Main>
+            <TabsContent value='tg' className='mt-4'>
+              <FormField
+                control={form.control}
+                name='name_tj'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className='text-sm'>Наименование</FormLabel>
+                    <FormControl>
+                      <Input {...field} placeholder='Ба тоҷикӣ' />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </TabsContent>
+          </Tabs>
+        </AdminFormCard>
+      </Form>
     </>
   )
 }
