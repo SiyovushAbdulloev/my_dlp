@@ -29,7 +29,7 @@ function RouteComponent() {
 
   return (
     <>
-      <Header fixed className='border-b'>
+      <Header>
         <Search />
         <div className='ms-auto flex items-center space-x-4'>
           <ThemeSwitch />

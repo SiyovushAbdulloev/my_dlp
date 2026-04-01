@@ -25,7 +25,6 @@ import { Route as AuthenticatedWebinarsIndexRouteImport } from './routes/_authen
 import { Route as AuthenticatedVideoLessonsIndexRouteImport } from './routes/_authenticated/video-lessons/index'
 import { Route as AuthenticatedUsersIndexRouteImport } from './routes/_authenticated/users/index'
 import { Route as AuthenticatedTeachersIndexRouteImport } from './routes/_authenticated/teachers/index'
-import { Route as AuthenticatedTasksIndexRouteImport } from './routes/_authenticated/tasks/index'
 import { Route as AuthenticatedSubjectsIndexRouteImport } from './routes/_authenticated/subjects/index'
 import { Route as AuthenticatedSubjectClassIndexRouteImport } from './routes/_authenticated/subject-class/index'
 import { Route as AuthenticatedStudentsIndexRouteImport } from './routes/_authenticated/students/index'
@@ -179,11 +178,6 @@ const AuthenticatedTeachersIndexRoute =
     path: '/teachers/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedTasksIndexRoute = AuthenticatedTasksIndexRouteImport.update({
-  id: '/tasks/',
-  path: '/tasks/',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
 const AuthenticatedSubjectsIndexRoute =
   AuthenticatedSubjectsIndexRouteImport.update({
     id: '/subjects/',
@@ -656,7 +650,6 @@ export interface FileRoutesByFullPath {
   '/students': typeof AuthenticatedStudentsIndexRoute
   '/subject-class': typeof AuthenticatedSubjectClassIndexRoute
   '/subjects': typeof AuthenticatedSubjectsIndexRoute
-  '/tasks': typeof AuthenticatedTasksIndexRoute
   '/teachers': typeof AuthenticatedTeachersIndexRoute
   '/users': typeof AuthenticatedUsersIndexRoute
   '/video-lessons': typeof AuthenticatedVideoLessonsIndexRoute
@@ -742,7 +735,6 @@ export interface FileRoutesByTo {
   '/students': typeof AuthenticatedStudentsIndexRoute
   '/subject-class': typeof AuthenticatedSubjectClassIndexRoute
   '/subjects': typeof AuthenticatedSubjectsIndexRoute
-  '/tasks': typeof AuthenticatedTasksIndexRoute
   '/teachers': typeof AuthenticatedTeachersIndexRoute
   '/users': typeof AuthenticatedUsersIndexRoute
   '/video-lessons': typeof AuthenticatedVideoLessonsIndexRoute
@@ -832,7 +824,6 @@ export interface FileRoutesById {
   '/_authenticated/students/': typeof AuthenticatedStudentsIndexRoute
   '/_authenticated/subject-class/': typeof AuthenticatedSubjectClassIndexRoute
   '/_authenticated/subjects/': typeof AuthenticatedSubjectsIndexRoute
-  '/_authenticated/tasks/': typeof AuthenticatedTasksIndexRoute
   '/_authenticated/teachers/': typeof AuthenticatedTeachersIndexRoute
   '/_authenticated/users/': typeof AuthenticatedUsersIndexRoute
   '/_authenticated/video-lessons/': typeof AuthenticatedVideoLessonsIndexRoute
@@ -921,7 +912,6 @@ export interface FileRouteTypes {
     | '/students'
     | '/subject-class'
     | '/subjects'
-    | '/tasks'
     | '/teachers'
     | '/users'
     | '/video-lessons'
@@ -1007,7 +997,6 @@ export interface FileRouteTypes {
     | '/students'
     | '/subject-class'
     | '/subjects'
-    | '/tasks'
     | '/teachers'
     | '/users'
     | '/video-lessons'
@@ -1096,7 +1085,6 @@ export interface FileRouteTypes {
     | '/_authenticated/students/'
     | '/_authenticated/subject-class/'
     | '/_authenticated/subjects/'
-    | '/_authenticated/tasks/'
     | '/_authenticated/teachers/'
     | '/_authenticated/users/'
     | '/_authenticated/video-lessons/'
@@ -1261,13 +1249,6 @@ declare module '@tanstack/react-router' {
       path: '/teachers'
       fullPath: '/teachers'
       preLoaderRoute: typeof AuthenticatedTeachersIndexRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/tasks/': {
-      id: '/_authenticated/tasks/'
-      path: '/tasks'
-      fullPath: '/tasks'
-      preLoaderRoute: typeof AuthenticatedTasksIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/subjects/': {
@@ -1849,7 +1830,6 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedStudentsIndexRoute: typeof AuthenticatedStudentsIndexRoute
   AuthenticatedSubjectClassIndexRoute: typeof AuthenticatedSubjectClassIndexRoute
   AuthenticatedSubjectsIndexRoute: typeof AuthenticatedSubjectsIndexRoute
-  AuthenticatedTasksIndexRoute: typeof AuthenticatedTasksIndexRoute
   AuthenticatedTeachersIndexRoute: typeof AuthenticatedTeachersIndexRoute
   AuthenticatedUsersIndexRoute: typeof AuthenticatedUsersIndexRoute
   AuthenticatedVideoLessonsIndexRoute: typeof AuthenticatedVideoLessonsIndexRoute
@@ -1928,7 +1908,6 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedStudentsIndexRoute: AuthenticatedStudentsIndexRoute,
   AuthenticatedSubjectClassIndexRoute: AuthenticatedSubjectClassIndexRoute,
   AuthenticatedSubjectsIndexRoute: AuthenticatedSubjectsIndexRoute,
-  AuthenticatedTasksIndexRoute: AuthenticatedTasksIndexRoute,
   AuthenticatedTeachersIndexRoute: AuthenticatedTeachersIndexRoute,
   AuthenticatedUsersIndexRoute: AuthenticatedUsersIndexRoute,
   AuthenticatedVideoLessonsIndexRoute: AuthenticatedVideoLessonsIndexRoute,
