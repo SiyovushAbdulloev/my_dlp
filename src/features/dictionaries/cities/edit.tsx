@@ -1,15 +1,13 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate } from '@tanstack/react-router'
-import { Route } from '@/routes/_authenticated/dictionaries/cities/$cityId.edit.tsx'
-import { CityTypeLabel } from '@/types/city.ts'
-import { ArrowLeft, Loader2 } from 'lucide-react'
+import { Route } from '@/routes/_authenticated/dictionaries/cities/$cityId.edit'
+import { CityTypeLabel } from '@/types/city'
 import { toast } from 'sonner'
 import { edit } from '@/api/dictionaries/cities'
 import { fetchIndex } from '@/api/dictionaries/districts'
-import { applyValidationErrors } from '@/lib/applyValidationErrors.ts'
-import { Button } from '@/components/ui/button.tsx'
+import { applyValidationErrors } from '@/lib/applyValidationErrors'
 import {
   Form,
   FormControl,
@@ -17,27 +15,22 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form.tsx'
-import { Input } from '@/components/ui/input.tsx'
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from '@/components/ui/tabs.tsx'
-import { Combobox } from '@/components/combobox.tsx'
-import { Main } from '@/components/layout/main'
-import { SelectDropdown } from '@/components/select-dropdown.tsx'
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { AdminFormCard } from '@/components/admin/form-card'
+import { Combobox } from '@/components/combobox'
+import { SelectDropdown } from '@/components/select-dropdown'
 import {
   type CityForm,
   cityFormSchema,
-} from '@/features/dictionaries/cities/create.tsx'
+} from '@/features/dictionaries/cities/create'
 
 const defaultLang = 'en'
 
 export function CitiesEdit() {
   const navigate = useNavigate()
-  const [loading, setLoading] = useState<boolean>(false)
+  const [loading, setLoading] = useState(false)
   const { city } = Route.useRouteContext()
 
   const form = useForm<CityForm>({
@@ -46,14 +39,22 @@ export function CitiesEdit() {
       name_ru: city.name_ru,
       name_en: city.name_en,
       name_tj: city.name_tj,
-      type: Object.keys(CityTypeLabel).find(
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        //@ts-expect-error
-        (k) => CityTypeLabel[k] === city.type
-      ),
+      type:
+        Object.keys(CityTypeLabel).find(
+          (k) => CityTypeLabel[k as keyof typeof CityTypeLabel] === city.type
+        ) ?? '',
       district_id: city.district.id,
     },
   })
+
+  const cityTypeItems = useMemo(
+    () =>
+      Object.keys(CityTypeLabel).map((key) => ({
+        value: key,
+        label: CityTypeLabel[key as keyof typeof CityTypeLabel],
+      })),
+    []
+  )
 
   const onSubmit = async (data: CityForm) => {
     setLoading(true)
@@ -72,131 +73,115 @@ export function CitiesEdit() {
   }
 
   return (
-    <>
-      <Main className='flex flex-1 flex-col gap-4 sm:gap-6'>
-        <header className={'flex items-center justify-between'}>
-          <h1>Редактировать город</h1>
-          <Button onClick={() => navigate({ to: '/dictionaries/cities' })}>
-            <ArrowLeft size={18} />
-            Назад
-          </Button>
-        </header>
+    <Form {...form}>
+      <AdminFormCard
+        title='Редактировать город'
+        backTo='/dictionaries/cities'
+        actionText='Сохранить'
+        loading={loading}
+        onSubmit={form.handleSubmit(onSubmit)}
+      >
+        <div className='space-y-6'>
+          <Tabs defaultValue={defaultLang} className='w-full'>
+            <div className='flex items-center justify-between'>
+              <TabsList>
+                <TabsTrigger value='ru'>RU</TabsTrigger>
+                <TabsTrigger value='en'>EN</TabsTrigger>
+                <TabsTrigger value='tg'>TG</TabsTrigger>
+              </TabsList>
+            </div>
 
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className='space-y-6 px-4'
-          >
-            <Tabs defaultValue={defaultLang} className='w-full'>
-              <div className='flex items-center justify-between'>
-                <TabsList>
-                  <TabsTrigger value='ru'>RU</TabsTrigger>
-                  <TabsTrigger value='en'>EN</TabsTrigger>
-                  <TabsTrigger value='tg'>TG</TabsTrigger>
-                </TabsList>
-              </div>
+            <TabsContent value='ru' className='mt-4'>
+              <FormField
+                control={form.control}
+                name='name_ru'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className='text-sm'>Наименование</FormLabel>
+                    <FormControl>
+                      <Input {...field} placeholder='На русском' />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </TabsContent>
 
-              <TabsContent value='ru' className='mt-4'>
-                <FormField
-                  control={form.control}
-                  name='name_ru'
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className='text-sm'>Наименование</FormLabel>
-                      <FormControl>
-                        <Input {...field} placeholder='На русском' />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+            <TabsContent value='en' className='mt-4'>
+              <FormField
+                control={form.control}
+                name='name_en'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className='text-sm'>Наименование</FormLabel>
+                    <FormControl>
+                      <Input {...field} placeholder='In English' />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </TabsContent>
+
+            <TabsContent value='tg' className='mt-4'>
+              <FormField
+                control={form.control}
+                name='name_tj'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className='text-sm'>Наименование</FormLabel>
+                    <FormControl>
+                      <Input {...field} placeholder='Ба тоҷикӣ' />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </TabsContent>
+          </Tabs>
+
+          <FormField
+            control={form.control}
+            name='type'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Тип</FormLabel>
+                <SelectDropdown
+                  className='w-full'
+                  defaultValue={field.value}
+                  onValueChange={field.onChange}
+                  placeholder='Выберите тип'
+                  items={cityTypeItems}
                 />
-              </TabsContent>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-              <TabsContent value='en' className='mt-4'>
-                <FormField
-                  control={form.control}
-                  name='name_en'
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className='text-sm'>Наименование</FormLabel>
-                      <FormControl>
-                        <Input {...field} placeholder='In English' />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </TabsContent>
-
-              <TabsContent value='tg' className='mt-4'>
-                <FormField
-                  control={form.control}
-                  name='name_tj'
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className='text-sm'>Наименование</FormLabel>
-                      <FormControl>
-                        <Input {...field} placeholder='Ба тоҷикӣ' />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </TabsContent>
-            </Tabs>
-
-            <FormField
-              control={form.control}
-              name='type'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Тип</FormLabel>
-                  <SelectDropdown
-                    defaultValue={field.value}
-                    onValueChange={field.onChange}
-                    placeholder='Выберите регион'
-                    items={Object.keys(CityTypeLabel).map((key) => ({
-                      value: key,
-                      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                      //@ts-expect-error
-                      label: CityTypeLabel[key],
-                    }))}
+          <FormField
+            control={form.control}
+            name='district_id'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Район</FormLabel>
+                <FormControl>
+                  <Combobox
+                    value={field.value}
+                    onChange={field.onChange}
+                    placeholder='Выберите район'
+                    searchPlaceholder='Поиск по районам...'
+                    load={({ page, q }) => fetchIndex(page, q)}
+                    getValue={(d) => String(d.id)}
+                    getLabel={(d) => d.name_ru}
+                    initialSelected={city.district}
                   />
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name='district_id'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Район</FormLabel>
-                  <FormControl>
-                    <Combobox
-                      value={field.value}
-                      onChange={field.onChange}
-                      placeholder='Выберите район'
-                      searchPlaceholder='Поиск по районам...'
-                      load={({ page, q }) => fetchIndex(page, q)} // позже добавишь q в API
-                      getValue={(d) => String(d.id)}
-                      getLabel={(d) => d.name_ru}
-                      initialSelected={city.district} // ✅ объект выбранного района
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <Button disabled={loading} type='submit'>
-              {loading ? <Loader2 className='animate-spin' /> : null}
-              Сохранить
-            </Button>
-          </form>
-        </Form>
-      </Main>
-    </>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+      </AdminFormCard>
+    </Form>
   )
 }

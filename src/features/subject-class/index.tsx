@@ -1,33 +1,19 @@
 import { useNavigate } from '@tanstack/react-router'
-import { Plus } from 'lucide-react'
-import { ability } from '@/lib/casl/ability.ts'
-import { Button } from '@/components/ui/button.tsx'
-import { Main } from '@/components/layout/main'
-import { SubjectClassTable } from '@/features/subject-class/components/subject-class-table.tsx'
+import { ability } from '@/lib/casl/ability'
+import { AdminIndexPage } from '@/components/admin/index-page'
+import { SubjectClassTable } from '@/features/subject-class/components/subject-class-table'
 
 export function SubjectClass() {
   const navigate = useNavigate()
 
   return (
-    <>
-      <Main className='flex flex-1 flex-col gap-4 sm:gap-6'>
-        <div className='flex flex-wrap items-end justify-between gap-2'>
-          <div>
-            <h2 className='text-2xl font-bold tracking-tight'>
-              Предметы-Классы
-            </h2>
-          </div>
-          {ability.can('create', 'subject_class') ? (
-            <Button
-              className='space-x-1'
-              onClick={() => navigate({ to: '/subject-class/create' })}
-            >
-              <span>Прикрепить предмет к классу</span> <Plus size={18} />
-            </Button>
-          ) : null}
-        </div>
-        <SubjectClassTable />
-      </Main>
-    </>
+    <AdminIndexPage
+      title='Предметы-Классы'
+      createLabel='Прикрепить'
+      canCreate={ability.can('create', 'subject_class')}
+      onCreate={() => navigate({ to: '/subject-class/create' })}
+    >
+      <SubjectClassTable />
+    </AdminIndexPage>
   )
 }

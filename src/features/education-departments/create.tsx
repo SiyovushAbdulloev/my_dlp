@@ -26,9 +26,15 @@ import {
 import { Main } from '@/components/layout/main'
 
 export const educationDepartmentFormSchema = z.object({
-  name_ru: z.string().min(1, 'Наименование на русском обязательно'),
-  name_en: z.string().min(1, 'Наименование на английском обязательно'),
-  name_tj: z.string().min(1, 'Наименование на таджикском обязательно'),
+  name_ru: z
+    .string({ message: 'Наименование на русском обязательно' })
+    .min(1, 'Наименование на русском обязательно'),
+  name_en: z
+    .string({ message: 'Наименование на английском обязательно' })
+    .min(1, 'Наименование на английском обязательно'),
+  name_tj: z
+    .string({ message: 'Наименование на таджикском обязательно' })
+    .min(1, 'Наименование на таджикском обязательно'),
 })
 
 export type EducationDepartmentForm = z.infer<

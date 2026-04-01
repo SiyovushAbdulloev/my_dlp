@@ -2,14 +2,12 @@ import * as React from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate } from '@tanstack/react-router'
-import { Route } from '@/routes/_authenticated/roles/$roleId.edit.tsx'
-import { type Permission } from '@/types/role.ts'
-import { ArrowLeft, Loader2 } from 'lucide-react'
+import { Route } from '@/routes/_authenticated/roles/$roleId.edit'
+import { type Permission } from '@/types/role'
 import { toast } from 'sonner'
 import { edit } from '@/api/roles'
-import { applyValidationErrors } from '@/lib/applyValidationErrors.ts'
+import { applyValidationErrors } from '@/lib/applyValidationErrors'
 import { cn } from '@/lib/utils'
-import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import {
   Form,
@@ -21,8 +19,8 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
-import { Main } from '@/components/layout/main'
-import { type RoleForm, roleFormSchema } from '@/features/roles/create.tsx'
+import { AdminFormCard } from '@/components/admin/form-card'
+import { type RoleForm, roleFormSchema } from '@/features/roles/create'
 
 export function RolesEdit() {
   const navigate = useNavigate()
@@ -37,9 +35,6 @@ export function RolesEdit() {
     },
   })
 
-  // Flatten only real selectable permissions:
-  // - children if parent has children
-  // - parent itself if no children
   const normalizedGroups = React.useMemo(() => {
     return groups.data.map((g: Permission) => {
       const children = g.children ?? []
@@ -72,7 +67,6 @@ export function RolesEdit() {
     return normalizedGroups.flatMap((g) => g.items.map((i) => i.id))
   }, [normalizedGroups])
 
-  // Fill selected permissions from backend role once groups are ready
   React.useEffect(() => {
     const rolePermissions =
       role.permissions?.map((p: { name: string }) => String(p.name)) ?? []
@@ -107,8 +101,9 @@ export function RolesEdit() {
 
     if (ids.length === 0) return { checked: false, indeterminate: false }
     if (checkedCount === 0) return { checked: false, indeterminate: false }
-    if (checkedCount === ids.length)
+    if (checkedCount === ids.length) {
       return { checked: true, indeterminate: false }
+    }
 
     return { checked: false, indeterminate: true }
   }
@@ -153,21 +148,15 @@ export function RolesEdit() {
   }
 
   return (
-    <Main className='flex flex-1 flex-col gap-4 sm:gap-6'>
-      <header className='flex items-center justify-between'>
-        <h1 className='text-xl font-semibold'>Редактировать роль</h1>
-        <Button
-          type='button'
-          variant='outline'
-          onClick={() => navigate({ to: '/roles' })}
-        >
-          <ArrowLeft size={18} />
-          Назад
-        </Button>
-      </header>
-
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6 px-4'>
+    <Form {...form}>
+      <AdminFormCard
+        title='Редактировать роль'
+        backTo='/roles'
+        actionText='Сохранить'
+        loading={submitting}
+        onSubmit={form.handleSubmit(onSubmit)}
+      >
+        <div className='space-y-6'>
           <FormField
             control={form.control}
             name='description'
@@ -186,7 +175,7 @@ export function RolesEdit() {
             )}
           />
 
-          <div className='rounded-md border p-4'>
+          <div className='rounded-xl border border-slate-200 bg-white p-4'>
             <div className='flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between'>
               <div>
                 <div className='text-sm font-medium'>Права</div>
@@ -219,7 +208,10 @@ export function RolesEdit() {
                 ).length
 
                 return (
-                  <div key={group.id} className='rounded-md border p-3'>
+                  <div
+                    key={group.id}
+                    className='rounded-xl border border-slate-200 p-3'
+                  >
                     <div className='flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between'>
                       <div className='flex items-center gap-2'>
                         <Checkbox
@@ -251,8 +243,8 @@ export function RolesEdit() {
                           <label
                             key={item.id}
                             className={cn(
-                              'flex cursor-pointer items-center gap-2 rounded-md border px-3 py-2 text-sm transition-colors hover:bg-muted/50',
-                              checked && 'bg-muted'
+                              'flex cursor-pointer items-center gap-2 rounded-lg border border-slate-200 px-3 py-2 text-sm transition-colors hover:bg-slate-50',
+                              checked && 'bg-slate-100'
                             )}
                           >
                             <Checkbox
@@ -279,19 +271,8 @@ export function RolesEdit() {
               )}
             />
           </div>
-
-          <Button
-            disabled={submitting}
-            type='submit'
-            className='w-full sm:w-auto'
-          >
-            {submitting ? (
-              <Loader2 className='mr-2 size-4 animate-spin' />
-            ) : null}
-            Сохранить
-          </Button>
-        </form>
-      </Form>
-    </Main>
+        </div>
+      </AdminFormCard>
+    </Form>
   )
 }

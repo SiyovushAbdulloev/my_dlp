@@ -1,31 +1,19 @@
 import { useNavigate } from '@tanstack/react-router'
-import { Plus } from 'lucide-react'
-import { ability } from '@/lib/casl/ability.ts'
-import { Button } from '@/components/ui/button.tsx'
-import { Main } from '@/components/layout/main'
-import { CitiesTable } from './components/cities-table.tsx'
+import { ability } from '@/lib/casl/ability'
+import { AdminIndexPage } from '@/components/admin/index-page'
+import { CitiesTable } from './components/cities-table'
 
 export function Cities() {
   const navigate = useNavigate()
 
   return (
-    <>
-      <Main className='flex flex-1 flex-col gap-4 sm:gap-6'>
-        <div className='flex flex-wrap items-end justify-between gap-2'>
-          <div>
-            <h2 className='text-2xl font-bold tracking-tight'>Города</h2>
-          </div>
-          {ability.can('create', 'cities') ? (
-            <Button
-              className='space-x-1'
-              onClick={() => navigate({ to: '/dictionaries/cities/create' })}
-            >
-              <span>Создать город</span> <Plus size={18} />
-            </Button>
-          ) : null}
-        </div>
-        <CitiesTable />
-      </Main>
-    </>
+    <AdminIndexPage
+      title='Города'
+      createLabel='Создать'
+      canCreate={ability.can('create', 'cities')}
+      onCreate={() => navigate({ to: '/dictionaries/cities/create' })}
+    >
+      <CitiesTable />
+    </AdminIndexPage>
   )
 }

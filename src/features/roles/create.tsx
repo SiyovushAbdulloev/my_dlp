@@ -3,13 +3,11 @@ import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate } from '@tanstack/react-router'
-import { Route } from '@/routes/_authenticated/roles/create.tsx'
-import { ArrowLeft, Loader2 } from 'lucide-react'
+import { Route } from '@/routes/_authenticated/roles/create'
 import { toast } from 'sonner'
 import { create } from '@/api/roles'
-import { applyValidationErrors } from '@/lib/applyValidationErrors.ts'
+import { applyValidationErrors } from '@/lib/applyValidationErrors'
 import { cn } from '@/lib/utils'
-import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import {
   Form,
@@ -21,7 +19,7 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
-import { Main } from '@/components/layout/main'
+import { AdminFormCard } from '@/components/admin/form-card'
 
 export const roleFormSchema = z.object({
   description: z.string().min(1, 'Название роли обязательно'),
@@ -48,9 +46,6 @@ export function RolesCreate() {
   const selected = form.watch('permissions')
   const selectedSet = React.useMemo(() => new Set(selected ?? []), [selected])
 
-  // Flatten only real selectable permissions:
-  // - children if parent has children
-  // - parent itself if no children
   const normalizedGroups = React.useMemo(() => {
     return groups.data.map((g) => {
       const children = g.children ?? []
@@ -100,8 +95,9 @@ export function RolesCreate() {
 
     if (ids.length === 0) return { checked: false, indeterminate: false }
     if (checkedCount === 0) return { checked: false, indeterminate: false }
-    if (checkedCount === ids.length)
+    if (checkedCount === ids.length) {
       return { checked: true, indeterminate: false }
+    }
 
     return { checked: false, indeterminate: true }
   }
@@ -146,21 +142,15 @@ export function RolesCreate() {
   }
 
   return (
-    <Main className='flex flex-1 flex-col gap-4 sm:gap-6'>
-      <header className='flex items-center justify-between'>
-        <h1 className='text-xl font-semibold'>Создать роль</h1>
-        <Button
-          type='button'
-          variant='outline'
-          onClick={() => navigate({ to: '/roles' })}
-        >
-          <ArrowLeft size={18} />
-          Назад
-        </Button>
-      </header>
-
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6 px-4'>
+    <Form {...form}>
+      <AdminFormCard
+        title='Создать роль'
+        backTo='/roles'
+        actionText='Создать'
+        loading={submitting}
+        onSubmit={form.handleSubmit(onSubmit)}
+      >
+        <div className='space-y-6'>
           <FormField
             control={form.control}
             name='description'
@@ -175,7 +165,7 @@ export function RolesCreate() {
             )}
           />
 
-          <div className='rounded-md border p-4'>
+          <div className='rounded-xl border border-slate-200 bg-white p-4'>
             <div className='flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between'>
               <div>
                 <div className='text-sm font-medium'>Права</div>
@@ -208,7 +198,10 @@ export function RolesCreate() {
                 ).length
 
                 return (
-                  <div key={group.id} className='rounded-md border p-3'>
+                  <div
+                    key={group.id}
+                    className='rounded-xl border border-slate-200 p-3'
+                  >
                     <div className='flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between'>
                       <div className='flex items-center gap-2'>
                         <Checkbox
@@ -240,8 +233,8 @@ export function RolesCreate() {
                           <label
                             key={item.id}
                             className={cn(
-                              'flex cursor-pointer items-center gap-2 rounded-md border px-3 py-2 text-sm transition-colors hover:bg-muted/50',
-                              checked && 'bg-muted'
+                              'flex cursor-pointer items-center gap-2 rounded-lg border border-slate-200 px-3 py-2 text-sm transition-colors hover:bg-slate-50',
+                              checked && 'bg-slate-100'
                             )}
                           >
                             <Checkbox
@@ -268,19 +261,8 @@ export function RolesCreate() {
               )}
             />
           </div>
-
-          <Button
-            disabled={submitting}
-            type='submit'
-            className='w-full sm:w-auto'
-          >
-            {submitting ? (
-              <Loader2 className='mr-2 size-4 animate-spin' />
-            ) : null}
-            Создать
-          </Button>
-        </form>
-      </Form>
-    </Main>
+        </div>
+      </AdminFormCard>
+    </Form>
   )
 }
