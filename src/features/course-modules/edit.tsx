@@ -2,12 +2,10 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate } from '@tanstack/react-router'
-import { Route } from '@/routes/_authenticated/courses/$courseId/modules/$moduleId/edit.tsx'
-import { ArrowLeft, Loader2 } from 'lucide-react'
+import { Route } from '@/routes/_authenticated/courses/$courseId/modules/$moduleId/edit'
 import { toast } from 'sonner'
 import { edit } from '@/api/course-modules'
 import { applyValidationErrors } from '@/lib/applyValidationErrors'
-import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import {
   Form,
@@ -20,7 +18,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Textarea } from '@/components/ui/textarea'
-import { Main } from '@/components/layout/main'
+import { AdminFormCard } from '@/components/admin/form-card'
 import {
   courseModuleFormSchema,
   type CourseModuleForm,
@@ -53,34 +51,24 @@ export function CourseModulesEdit() {
         params: { courseId: course.id },
       })
     } catch (e) {
-      if (!applyValidationErrors(form, e)) toast.error('Не валидные данные')
+      if (!applyValidationErrors(form, e)) {
+        toast.error('Не валидные данные')
+      }
     } finally {
       setLoading(false)
     }
   }
 
   return (
-    <Main className='flex flex-1 flex-col gap-4 sm:gap-6'>
-      <header className='flex items-center justify-between'>
-        <h1 className='text-2xl font-bold tracking-tight'>
-          Редактировать модуль
-        </h1>
-        <Button
-          variant='outline'
-          onClick={() =>
-            navigate({
-              to: '/courses/$courseId/modules',
-              params: { courseId: course.id },
-            })
-          }
-        >
-          <ArrowLeft size={18} />
-          Назад
-        </Button>
-      </header>
-
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
+    <Form {...form}>
+      <AdminFormCard
+        title='Редактировать модуль'
+        backTo={`/courses/${course.id}/modules`}
+        actionText='Сохранить'
+        loading={loading}
+        onSubmit={form.handleSubmit(onSubmit)}
+      >
+        <div className='space-y-6'>
           <Tabs defaultValue='ru'>
             <TabsList>
               <TabsTrigger value='ru'>RU</TabsTrigger>
@@ -129,7 +117,11 @@ export function CourseModulesEdit() {
                 <FormItem>
                   <FormLabel>Порядок</FormLabel>
                   <FormControl>
-                    <Input type='number' {...field} />
+                    <Input
+                      type='number'
+                      value={field.value}
+                      onChange={(e) => field.onChange(e.target.value)}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -143,7 +135,11 @@ export function CourseModulesEdit() {
                 <FormItem>
                   <FormLabel>Проходной балл</FormLabel>
                   <FormControl>
-                    <Input type='number' {...field} />
+                    <Input
+                      type='number'
+                      value={field.value}
+                      onChange={(e) => field.onChange(e.target.value)}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -157,7 +153,11 @@ export function CourseModulesEdit() {
                 <FormItem>
                   <FormLabel>Количество попыток</FormLabel>
                   <FormControl>
-                    <Input type='number' {...field} />
+                    <Input
+                      type='number'
+                      value={field.value}
+                      onChange={(e) => field.onChange(e.target.value)}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -182,13 +182,8 @@ export function CourseModulesEdit() {
               </FormItem>
             )}
           />
-
-          <Button disabled={loading} type='submit'>
-            {loading ? <Loader2 className='mr-2 animate-spin' /> : null}
-            Сохранить
-          </Button>
-        </form>
-      </Form>
-    </Main>
+        </div>
+      </AdminFormCard>
+    </Form>
   )
 }

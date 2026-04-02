@@ -1,9 +1,9 @@
 import { useNavigate } from '@tanstack/react-router'
 import { Route } from '@/routes/_authenticated/courses/$courseId/modules'
-import { ArrowLeft, Plus } from 'lucide-react'
-import { ability } from '@/lib/casl/ability.ts'
+import { ArrowLeft } from 'lucide-react'
+import { ability } from '@/lib/casl/ability'
 import { Button } from '@/components/ui/button'
-import { Main } from '@/components/layout/main'
+import { AdminIndexPage } from '@/components/admin/index-page'
 import { CourseModulesTable } from './components/course-modules-table'
 
 export function CourseModules() {
@@ -11,44 +11,25 @@ export function CourseModules() {
   const { course } = Route.useRouteContext()
 
   return (
-    <Main className='flex flex-1 flex-col gap-4 sm:gap-6'>
-      <div className='flex flex-wrap items-end justify-between gap-2'>
-        <div>
-          <h2 className='text-2xl font-bold tracking-tight'>Модули курса</h2>
-          <p className='text-sm text-muted-foreground'>{course.title.ru}</p>
-        </div>
-
-        <div className='flex items-center gap-2'>
-          <Button
-            variant='outline'
-            onClick={() =>
-              navigate({
-                to: '/courses',
-              })
-            }
-          >
-            <ArrowLeft size={18} />
-            Курсы
-          </Button>
-
-          {ability.can('create', 'course_modules') ? (
-            <Button
-              className='space-x-1'
-              onClick={() =>
-                navigate({
-                  to: '/courses/$courseId/modules/create',
-                  params: { courseId: course.id },
-                })
-              }
-            >
-              <span>Создать модуль</span>
-              <Plus size={18} />
-            </Button>
-          ) : null}
-        </div>
-      </div>
-
+    <AdminIndexPage
+      title='Модули курса'
+      subtitle={course.title.ru}
+      createLabel='Создать модуль'
+      canCreate={ability.can('create', 'course_modules')}
+      onCreate={() =>
+        navigate({
+          to: '/courses/$courseId/modules/create',
+          params: { courseId: course.id },
+        })
+      }
+      actions={
+        <Button variant='outline' onClick={() => navigate({ to: '/courses' })}>
+          <ArrowLeft className='size-4' />
+          Курсы
+        </Button>
+      }
+    >
       <CourseModulesTable />
-    </Main>
+    </AdminIndexPage>
   )
 }
