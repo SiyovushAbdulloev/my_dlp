@@ -3,12 +3,11 @@ import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate } from '@tanstack/react-router'
-import { CourseDifficultyLabel, CourseStatusLabel } from '@/types/course.ts'
-import { ArrowLeft, ImageIcon, Loader2 } from 'lucide-react'
+import { CourseDifficultyLabel, CourseStatusLabel } from '@/types/course'
+import { ImageIcon } from 'lucide-react'
 import { toast } from 'sonner'
 import { create } from '@/api/courses'
 import { applyValidationErrors } from '@/lib/applyValidationErrors'
-import { Button } from '@/components/ui/button'
 import { Field } from '@/components/ui/field'
 import {
   Form,
@@ -21,7 +20,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Textarea } from '@/components/ui/textarea'
-import { Main } from '@/components/layout/main'
+import { AdminFormCard } from '@/components/admin/form-card'
 import { SelectDropdown } from '@/components/select-dropdown'
 
 export const courseFormSchema = z.object({
@@ -46,8 +45,17 @@ export type CourseForm = z.infer<typeof courseFormSchema>
 export function CoursesCreate() {
   const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
+
   const form = useForm<CourseForm>({
     resolver: zodResolver(courseFormSchema),
+    defaultValues: {
+      title: { ru: '', en: '', tg: '' },
+      description: { ru: '', en: '', tg: '' },
+      difficulty: '',
+      duration_minutes: null,
+      status: '',
+      cover: null,
+    },
   })
 
   const cover = form.watch('cover')
@@ -70,9 +78,11 @@ export function CoursesCreate() {
 
       fd.append('difficulty', String(data.difficulty))
       fd.append('status', String(data.status))
+
       if (data.duration_minutes) {
         fd.append('duration_minutes', String(data.duration_minutes))
       }
+
       if (data.cover) {
         fd.append('cover', data.cover)
       }
@@ -81,24 +91,24 @@ export function CoursesCreate() {
       toast.success('Курс успешно создан')
       navigate({ to: '/courses' })
     } catch (e) {
-      if (!applyValidationErrors(form, e)) toast.error('Не валидные данные')
+      if (!applyValidationErrors(form, e)) {
+        toast.error('Не валидные данные')
+      }
     } finally {
       setLoading(false)
     }
   }
 
   return (
-    <Main className='flex flex-1 flex-col gap-4 sm:gap-6'>
-      <header className='flex items-center justify-between'>
-        <h1 className='text-2xl font-bold tracking-tight'>Создать курс</h1>
-        <Button variant='outline' onClick={() => navigate({ to: '/courses' })}>
-          <ArrowLeft size={18} />
-          Назад
-        </Button>
-      </header>
-
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
+    <Form {...form}>
+      <AdminFormCard
+        title='Создать курс'
+        backTo='/courses'
+        actionText='Создать'
+        loading={loading}
+        onSubmit={form.handleSubmit(onSubmit)}
+      >
+        <div className='space-y-6'>
           <Tabs defaultValue='ru' className='w-full'>
             <div className='flex items-center justify-between'>
               <TabsList>
@@ -149,16 +159,19 @@ export function CoursesCreate() {
                 <FormItem>
                   <FormLabel>Сложность</FormLabel>
                   <SelectDropdown
-                    placeholder={'Выберите сложность'}
-                    className={'w-full'}
+                    placeholder='Выберите сложность'
+                    className='w-full'
                     defaultValue={field.value}
                     onValueChange={field.onChange}
                     items={Object.keys(CourseDifficultyLabel).map(
                       (difficulty) => ({
                         value: difficulty,
-                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                        //@ts-expect-error
-                        label: CourseDifficultyLabel[difficulty],
+                        label:
+                          CourseDifficultyLabel[
+                            Number(
+                              difficulty
+                            ) as keyof typeof CourseDifficultyLabel
+                          ],
                       })
                     )}
                   />
@@ -174,15 +187,16 @@ export function CoursesCreate() {
                 <FormItem>
                   <FormLabel>Статус</FormLabel>
                   <SelectDropdown
-                    className={'w-full'}
-                    placeholder={'Выберите статус'}
+                    className='w-full'
+                    placeholder='Выберите статус'
                     defaultValue={field.value}
                     onValueChange={field.onChange}
                     items={Object.keys(CourseStatusLabel).map((status) => ({
                       value: status,
-                      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                      //@ts-expect-error
-                      label: CourseStatusLabel[status],
+                      label:
+                        CourseStatusLabel[
+                          Number(status) as keyof typeof CourseStatusLabel
+                        ],
                     }))}
                   />
                   <FormMessage />
@@ -222,7 +236,7 @@ export function CoursesCreate() {
               <FormItem>
                 <FormLabel>Обложка</FormLabel>
                 <FormControl>
-                  <div className='rounded-2xl border p-4'>
+                  <div className='rounded-2xl border border-slate-200 p-4'>
                     <Input
                       type='file'
                       accept='image/*'
@@ -230,6 +244,7 @@ export function CoursesCreate() {
                         field.onChange(e.target.files?.[0] ?? null)
                       }
                     />
+
                     <div className='mt-4 aspect-[16/9] overflow-hidden rounded-xl bg-slate-100'>
                       {coverPreview ? (
                         <img
@@ -249,13 +264,8 @@ export function CoursesCreate() {
               </FormItem>
             )}
           />
-
-          <Button disabled={loading} type='submit'>
-            {loading ? <Loader2 className='mr-2 animate-spin' /> : null}
-            Создать
-          </Button>
-        </form>
-      </Form>
-    </Main>
+        </div>
+      </AdminFormCard>
+    </Form>
   )
 }

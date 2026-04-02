@@ -14,7 +14,7 @@ import { type LaravelPaginatedResource } from 'laravel-resource-pagination-type'
 import { LoaderCircle, PenLine, Trash } from 'lucide-react'
 import { toast } from 'sonner'
 import { deleteById, fetchIndex } from '@/api/courses'
-import { ability } from '@/lib/casl/ability.ts'
+import { ability } from '@/lib/casl/ability'
 import { Button } from '@/components/ui/button'
 import { DataTablePagination } from '@/components/data-table'
 
@@ -65,11 +65,11 @@ export const CoursesTable = () => {
   return (
     <div className='flex flex-col gap-6'>
       <div className='relative'>
-        {fetching && (
+        {fetching ? (
           <div className='absolute inset-0 z-10 flex items-center justify-center rounded-2xl bg-white/70'>
             <LoaderCircle className='size-10 animate-spin' />
           </div>
-        )}
+        ) : null}
 
         {courses?.data?.length ? (
           <div className='grid gap-6 sm:grid-cols-2 xl:grid-cols-3'>
@@ -92,7 +92,7 @@ export const CoursesTable = () => {
                   <div className='aspect-[16/9] bg-slate-100'>
                     {course.cover?.url ? (
                       <img
-                        src={course.cover?.url}
+                        src={course.cover.url}
                         alt={course.title.ru}
                         className='h-full w-full object-cover'
                       />
@@ -103,19 +103,21 @@ export const CoursesTable = () => {
                     <h3 className='text-lg font-semibold text-slate-900'>
                       {course.title.ru}
                     </h3>
+
                     <div className='mt-2 text-sm text-slate-500'>
                       <div>🇬🇧 {course.title.en}</div>
                       <div>🇹🇯 {course.title.tg}</div>
                     </div>
 
                     <div className='mt-4 grid grid-cols-2 gap-3 text-sm'>
-                      <div className='rounded-xl border p-3'>
+                      <div className='rounded-xl border border-slate-200 p-3'>
                         <div className='text-slate-500'>Сложность</div>
                         <div className='font-semibold'>
                           {CourseDifficultyLabel[course.difficulty]}
                         </div>
                       </div>
-                      <div className='rounded-xl border p-3'>
+
+                      <div className='rounded-xl border border-slate-200 p-3'>
                         <div className='text-slate-500'>Статус</div>
                         <div className='font-semibold'>
                           {CourseStatusLabel[course.status]}
@@ -129,7 +131,7 @@ export const CoursesTable = () => {
                           to='/courses/$courseId/edit'
                           params={{ courseId: course.id }}
                           onClick={(e) => e.stopPropagation()}
-                          className='rounded-xl border bg-white px-3 py-2 text-slate-600 transition hover:text-primary'
+                          className='rounded-xl border border-slate-200 bg-white px-3 py-2 text-slate-600 transition hover:text-primary'
                         >
                           <PenLine className='size-4' />
                         </Link>
