@@ -18,7 +18,7 @@ import {
 } from 'lucide-react'
 import { toast } from 'sonner'
 import { deleteById, fetchIndex } from '@/api/course-lessons'
-import { ability } from '@/lib/casl/ability.ts'
+import { ability } from '@/lib/casl/ability'
 import { Button } from '@/components/ui/button'
 import { DataTablePagination } from '@/components/data-table'
 
@@ -79,11 +79,11 @@ export const CourseLessonsTable = () => {
   return (
     <div className='flex flex-col gap-6'>
       <div className='relative'>
-        {fetching && (
+        {fetching ? (
           <div className='absolute inset-0 z-10 flex items-center justify-center rounded-2xl bg-white/70'>
             <LoaderCircle className='size-10 animate-spin' />
           </div>
-        )}
+        ) : null}
 
         {lessons?.data?.length ? (
           <div className='grid gap-6 sm:grid-cols-2 xl:grid-cols-3'>

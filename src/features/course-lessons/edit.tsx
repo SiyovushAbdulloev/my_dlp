@@ -1,19 +1,13 @@
-import { useMemo, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
+import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate } from '@tanstack/react-router'
-import { Route } from '@/routes/_authenticated/courses/$courseId/modules/$moduleId/lessons/$lessonId.edit'
-import {
-  ArrowLeft,
-  FileText,
-  Film,
-  Loader2,
-  Paperclip,
-  Trash,
-} from 'lucide-react'
+import { Route } from '@/routes/_authenticated/courses/$courseId/modules/$moduleId/lessons/create'
+import { FileText, Film, Paperclip, Trash } from 'lucide-react'
 import ReactPlayer from 'react-player'
 import { toast } from 'sonner'
-import { edit } from '@/api/course-lessons'
+import { create } from '@/api/course-lessons'
 import { applyValidationErrors } from '@/lib/applyValidationErrors'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -28,49 +22,70 @@ import {
 import { Input } from '@/components/ui/input'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Textarea } from '@/components/ui/textarea'
-import { Main } from '@/components/layout/main'
-import {
-  courseLessonFormSchema,
-  type CourseLessonForm,
-} from '@/features/course-lessons/create'
+import { AdminFormCard } from '@/components/admin/form-card'
 
-export function CourseLessonsEdit() {
+export const courseLessonFormSchema = z.object({
+  title: z.object({
+    ru: z.string().min(1),
+    en: z.string().min(1),
+    tg: z.string().min(1),
+  }),
+  description: z.object({
+    ru: z.string().optional(),
+    en: z.string().optional(),
+    tg: z.string().optional(),
+  }),
+  sort_order: z.number().min(1),
+  duration_minutes: z.string().nullable().optional(),
+
+  text_content: z.object({
+    ru: z.string().optional(),
+    en: z.string().optional(),
+    tg: z.string().optional(),
+  }),
+
+  use_external_video: z.boolean(),
+  video: z.instanceof(File).nullable().optional(),
+  video_link: z.string().optional(),
+
+  video_description: z.object({
+    ru: z.string().optional(),
+    en: z.string().optional(),
+    tg: z.string().optional(),
+  }),
+
+  attachments: z.array(z.instanceof(File)).optional(),
+})
+
+export type CourseLessonFormInput = z.input<typeof courseLessonFormSchema>
+export type CourseLessonForm = z.output<typeof courseLessonFormSchema>
+
+export function CourseLessonsCreate() {
   const navigate = useNavigate()
-  const { course, module, lesson } = Route.useRouteContext()
-
+  const { course, module } = Route.useRouteContext()
   const [loading, setLoading] = useState(false)
   const [videoPreview, setVideoPreview] = useState<string | null>(null)
-  const [deleteFileIds, setDeleteFileIds] = useState<string[]>([])
 
-  const videoInputRef = useRef<HTMLInputElement | null>(null)
+  const fileInputRef = useRef<HTMLInputElement | null>(null)
   const attachmentsInputRef = useRef<HTMLInputElement | null>(null)
 
-  const form = useForm<CourseLessonForm>({
+  const form = useForm<CourseLessonFormInput, undefined, CourseLessonForm>({
     resolver: zodResolver(courseLessonFormSchema),
     defaultValues: {
-      title: lesson.title,
-      description: lesson.description ?? { ru: '', en: '', tg: '' },
-      sort_order: lesson.sort_order,
-      duration_minutes: lesson.duration_minutes ?? undefined,
-      text_content: lesson.text_content ?? { ru: '', en: '', tg: '' },
-      use_external_video: !lesson.video?.url && !!lesson.video_link,
+      title: { ru: '', en: '', tg: '' },
+      description: { ru: '', en: '', tg: '' },
+      sort_order: 1,
+      duration_minutes: undefined,
+      text_content: { ru: '', en: '', tg: '' },
+      use_external_video: false,
       video: null,
-      video_link: lesson.video_link ?? '',
-      video_description: lesson.video_description ?? { ru: '', en: '', tg: '' },
+      video_link: '',
+      video_description: { ru: '', en: '', tg: '' },
       attachments: [],
     },
   })
 
-  const newFiles = form.watch('attachments') ?? []
-
-  const visibleExistingFiles = useMemo(() => {
-    return (lesson.files ?? []).filter(
-      (file) => !deleteFileIds.includes(String(file.id))
-    )
-  }, [lesson.files, deleteFileIds])
-
-  const currentVideo =
-    videoPreview || lesson.video?.url || lesson.video_link || ''
+  const attachments = form.watch('attachments') ?? []
 
   const onSubmit = async (data: CourseLessonForm) => {
     setLoading(true)
@@ -86,7 +101,6 @@ export function CourseLessonsEdit() {
       fd.append('description[tg]', data.description.tg ?? '')
 
       fd.append('sort_order', String(data.sort_order))
-      fd.append('_method', 'PUT')
 
       if (data.duration_minutes) {
         fd.append('duration_minutes', String(data.duration_minutes))
@@ -108,17 +122,13 @@ export function CourseLessonsEdit() {
       fd.append('video_description[en]', data.video_description.en ?? '')
       fd.append('video_description[tg]', data.video_description.tg ?? '')
 
-      for (const file of newFiles) {
+      for (const file of attachments) {
         fd.append('attachments[]', file)
       }
 
-      for (const id of deleteFileIds) {
-        fd.append('delete_file_ids[]', id)
-      }
+      await create(course.id, module.id, fd)
 
-      await edit(course.id, module.id, lesson.id, fd)
-
-      toast.success('Урок успешно обновлён')
+      toast.success('Урок успешно создан')
       navigate({
         to: '/courses/$courseId/modules/$moduleId/lessons',
         params: { courseId: course.id, moduleId: module.id },
@@ -132,7 +142,7 @@ export function CourseLessonsEdit() {
     }
   }
 
-  const removeNewFile = (index: number) => {
+  const removeAttachment = (index: number) => {
     const current = form.getValues('attachments') ?? []
     form.setValue(
       'attachments',
@@ -142,31 +152,15 @@ export function CourseLessonsEdit() {
   }
 
   return (
-    <Main className='flex flex-1 flex-col gap-4 sm:gap-6'>
-      <header className='flex items-center justify-between'>
-        <div>
-          <h1 className='text-2xl font-bold tracking-tight'>
-            Редактировать урок
-          </h1>
-          <p className='text-sm text-muted-foreground'>{module.title.ru}</p>
-        </div>
-
-        <Button
-          variant='outline'
-          onClick={() =>
-            navigate({
-              to: '/courses/$courseId/modules/$moduleId/lessons',
-              params: { courseId: course.id, moduleId: module.id },
-            })
-          }
-        >
-          <ArrowLeft size={18} />
-          Назад
-        </Button>
-      </header>
-
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
+    <Form {...form}>
+      <AdminFormCard
+        title='Создать урок'
+        backTo={`/courses/${course.id}/modules/${module.id}/lessons`}
+        actionText='Создать'
+        loading={loading}
+        onSubmit={form.handleSubmit(onSubmit)}
+      >
+        <div className='space-y-6'>
           <Tabs defaultValue='ru'>
             <TabsList>
               <TabsTrigger value='ru'>RU</TabsTrigger>
@@ -243,11 +237,7 @@ export function CourseLessonsEdit() {
                 <FormItem>
                   <FormLabel>Порядок</FormLabel>
                   <FormControl>
-                    <Input
-                      type='number'
-                      value={field.value}
-                      onChange={(e) => field.onChange(Number(e.target.value))}
-                    />
+                    <Input type='number' {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -264,11 +254,7 @@ export function CourseLessonsEdit() {
                     <Input
                       type='number'
                       value={field.value ?? ''}
-                      onChange={(e) =>
-                        field.onChange(
-                          e.target.value ? Number(e.target.value) : null
-                        )
-                      }
+                      onChange={(e) => field.onChange(e.target.value)}
                     />
                   </FormControl>
                   <FormMessage />
@@ -305,31 +291,29 @@ export function CourseLessonsEdit() {
                   <FormControl>
                     <div
                       className='rounded-2xl border border-dashed p-4'
-                      onClick={() => videoInputRef.current?.click()}
+                      onClick={() => fileInputRef.current?.click()}
                     >
-                      {currentVideo ? (
+                      {videoPreview ? (
                         <div className='relative'>
                           <ReactPlayer
-                            src={currentVideo}
+                            src={videoPreview}
                             controls
                             width='100%'
                             height='320px'
                           />
-                          {videoPreview ? (
-                            <Button
-                              type='button'
-                              className='absolute top-2 right-2'
-                              onClick={(e) => {
-                                e.stopPropagation()
-                                field.onChange(null)
-                                setVideoPreview(null)
-                                if (videoInputRef.current)
-                                  videoInputRef.current.value = ''
-                              }}
-                            >
-                              <Trash className='size-4' />
-                            </Button>
-                          ) : null}
+                          <Button
+                            type='button'
+                            className='absolute top-2 right-2'
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              field.onChange(null)
+                              setVideoPreview(null)
+                              if (fileInputRef.current)
+                                fileInputRef.current.value = ''
+                            }}
+                          >
+                            <Trash className='size-4' />
+                          </Button>
                         </div>
                       ) : (
                         <div className='flex min-h-[180px] items-center justify-center text-slate-400'>
@@ -339,7 +323,7 @@ export function CourseLessonsEdit() {
                       )}
 
                       <input
-                        ref={videoInputRef}
+                        ref={fileInputRef}
                         type='file'
                         accept='video/*'
                         className='hidden'
@@ -408,45 +392,9 @@ export function CourseLessonsEdit() {
                       }}
                     />
 
-                    {visibleExistingFiles.length ? (
+                    {attachments.length ? (
                       <div className='mt-4 space-y-2'>
-                        {visibleExistingFiles.map((file) => (
-                          <div
-                            key={file.id}
-                            className='flex items-center justify-between rounded-xl border p-3'
-                          >
-                            <div className='flex items-center gap-2'>
-                              <FileText className='size-4' />
-                              <a
-                                href={file.url}
-                                target='_blank'
-                                rel='noreferrer'
-                                className='text-sm underline'
-                              >
-                                {file.name}
-                              </a>
-                            </div>
-
-                            <Button
-                              type='button'
-                              variant='outline'
-                              onClick={() =>
-                                setDeleteFileIds((prev) => [
-                                  ...prev,
-                                  String(file.id),
-                                ])
-                              }
-                            >
-                              <Trash className='size-4' />
-                            </Button>
-                          </div>
-                        ))}
-                      </div>
-                    ) : null}
-
-                    {newFiles.length ? (
-                      <div className='mt-4 space-y-2'>
-                        {newFiles.map((file, index) => (
+                        {attachments.map((file, index) => (
                           <div
                             key={`${file.name}-${index}`}
                             className='flex items-center justify-between rounded-xl border p-3'
@@ -459,7 +407,7 @@ export function CourseLessonsEdit() {
                             <Button
                               type='button'
                               variant='outline'
-                              onClick={() => removeNewFile(index)}
+                              onClick={() => removeAttachment(index)}
                             >
                               <Trash className='size-4' />
                             </Button>
@@ -473,13 +421,8 @@ export function CourseLessonsEdit() {
               </FormItem>
             )}
           />
-
-          <Button disabled={loading} type='submit'>
-            {loading ? <Loader2 className='mr-2 animate-spin' /> : null}
-            Сохранить
-          </Button>
-        </form>
-      </Form>
-    </Main>
+        </div>
+      </AdminFormCard>
+    </Form>
   )
 }

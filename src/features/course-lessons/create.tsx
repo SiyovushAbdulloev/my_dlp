@@ -4,14 +4,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate } from '@tanstack/react-router'
 import { Route } from '@/routes/_authenticated/courses/$courseId/modules/$moduleId/lessons/create'
-import {
-  ArrowLeft,
-  FileText,
-  Film,
-  Loader2,
-  Paperclip,
-  Trash,
-} from 'lucide-react'
+import { FileText, Film, Paperclip, Trash } from 'lucide-react'
 import ReactPlayer from 'react-player'
 import { toast } from 'sonner'
 import { create } from '@/api/course-lessons'
@@ -29,7 +22,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Textarea } from '@/components/ui/textarea'
-import { Main } from '@/components/layout/main'
+import { AdminFormCard } from '@/components/admin/form-card'
 
 export const courseLessonFormSchema = z.object({
   title: z.object({
@@ -43,7 +36,7 @@ export const courseLessonFormSchema = z.object({
     tg: z.string().optional(),
   }),
   sort_order: z.number().min(1),
-  duration_minutes: z.number().nullable().optional(),
+  duration_minutes: z.string().nullable().optional(),
 
   text_content: z.object({
     ru: z.string().optional(),
@@ -64,7 +57,8 @@ export const courseLessonFormSchema = z.object({
   attachments: z.array(z.instanceof(File)).optional(),
 })
 
-export type CourseLessonForm = z.infer<typeof courseLessonFormSchema>
+export type CourseLessonFormInput = z.input<typeof courseLessonFormSchema>
+export type CourseLessonForm = z.output<typeof courseLessonFormSchema>
 
 export function CourseLessonsCreate() {
   const navigate = useNavigate()
@@ -75,7 +69,7 @@ export function CourseLessonsCreate() {
   const fileInputRef = useRef<HTMLInputElement | null>(null)
   const attachmentsInputRef = useRef<HTMLInputElement | null>(null)
 
-  const form = useForm<CourseLessonForm>({
+  const form = useForm<CourseLessonFormInput, undefined, CourseLessonForm>({
     resolver: zodResolver(courseLessonFormSchema),
     defaultValues: {
       title: { ru: '', en: '', tg: '' },
@@ -152,35 +146,21 @@ export function CourseLessonsCreate() {
     const current = form.getValues('attachments') ?? []
     form.setValue(
       'attachments',
-      current.filter((_, i) => i !== index),
+      current.filter((_: File, i: number) => i !== index),
       { shouldValidate: true, shouldDirty: true }
     )
   }
 
   return (
-    <Main className='flex flex-1 flex-col gap-4 sm:gap-6'>
-      <header className='flex items-center justify-between'>
-        <div>
-          <h1 className='text-2xl font-bold tracking-tight'>Создать урок</h1>
-          <p className='text-sm text-muted-foreground'>{module.title.ru}</p>
-        </div>
-
-        <Button
-          variant='outline'
-          onClick={() =>
-            navigate({
-              to: '/courses/$courseId/modules/$moduleId/lessons',
-              params: { courseId: course.id, moduleId: module.id },
-            })
-          }
-        >
-          <ArrowLeft size={18} />
-          Назад
-        </Button>
-      </header>
-
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
+    <Form {...form}>
+      <AdminFormCard
+        title='Создать урок'
+        backTo={`/courses/${course.id}/modules/${module.id}/lessons`}
+        actionText='Создать'
+        loading={loading}
+        onSubmit={form.handleSubmit(onSubmit)}
+      >
+        <div className='space-y-6'>
           <Tabs defaultValue='ru'>
             <TabsList>
               <TabsTrigger value='ru'>RU</TabsTrigger>
@@ -257,11 +237,7 @@ export function CourseLessonsCreate() {
                 <FormItem>
                   <FormLabel>Порядок</FormLabel>
                   <FormControl>
-                    <Input
-                      type='number'
-                      value={field.value}
-                      onChange={(e) => field.onChange(Number(e.target.value))}
-                    />
+                    <Input type='number' {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -278,11 +254,7 @@ export function CourseLessonsCreate() {
                     <Input
                       type='number'
                       value={field.value ?? ''}
-                      onChange={(e) =>
-                        field.onChange(
-                          e.target.value ? Number(e.target.value) : null
-                        )
-                      }
+                      onChange={(e) => field.onChange(e.target.value)}
                     />
                   </FormControl>
                   <FormMessage />
@@ -422,7 +394,7 @@ export function CourseLessonsCreate() {
 
                     {attachments.length ? (
                       <div className='mt-4 space-y-2'>
-                        {attachments.map((file, index) => (
+                        {attachments.map((file: File, index: number) => (
                           <div
                             key={`${file.name}-${index}`}
                             className='flex items-center justify-between rounded-xl border p-3'
@@ -449,13 +421,8 @@ export function CourseLessonsCreate() {
               </FormItem>
             )}
           />
-
-          <Button disabled={loading} type='submit'>
-            {loading ? <Loader2 className='mr-2 animate-spin' /> : null}
-            Создать
-          </Button>
-        </form>
-      </Form>
-    </Main>
+        </div>
+      </AdminFormCard>
+    </Form>
   )
 }
