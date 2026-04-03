@@ -4,11 +4,9 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate } from '@tanstack/react-router'
 import { Route } from '@/routes/_authenticated/courses/$courseId/modules/$moduleId/questions/$questionId/answers/create'
-import { ArrowLeft, Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { create } from '@/api/module-question-answers'
 import { applyValidationErrors } from '@/lib/applyValidationErrors'
-import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import {
   Form,
@@ -21,7 +19,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Textarea } from '@/components/ui/textarea'
-import { Main } from '@/components/layout/main'
+import { AdminFormCard } from '@/components/admin/form-card'
 
 export const questionAnswerFormSchema = z.object({
   text: z.object({
@@ -33,15 +31,21 @@ export const questionAnswerFormSchema = z.object({
   sort_order: z.number().min(1),
 })
 
-export type QuestionAnswerForm = z.infer<typeof questionAnswerFormSchema>
+export type QuestionAnswerFormInput = z.input<typeof questionAnswerFormSchema>
+export type QuestionAnswerForm = z.output<typeof questionAnswerFormSchema>
 
 export function ModuleQuestionAnswersCreate() {
   const navigate = useNavigate()
   const { course, module, question } = Route.useRouteContext()
   const [loading, setLoading] = useState(false)
 
-  const form = useForm<QuestionAnswerForm>({
+  const form = useForm<QuestionAnswerFormInput, undefined, QuestionAnswerForm>({
     resolver: zodResolver(questionAnswerFormSchema),
+    defaultValues: {
+      text: { ru: '', en: '', tg: '' },
+      is_correct: false,
+      sort_order: 1,
+    },
   })
 
   const onSubmit = async (data: QuestionAnswerForm) => {
@@ -58,36 +62,24 @@ export function ModuleQuestionAnswersCreate() {
         },
       })
     } catch (e) {
-      if (!applyValidationErrors(form, e)) toast.error('Не валидные данные')
+      if (!applyValidationErrors(form, e)) {
+        toast.error('Не валидные данные')
+      }
     } finally {
       setLoading(false)
     }
   }
 
   return (
-    <Main className='flex flex-1 flex-col gap-4 sm:gap-6'>
-      <header className='flex items-center justify-between'>
-        <h1 className='text-2xl font-bold tracking-tight'>Создать ответ</h1>
-        <Button
-          variant='outline'
-          onClick={() =>
-            navigate({
-              to: '/courses/$courseId/modules/$moduleId/questions/$questionId/answers',
-              params: {
-                courseId: course.id,
-                moduleId: module.id,
-                questionId: question.id,
-              },
-            })
-          }
-        >
-          <ArrowLeft size={18} />
-          Назад
-        </Button>
-      </header>
-
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
+    <Form {...form}>
+      <AdminFormCard
+        title='Создать ответ'
+        backTo={`/courses/${course.id}/modules/${module.id}/questions/${question.id}/answers`}
+        actionText='Создать'
+        loading={loading}
+        onSubmit={form.handleSubmit(onSubmit)}
+      >
+        <div className='space-y-6'>
           <Tabs defaultValue='ru'>
             <TabsList>
               <TabsTrigger value='ru'>RU</TabsTrigger>
@@ -145,13 +137,8 @@ export function ModuleQuestionAnswersCreate() {
               )}
             />
           </div>
-
-          <Button disabled={loading} type='submit'>
-            {loading ? <Loader2 className='mr-2 animate-spin' /> : null}
-            Создать
-          </Button>
-        </form>
-      </Form>
-    </Main>
+        </div>
+      </AdminFormCard>
+    </Form>
   )
 }

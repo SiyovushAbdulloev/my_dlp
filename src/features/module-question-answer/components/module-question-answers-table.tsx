@@ -17,7 +17,7 @@ import {
 } from 'lucide-react'
 import { toast } from 'sonner'
 import { deleteById, fetchIndex } from '@/api/module-question-answers'
-import { ability } from '@/lib/casl/ability.ts'
+import { ability } from '@/lib/casl/ability'
 import { Button } from '@/components/ui/button'
 import { DataTablePagination } from '@/components/data-table'
 
@@ -79,11 +79,11 @@ export const ModuleQuestionAnswersTable = () => {
   return (
     <div className='flex flex-col gap-6'>
       <div className='relative'>
-        {fetching && (
+        {fetching ? (
           <div className='absolute inset-0 z-10 flex items-center justify-center rounded-2xl bg-white/70'>
             <LoaderCircle className='size-10 animate-spin' />
           </div>
-        )}
+        ) : null}
 
         {answers?.data?.length ? (
           <div className='space-y-4'>
@@ -93,7 +93,7 @@ export const ModuleQuestionAnswersTable = () => {
               return (
                 <div
                   key={answer.id}
-                  className='w-fit rounded-2xl border border-slate-200 bg-white p-6 shadow-sm'
+                  className='rounded-2xl border border-slate-200 bg-white p-6 shadow-sm'
                 >
                   <div className='flex items-start justify-between gap-3'>
                     <div>

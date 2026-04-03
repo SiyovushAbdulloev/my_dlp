@@ -1,13 +1,12 @@
-import { useRef, useState } from 'react'
-import { z } from 'zod'
+import { useMemo, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate } from '@tanstack/react-router'
-import { Route } from '@/routes/_authenticated/courses/$courseId/modules/$moduleId/lessons/create'
+import { Route } from '@/routes/_authenticated/courses/$courseId/modules/$moduleId/lessons/$lessonId.edit'
 import { FileText, Film, Paperclip, Trash } from 'lucide-react'
 import ReactPlayer from 'react-player'
 import { toast } from 'sonner'
-import { create } from '@/api/course-lessons'
+import { edit } from '@/api/course-lessons'
 import { applyValidationErrors } from '@/lib/applyValidationErrors'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -23,69 +22,51 @@ import { Input } from '@/components/ui/input'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Textarea } from '@/components/ui/textarea'
 import { AdminFormCard } from '@/components/admin/form-card'
+import {
+  courseLessonFormSchema,
+  type CourseLessonForm,
+  type CourseLessonFormInput,
+} from '@/features/course-lessons/create'
 
-export const courseLessonFormSchema = z.object({
-  title: z.object({
-    ru: z.string().min(1),
-    en: z.string().min(1),
-    tg: z.string().min(1),
-  }),
-  description: z.object({
-    ru: z.string().optional(),
-    en: z.string().optional(),
-    tg: z.string().optional(),
-  }),
-  sort_order: z.number().min(1),
-  duration_minutes: z.string().nullable().optional(),
-
-  text_content: z.object({
-    ru: z.string().optional(),
-    en: z.string().optional(),
-    tg: z.string().optional(),
-  }),
-
-  use_external_video: z.boolean(),
-  video: z.instanceof(File).nullable().optional(),
-  video_link: z.string().optional(),
-
-  video_description: z.object({
-    ru: z.string().optional(),
-    en: z.string().optional(),
-    tg: z.string().optional(),
-  }),
-
-  attachments: z.array(z.instanceof(File)).optional(),
-})
-
-export type CourseLessonFormInput = z.input<typeof courseLessonFormSchema>
-export type CourseLessonForm = z.output<typeof courseLessonFormSchema>
-
-export function CourseLessonsCreate() {
+export function CourseLessonsEdit() {
   const navigate = useNavigate()
-  const { course, module } = Route.useRouteContext()
+  const { course, module, lesson } = Route.useRouteContext()
+
   const [loading, setLoading] = useState(false)
   const [videoPreview, setVideoPreview] = useState<string | null>(null)
+  const [deleteFileIds, setDeleteFileIds] = useState<string[]>([])
 
-  const fileInputRef = useRef<HTMLInputElement | null>(null)
+  const videoInputRef = useRef<HTMLInputElement | null>(null)
   const attachmentsInputRef = useRef<HTMLInputElement | null>(null)
 
   const form = useForm<CourseLessonFormInput, undefined, CourseLessonForm>({
     resolver: zodResolver(courseLessonFormSchema),
     defaultValues: {
-      title: { ru: '', en: '', tg: '' },
-      description: { ru: '', en: '', tg: '' },
-      sort_order: 1,
-      duration_minutes: undefined,
-      text_content: { ru: '', en: '', tg: '' },
-      use_external_video: false,
+      title: lesson.title,
+      description: lesson.description ?? { ru: '', en: '', tg: '' },
+      sort_order: lesson.sort_order,
+      duration_minutes: lesson.duration_minutes
+        ? String(lesson.duration_minutes)
+        : undefined,
+      text_content: lesson.text_content ?? { ru: '', en: '', tg: '' },
+      use_external_video: !lesson.video?.url && !!lesson.video_link,
       video: null,
-      video_link: '',
-      video_description: { ru: '', en: '', tg: '' },
+      video_link: lesson.video_link ?? '',
+      video_description: lesson.video_description ?? { ru: '', en: '', tg: '' },
       attachments: [],
     },
   })
 
-  const attachments = form.watch('attachments') ?? []
+  const newFiles = form.watch('attachments') ?? []
+
+  const visibleExistingFiles = useMemo(() => {
+    return (lesson.files ?? []).filter(
+      (file) => !deleteFileIds.includes(String(file.id))
+    )
+  }, [lesson.files, deleteFileIds])
+
+  const currentVideo =
+    videoPreview || lesson.video?.url || lesson.video_link || ''
 
   const onSubmit = async (data: CourseLessonForm) => {
     setLoading(true)
@@ -101,6 +82,7 @@ export function CourseLessonsCreate() {
       fd.append('description[tg]', data.description.tg ?? '')
 
       fd.append('sort_order', String(data.sort_order))
+      fd.append('_method', 'PUT')
 
       if (data.duration_minutes) {
         fd.append('duration_minutes', String(data.duration_minutes))
@@ -122,13 +104,17 @@ export function CourseLessonsCreate() {
       fd.append('video_description[en]', data.video_description.en ?? '')
       fd.append('video_description[tg]', data.video_description.tg ?? '')
 
-      for (const file of attachments) {
+      for (const file of newFiles) {
         fd.append('attachments[]', file)
       }
 
-      await create(course.id, module.id, fd)
+      for (const id of deleteFileIds) {
+        fd.append('delete_file_ids[]', id)
+      }
 
-      toast.success('Урок успешно создан')
+      await edit(course.id, module.id, lesson.id, fd)
+
+      toast.success('Урок успешно обновлён')
       navigate({
         to: '/courses/$courseId/modules/$moduleId/lessons',
         params: { courseId: course.id, moduleId: module.id },
@@ -142,7 +128,7 @@ export function CourseLessonsCreate() {
     }
   }
 
-  const removeAttachment = (index: number) => {
+  const removeNewFile = (index: number) => {
     const current = form.getValues('attachments') ?? []
     form.setValue(
       'attachments',
@@ -154,9 +140,9 @@ export function CourseLessonsCreate() {
   return (
     <Form {...form}>
       <AdminFormCard
-        title='Создать урок'
+        title='Редактировать урок'
         backTo={`/courses/${course.id}/modules/${module.id}/lessons`}
-        actionText='Создать'
+        actionText='Сохранить'
         loading={loading}
         onSubmit={form.handleSubmit(onSubmit)}
       >
@@ -291,29 +277,31 @@ export function CourseLessonsCreate() {
                   <FormControl>
                     <div
                       className='rounded-2xl border border-dashed p-4'
-                      onClick={() => fileInputRef.current?.click()}
+                      onClick={() => videoInputRef.current?.click()}
                     >
-                      {videoPreview ? (
+                      {currentVideo ? (
                         <div className='relative'>
                           <ReactPlayer
-                            src={videoPreview}
+                            src={currentVideo}
                             controls
                             width='100%'
                             height='320px'
                           />
-                          <Button
-                            type='button'
-                            className='absolute top-2 right-2'
-                            onClick={(e) => {
-                              e.stopPropagation()
-                              field.onChange(null)
-                              setVideoPreview(null)
-                              if (fileInputRef.current)
-                                fileInputRef.current.value = ''
-                            }}
-                          >
-                            <Trash className='size-4' />
-                          </Button>
+                          {videoPreview ? (
+                            <Button
+                              type='button'
+                              className='absolute top-2 right-2'
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                field.onChange(null)
+                                setVideoPreview(null)
+                                if (videoInputRef.current)
+                                  videoInputRef.current.value = ''
+                              }}
+                            >
+                              <Trash className='size-4' />
+                            </Button>
+                          ) : null}
                         </div>
                       ) : (
                         <div className='flex min-h-[180px] items-center justify-center text-slate-400'>
@@ -323,7 +311,7 @@ export function CourseLessonsCreate() {
                       )}
 
                       <input
-                        ref={fileInputRef}
+                        ref={videoInputRef}
                         type='file'
                         accept='video/*'
                         className='hidden'
@@ -392,9 +380,45 @@ export function CourseLessonsCreate() {
                       }}
                     />
 
-                    {attachments.length ? (
+                    {visibleExistingFiles.length ? (
                       <div className='mt-4 space-y-2'>
-                        {attachments.map((file, index) => (
+                        {visibleExistingFiles.map((file) => (
+                          <div
+                            key={file.id}
+                            className='flex items-center justify-between rounded-xl border p-3'
+                          >
+                            <div className='flex items-center gap-2'>
+                              <FileText className='size-4' />
+                              <a
+                                href={file.url}
+                                target='_blank'
+                                rel='noreferrer'
+                                className='text-sm underline'
+                              >
+                                {file.name}
+                              </a>
+                            </div>
+
+                            <Button
+                              type='button'
+                              variant='outline'
+                              onClick={() =>
+                                setDeleteFileIds((prev) => [
+                                  ...prev,
+                                  String(file.id),
+                                ])
+                              }
+                            >
+                              <Trash className='size-4' />
+                            </Button>
+                          </div>
+                        ))}
+                      </div>
+                    ) : null}
+
+                    {newFiles.length ? (
+                      <div className='mt-4 space-y-2'>
+                        {newFiles.map((file, index) => (
                           <div
                             key={`${file.name}-${index}`}
                             className='flex items-center justify-between rounded-xl border p-3'
@@ -407,7 +431,7 @@ export function CourseLessonsCreate() {
                             <Button
                               type='button'
                               variant='outline'
-                              onClick={() => removeAttachment(index)}
+                              onClick={() => removeNewFile(index)}
                             >
                               <Trash className='size-4' />
                             </Button>
