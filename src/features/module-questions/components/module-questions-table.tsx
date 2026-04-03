@@ -6,12 +6,15 @@ import {
   useReactTable,
 } from '@tanstack/react-table'
 import { Route } from '@/routes/_authenticated/courses/$courseId/modules/$moduleId/questions'
-import { type ModuleQuestion } from '@/types/module_question'
+import {
+  type ModuleQuestion,
+  ModuleQuestionTypeLabel,
+} from '@/types/module_question'
 import { type LaravelPaginatedResource } from 'laravel-resource-pagination-type'
 import { LoaderCircle, PenLine, Trash } from 'lucide-react'
 import { toast } from 'sonner'
 import { deleteById, fetchIndex } from '@/api/module-questions'
-import { ability } from '@/lib/casl/ability.ts'
+import { ability } from '@/lib/casl/ability'
 import { Button } from '@/components/ui/button'
 import { DataTablePagination } from '@/components/data-table'
 
@@ -73,11 +76,11 @@ export const ModuleQuestionsTable = () => {
   return (
     <div className='flex flex-col gap-6'>
       <div className='relative'>
-        {fetching && (
+        {fetching ? (
           <div className='absolute inset-0 z-10 flex items-center justify-center rounded-2xl bg-white/70'>
             <LoaderCircle className='size-10 animate-spin' />
           </div>
-        )}
+        ) : null}
 
         {questions?.data?.length ? (
           <div className='space-y-4'>
@@ -99,7 +102,7 @@ export const ModuleQuestionsTable = () => {
                       })
                     }
                   }}
-                  className='w-fit cursor-pointer rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:shadow-md'
+                  className='cursor-pointer rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:shadow-md'
                 >
                   <div className='flex items-start justify-between gap-3'>
                     <div>
@@ -114,7 +117,13 @@ export const ModuleQuestionsTable = () => {
 
                     <div className='flex items-center gap-2'>
                       <span className='rounded-full border px-3 py-1 text-xs'>
-                        {question.type}
+                        {
+                          ModuleQuestionTypeLabel[
+                            Number(
+                              question.type
+                            ) as keyof typeof ModuleQuestionTypeLabel
+                          ]
+                        }
                       </span>
                       <span className='rounded-full border px-3 py-1 text-xs'>
                         #{question.sort_order}
